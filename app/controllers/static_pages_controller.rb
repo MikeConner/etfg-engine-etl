@@ -1,6 +1,7 @@
 class StaticPagesController < ApplicationController
-  before_filter :authenticate_user!
+  before_action :authenticate_user!
 
-  def  home
+  def workbench
+    render :layout => 'admin'
   end
 end

@@ -10,7 +10,15 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require rails-ujs
-//= require activestorage
+//= require jquery
+//= require jquery_ujs
 //= require turbolinks
+//= require foundation
+//= require libs/jquery-ui-1.10.1.custom.min.js
 //= require_tree .
+
+$(function(){ 
+  $(document).foundation(); 
+});
+
+$(function(){ $(document).foundation(); });

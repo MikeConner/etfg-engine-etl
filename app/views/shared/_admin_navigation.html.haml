@@ -1,25 +1,10 @@
 .icon-bar.seven-up.vertical
-  %a.item{:href => vmap_versions_path}
-    %i.fa.fa-table.fa-5
-    %label VMAP
-  %a.item{:href => trucost_versions_path}
-    = image_tag 'Trucost.jpg'
-    %label Trucost
-  %a.item{:href => morningstar_versions_path}
+  %a.item{:href => root_path}
+    %i.fa.fa-asterisk.fa-5
+    %label Name Variants
+  %a.item{:href => root_path}
+    %i.fa.fa-question.fa-5
+    %label Ambiguous
+  %a.item{:href => root_path}
     %i.fa.fa-star.fa-5
-    %label Morningstar
-  %a.item{:href => edit_esg_option_path(EsgOption.first)}
-    %i.fa.fa-cog.fa-5
-    %label ESG
-  %a.item{:href => ngo_versions_path}
-    %i.fa.fa-list-ul.fa-5
-    %label NGO
-  %a.item{:href => scope4_versions_path}
-    %i.fa.fa-list-ul.fa-5
-    %label Scope4
-  %a.item{:href => reports_path}
-    %i.fa.fa-bar-chart.fa-5
-    %label Reports
-  %a.item{:href => figis_vmaps_path}
-    = image_tag 'figi.jpg'
-    %label Open FIGI
+    %label Issuers
