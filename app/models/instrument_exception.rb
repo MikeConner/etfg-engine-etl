@@ -11,4 +11,5 @@
 #
 
 class InstrumentException < ApplicationRecord
+  belongs_to :instrument
 end

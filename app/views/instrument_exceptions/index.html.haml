@@ -1,0 +1,50 @@
+.container
+  .span12
+    .content-block
+      .bd
+        %br
+        %br
+        %h1 Instrument Name Variants
+        - if @exceptions.empty?
+          %h3 No Exceptions
+        - else
+          .center
+            = will_paginate @exceptions
+            = page_entries_info @exceptions    
+          %table.table.zebra-striped
+            %caption Instrument Exceptions
+            %thead
+              %tr
+                %th Instrument ID
+                %th Pooled Instrument
+                %th Standard Name
+                %th Unknown Name
+                %th Figi
+                %th Sedol
+                %th Isin 
+                %th Cusip
+                %th Variants
+                %th
+                %th
+                %th
+            %tbody
+              - @exceptions.each do |exception|
+                - instrument = exception.instrument
+                - composite = instrument.pooled_instrument
+                %tr
+                  %td= instrument.id
+                  %td= composite.nil? ? 'N/A' : "#{composite.composite_ticker}/#{composite.exchange_country}"
+                  %td= instrument.standard_name
+                  %td
+                    %strong= exception.name_in_datasource
+                  %td
+                    = instrument.figi
+                    - if instrument.is_exchange_figi
+                      &nbsp;(Exchange)
+                  %td= instrument.sedol
+                  %td= instrument.isin
+                  %td= instrument.cusip
+                  %td= raw instrument.name_variants.split('^').join(",<br>")
+                  %td= link_to "Accept Variant", root_path, :class => 'btn'
+                  %td= link_to "Discard (Error)", root_path, :class => 'btn'
+                  %td= link_to "Make Standard", root_path, :class => 'btn'

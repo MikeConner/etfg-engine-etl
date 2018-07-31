@@ -14,9 +14,9 @@
     = javascript_include_tag "application"
     = render 'layouts/application/header'
     .admin-page-container
-      .admin-nav.large-2.columns
+      .admin-nav.small-1.columns
         = render :partial => 'shared/admin_navigation'
-      .large-10.columns
+      .small-11.columns
         = yield
     = content_for :head
     = render 'layouts/application/footer'

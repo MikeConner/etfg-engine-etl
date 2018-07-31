@@ -35,4 +35,7 @@
 #
 
 class Instrument < ApplicationRecord
+  belongs_to :pooled_instrument
+  
+  has_many :instrument_exceptions, :dependent => :destroy
 end
