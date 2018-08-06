@@ -12,4 +12,9 @@
 
 class InstrumentException < ApplicationRecord
   belongs_to :instrument
+  
+  # Return the first available ticker from the data file
+  def first_composite_ticker
+    
+  end
 end

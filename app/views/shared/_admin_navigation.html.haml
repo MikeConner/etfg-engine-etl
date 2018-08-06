@@ -1,10 +1,19 @@
 .icon-bar.seven-up.vertical
   %a.item{:href => instrument_exceptions_path}
     %i.fa.fa-asterisk.fa-5
-    %label Name Variants
+    %label Composite Exceptions
+  %a.item{:href => instrument_exceptions_path}
+    %i.fa.fa-asterisk.fa-5
+    %label Instrument Exceptions
   %a.item{:href => root_path}
     %i.fa.fa-question.fa-5
-    %label Ambiguous
+    %label Ambiguous Instruments
   %a.item{:href => root_path}
     %i.fa.fa-star.fa-5
-    %label Issuers
+    %label Unknown Issuers
+  %a.item{:href => root_path}
+    %i.fa.fa-star.fa-5
+    %label Known Exceptions
+  %a.item{:href => root_path}
+    %i.fa.fa-star.fa-5
+    %label Unapproved Instruments

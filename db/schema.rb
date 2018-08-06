@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_07_31_022258) do
+ActiveRecord::Schema.define(version: 2018_08_06_135103) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,6 +48,7 @@ ActiveRecord::Schema.define(version: 2018_07_31_022258) do
 
   create_table "datasources", id: :bigint, default: -> { "nextval('etfg_datasources_id_seq'::regclass)" }, force: :cascade do |t|
     t.string "data_source_name", limit: 50, null: false
+    t.boolean "is_direct_feed", default: true, null: false
   end
 
   create_table "instrument_exceptions", force: :cascade do |t|
@@ -72,7 +73,7 @@ ActiveRecord::Schema.define(version: 2018_07_31_022258) do
     t.date "effective_date"
     t.date "expiration_date"
     t.string "figi", limit: 12, null: false
-    t.boolean "is_exchange_figi", default: false, null: false
+    t.boolean "is_exchange_figi", null: false
     t.string "sedol", limit: 7
     t.string "isin", limit: 12
     t.string "cusip", limit: 9
@@ -88,23 +89,17 @@ ActiveRecord::Schema.define(version: 2018_07_31_022258) do
     t.string "subindustry", limit: 128
     t.string "rating", limit: 32
     t.boolean "approved", default: false, null: false
-    t.boolean "valid", default: false, null: false
+    t.boolean "is_valid", null: false
     t.boolean "default_instrument", default: false, null: false
-    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "created_at", default: -> { "now()" }, null: false
     t.string "standard_name", limit: 128
     t.bigint "pooled_instrument_id"
     t.bigint "instrument_id"
-    t.index ["cusip"], name: "index_instruments_on_cusip"
     t.index ["cusip"], name: "instrument_cusip", opclass: :bpchar_pattern_ops
-    t.index ["figi"], name: "index_instruments_on_figi"
     t.index ["figi"], name: "speed_up_figi", unique: true, opclass: :bpchar_pattern_ops
-    t.index ["isin"], name: "index_instruments_on_isin"
     t.index ["isin"], name: "instrument_isin", opclass: :bpchar_pattern_ops
     t.index ["issuer_id"], name: "fki_fk_issuer"
-    t.index ["issuer_id"], name: "index_instruments_on_issuer_id"
     t.index ["pooled_instrument_id"], name: "fki_fk_pooled_instrument"
-    t.index ["pooled_instrument_id"], name: "index_instruments_on_pooled_instrument_id"
-    t.index ["sedol"], name: "index_instruments_on_sedol"
     t.index ["sedol"], name: "instrument_sedol", opclass: :bpchar_pattern_ops
   end
 
@@ -158,7 +153,10 @@ ActiveRecord::Schema.define(version: 2018_07_31_022258) do
     t.bigint "pooled_instrument_id", null: false
     t.string "name_in_datasource", limit: 128, null: false
     t.text "datasource_lines", null: false
+    t.index ["datasource_id", "file_date", "pooled_instrument_id", "name_in_datasource"], name: "detect_dups", unique: true
     t.index ["datasource_id", "file_date", "pooled_instrument_id", "name_in_datasource"], name: "no_dups_piexc", unique: true
+    t.index ["datasource_id"], name: "fki_fk_comp_datasource"
+    t.index ["pooled_instrument_id"], name: "fki_fk_composite_ex_pooled"
   end
 
   create_table "pooled_instrument_overwrites", force: :cascade do |t|
@@ -255,10 +253,14 @@ ActiveRecord::Schema.define(version: 2018_07_31_022258) do
   end
 
   add_foreign_key "instrument_exceptions", "datasources", name: "fk_datasource"
+  add_foreign_key "instruments", "issuers", name: "fk_issuer"
   add_foreign_key "issuer_exceptions", "datasources", name: "fk_exception_datasource"
   add_foreign_key "issuer_variants", "datasources", name: "src_key"
   add_foreign_key "issuer_variants", "issuers", name: "fk_issuer"
   add_foreign_key "known_exceptions", "datasources", name: "fk_known_ex_ds"
+  add_foreign_key "pooled_instrument_exceptions", "datasources", name: "fk_comp_datasource"
+  add_foreign_key "pooled_instrument_exceptions", "pooled_instruments", name: "fk_composite_ex_pooled"
+  add_foreign_key "pooled_instrument_exceptions", "pooled_instruments", name: "fk_composite_exceptions"
   add_foreign_key "pooled_instrument_overwrites", "datasources", name: "piex_datasrc"
   add_foreign_key "pooled_instruments", "issuers", name: "fk_comp_issuer"
 end
