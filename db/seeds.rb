@@ -26,6 +26,10 @@ if File.exists?('composite_figis.csv') and (0 == CompositeFigi.count)
   end
 end
 
+["MasterDataReports", "FirstBridge"].each do |ds|
+   Datasource.create(:data_source_name => ds, :is_direct_feed => false)
+ end
+
 ["MasterDataReports", "FirstBridge", "VelocityShares", "PurposeHoldings", "Gsam", "Yahoo", "Xignite", "NYSE", "Nasdaq", "ShortSqueeze", "HOD", "ETPR", 
  "RBC", "AGFi", "BMO", "CanadianMint", "Harvest", "SSC", "BNY", "BlackRock", "Vanguard", "Barclays", "Sei", "BBH", "Gemini", "Citi", "JPMorgan", 
  "USBank"].each do |ds|
