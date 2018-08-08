@@ -82,6 +82,6 @@ test:
 #
 production:
   <<: *default
-  database: etfg_etl_production
-  username: etfg_etl
+  database: etfg
+  username: etfg
   password: <%= ENV['ETFG_ETL_DATABASE_PASSWORD'] %>
