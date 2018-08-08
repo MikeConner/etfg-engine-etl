@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_08_06_135103) do
+ActiveRecord::Schema.define(version: 2018_08_08_213902) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -235,6 +235,54 @@ ActiveRecord::Schema.define(version: 2018_08_06_135103) do
     t.index ["issuer_id"], name: "index_pooled_instruments_on_issuer_id"
   end
 
+  create_table "ts_composites", force: :cascade do |t|
+    t.date "etfg_date", null: false
+    t.integer "datasource_id", limit: 2, null: false
+    t.bigint "pooled_instrument_id", null: false
+    t.string "composite_ticker", limit: 32
+    t.string "composite_name", limit: 128, null: false
+    t.decimal "aum", precision: 18, scale: 6
+    t.decimal "shares_outstanding", precision: 18, scale: 6
+    t.decimal "share_volue", precision: 18, scale: 6
+    t.decimal "nav", precision: 18, scale: 6
+    t.decimal "open_price", precision: 18, scale: 6
+    t.decimal "low_price", precision: 18, scale: 6
+    t.decimal "high_price", precision: 18, scale: 6
+    t.decimal "close_price", precision: 18, scale: 6
+    t.decimal "daily_return", precision: 18, scale: 6
+    t.decimal "bid_ask_spread", precision: 18, scale: 6
+    t.decimal "avg_bid_size", precision: 18, scale: 6
+    t.decimal "avg_ask_size", precision: 18, scale: 6
+    t.decimal "avg_midpoint", precision: 18, scale: 6
+    t.decimal "basket_estimated_cash", precision: 18, scale: 6
+    t.boolean "publish", default: false, null: false
+    t.index ["datasource_id"], name: "index_ts_composites_on_datasource_id"
+    t.index ["etfg_date", "datasource_id"], name: "index_ts_composites_on_etfg_date_and_datasource_id"
+    t.index ["etfg_date"], name: "index_ts_composites_on_etfg_date"
+    t.index ["pooled_instrument_id"], name: "index_ts_composites_on_pooled_instrument_id"
+  end
+
+  create_table "ts_constituents", force: :cascade do |t|
+    t.date "etfg_date", null: false
+    t.integer "datasource_id", limit: 2, null: false
+    t.bigint "pooled_instrument_id", null: false
+    t.bigint "instrument_id", null: false
+    t.string "composite_ticker", limit: 32
+    t.string "composite_name", limit: 128, null: false
+    t.string "constituent_ticker", limit: 64
+    t.string "constituent_name", limit: 128, null: false
+    t.decimal "weight", precision: 18, scale: 6
+    t.decimal "market_value", precision: 18, scale: 6
+    t.decimal "notional_value", precision: 18, scale: 6
+    t.decimal "total_shares_held", precision: 18, scale: 6
+    t.boolean "publish", default: false, null: false
+    t.index ["datasource_id"], name: "index_ts_constituents_on_datasource_id"
+    t.index ["etfg_date", "datasource_id"], name: "index_ts_constituents_on_etfg_date_and_datasource_id"
+    t.index ["etfg_date"], name: "index_ts_constituents_on_etfg_date"
+    t.index ["instrument_id"], name: "index_ts_constituents_on_instrument_id"
+    t.index ["pooled_instrument_id"], name: "index_ts_constituents_on_pooled_instrument_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -263,4 +311,9 @@ ActiveRecord::Schema.define(version: 2018_08_06_135103) do
   add_foreign_key "pooled_instrument_exceptions", "pooled_instruments", name: "fk_composite_exceptions"
   add_foreign_key "pooled_instrument_overwrites", "datasources", name: "piex_datasrc"
   add_foreign_key "pooled_instruments", "issuers", name: "fk_comp_issuer"
+  add_foreign_key "ts_composites", "datasources"
+  add_foreign_key "ts_composites", "pooled_instruments"
+  add_foreign_key "ts_constituents", "datasources"
+  add_foreign_key "ts_constituents", "instruments"
+  add_foreign_key "ts_constituents", "pooled_instruments"
 end

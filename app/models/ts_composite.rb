@@ -1,0 +1,2 @@
+class TsComposite < ApplicationRecord
+end

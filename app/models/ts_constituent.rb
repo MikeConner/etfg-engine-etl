@@ -1,0 +1,2 @@
+class TsConstituent < ApplicationRecord
+end
