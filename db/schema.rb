@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_08_08_213902) do
+ActiveRecord::Schema.define(version: 2018_08_09_200545) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,16 +21,14 @@ ActiveRecord::Schema.define(version: 2018_08_08_213902) do
     t.bigint "datasource_line", null: false
     t.text "instrument_list", null: false
     t.bigint "resolved_id"
-    t.index ["datasource_id", "file_date", "datasource_line"], name: "no_ambig_dups", unique: true
     t.index ["datasource_id", "file_date", "datasource_line"], name: "no_dups_ambigs", unique: true
-    t.index ["datasource_id", "file_date"], name: "ambiguous_date"
     t.index ["datasource_id", "file_date"], name: "speed_up_ambigs"
   end
 
-  create_table "composite_figis", id: :bigint, default: -> { "nextval('figi_map_id_seq'::regclass)" }, force: :cascade do |t|
+  create_table "composite_figis", force: :cascade do |t|
     t.string "figi", limit: 12, null: false
     t.string "composite_figi", limit: 12, null: false
-    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "created_at", default: -> { "now()" }, null: false
     t.string "ticker", limit: 64
     t.string "name", limit: 128
     t.string "security_type", limit: 128
@@ -39,14 +37,12 @@ ActiveRecord::Schema.define(version: 2018_08_08_213902) do
     t.string "unique_id", limit: 32
     t.string "description"
     t.string "iso_country", limit: 2
-    t.index ["composite_figi"], name: "composite", opclass: :bpchar_pattern_ops
     t.index ["composite_figi"], name: "index_composite_figis_on_composite_figi"
     t.index ["figi", "composite_figi"], name: "no_figi_map_dups", unique: true
     t.index ["figi"], name: "index_composite_figis_on_figi"
-    t.index ["figi"], name: "speed_up", opclass: :bpchar_pattern_ops
   end
 
-  create_table "datasources", id: :bigint, default: -> { "nextval('etfg_datasources_id_seq'::regclass)" }, force: :cascade do |t|
+  create_table "datasources", force: :cascade do |t|
     t.string "data_source_name", limit: 50, null: false
     t.boolean "is_direct_feed", default: true, null: false
   end
@@ -57,11 +53,8 @@ ActiveRecord::Schema.define(version: 2018_08_08_213902) do
     t.bigint "instrument_id", null: false
     t.string "name_in_datasource", limit: 128, null: false
     t.text "datasource_lines", null: false
-    t.index ["datasource_id", "file_date"], name: "exceptions_file_date"
     t.index ["datasource_id", "file_date"], name: "idx_data_on_date"
-    t.index ["datasource_id"], name: "fki_fk_datasource"
     t.index ["datasource_id"], name: "index_instrument_exceptions_on_datasource_id"
-    t.index ["instrument_id"], name: "fki_fk_instrument_exceptions"
     t.index ["instrument_id"], name: "index_instrument_exceptions_on_instrument_id"
   end
 
@@ -73,7 +66,7 @@ ActiveRecord::Schema.define(version: 2018_08_08_213902) do
     t.date "effective_date"
     t.date "expiration_date"
     t.string "figi", limit: 12, null: false
-    t.boolean "is_exchange_figi", null: false
+    t.boolean "is_exchange_figi", default: false, null: false
     t.string "sedol", limit: 7
     t.string "isin", limit: 12
     t.string "cusip", limit: 9
@@ -89,18 +82,18 @@ ActiveRecord::Schema.define(version: 2018_08_08_213902) do
     t.string "subindustry", limit: 128
     t.string "rating", limit: 32
     t.boolean "approved", default: false, null: false
-    t.boolean "is_valid", null: false
+    t.boolean "is_valid", default: false, null: false
     t.boolean "default_instrument", default: false, null: false
     t.datetime "created_at", default: -> { "now()" }, null: false
     t.string "standard_name", limit: 128
     t.bigint "pooled_instrument_id"
     t.bigint "instrument_id"
-    t.index ["cusip"], name: "instrument_cusip", opclass: :bpchar_pattern_ops
-    t.index ["figi"], name: "speed_up_figi", unique: true, opclass: :bpchar_pattern_ops
-    t.index ["isin"], name: "instrument_isin", opclass: :bpchar_pattern_ops
-    t.index ["issuer_id"], name: "fki_fk_issuer"
-    t.index ["pooled_instrument_id"], name: "fki_fk_pooled_instrument"
-    t.index ["sedol"], name: "instrument_sedol", opclass: :bpchar_pattern_ops
+    t.index ["cusip"], name: "index_instruments_on_cusip"
+    t.index ["figi"], name: "index_instruments_on_figi"
+    t.index ["isin"], name: "index_instruments_on_isin"
+    t.index ["issuer_id"], name: "index_instruments_on_issuer_id"
+    t.index ["pooled_instrument_id"], name: "index_instruments_on_pooled_instrument_id"
+    t.index ["sedol"], name: "index_instruments_on_sedol"
   end
 
   create_table "issuer_exceptions", force: :cascade do |t|
@@ -108,11 +101,8 @@ ActiveRecord::Schema.define(version: 2018_08_08_213902) do
     t.date "file_date", null: false
     t.string "tablename", limit: 64, null: false
     t.string "name_in_datasource", limit: 128
-    t.index ["datasource_id", "file_date"], name: "exceptions_file_date_issuer"
     t.index ["datasource_id", "file_date"], name: "index_issuer_exceptions_on_datasource_id_and_file_date"
     t.index ["datasource_id", "name_in_datasource"], name: "index_issuer_exceptions_on_datasource_id_and_name_in_datasource", unique: true
-    t.index ["datasource_id", "name_in_datasource"], name: "no_dup_excs", unique: true
-    t.index ["datasource_id"], name: "fki_fk_exception_datasource"
     t.index ["datasource_id"], name: "index_issuer_exceptions_on_datasource_id"
   end
 
@@ -120,19 +110,14 @@ ActiveRecord::Schema.define(version: 2018_08_08_213902) do
     t.string "name", limit: 32, null: false
     t.integer "datasource_id", limit: 2, null: false
     t.integer "issuer_id"
-    t.index ["datasource_id"], name: "fki_src_key"
     t.index ["datasource_id"], name: "index_issuer_variants_on_datasource_id"
     t.index ["name", "issuer_id"], name: "index_issuer_variants_on_name_and_issuer_id", unique: true
-    t.index ["name", "issuer_id"], name: "uniq_names", unique: true
     t.index ["name"], name: "index_issuer_variants_on_name"
-    t.index ["name"], name: "issuer_name", opclass: :varchar_pattern_ops
   end
 
   create_table "issuers", force: :cascade do |t|
     t.string "name", limit: 32, null: false
     t.index ["name"], name: "index_issuers_on_name", unique: true
-    t.index ["name"], name: "name_idx", opclass: :varchar_pattern_ops
-    t.index ["name"], name: "no_dups_names", unique: true
   end
 
   create_table "known_exceptions", force: :cascade do |t|
@@ -143,7 +128,6 @@ ActiveRecord::Schema.define(version: 2018_08_08_213902) do
     t.string "id_type", limit: 8, null: false
     t.string "id_value", limit: 12, null: false
     t.string "figi", limit: 12
-    t.index ["datasource_id"], name: "fki_fk_known_ex_ds"
     t.index ["datasource_id"], name: "index_known_exceptions_on_datasource_id"
   end
 
@@ -153,10 +137,7 @@ ActiveRecord::Schema.define(version: 2018_08_08_213902) do
     t.bigint "pooled_instrument_id", null: false
     t.string "name_in_datasource", limit: 128, null: false
     t.text "datasource_lines", null: false
-    t.index ["datasource_id", "file_date", "pooled_instrument_id", "name_in_datasource"], name: "detect_dups", unique: true
     t.index ["datasource_id", "file_date", "pooled_instrument_id", "name_in_datasource"], name: "no_dups_piexc", unique: true
-    t.index ["datasource_id"], name: "fki_fk_comp_datasource"
-    t.index ["pooled_instrument_id"], name: "fki_fk_composite_ex_pooled"
   end
 
   create_table "pooled_instrument_overwrites", force: :cascade do |t|
@@ -226,12 +207,9 @@ ActiveRecord::Schema.define(version: 2018_08_08_213902) do
     t.decimal "other_expenses", precision: 18, scale: 6
     t.boolean "approved", default: false, null: false
     t.bigint "pooled_instrument_id"
-    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "created_at", default: -> { "now()" }, null: false
     t.index ["composite_ticker"], name: "index_pooled_instruments_on_composite_ticker"
-    t.index ["composite_ticker"], name: "ticker", opclass: :varchar_ops
-    t.index ["instrument_id"], name: "fki_fk_comp_instr"
     t.index ["instrument_id"], name: "index_pooled_instruments_on_instrument_id"
-    t.index ["issuer_id"], name: "fki_fk_comp_issuer"
     t.index ["issuer_id"], name: "index_pooled_instruments_on_issuer_id"
   end
 
@@ -300,17 +278,6 @@ ActiveRecord::Schema.define(version: 2018_08_08_213902) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
-  add_foreign_key "instrument_exceptions", "datasources", name: "fk_datasource"
-  add_foreign_key "instruments", "issuers", name: "fk_issuer"
-  add_foreign_key "issuer_exceptions", "datasources", name: "fk_exception_datasource"
-  add_foreign_key "issuer_variants", "datasources", name: "src_key"
-  add_foreign_key "issuer_variants", "issuers", name: "fk_issuer"
-  add_foreign_key "known_exceptions", "datasources", name: "fk_known_ex_ds"
-  add_foreign_key "pooled_instrument_exceptions", "datasources", name: "fk_comp_datasource"
-  add_foreign_key "pooled_instrument_exceptions", "pooled_instruments", name: "fk_composite_ex_pooled"
-  add_foreign_key "pooled_instrument_exceptions", "pooled_instruments", name: "fk_composite_exceptions"
-  add_foreign_key "pooled_instrument_overwrites", "datasources", name: "piex_datasrc"
-  add_foreign_key "pooled_instruments", "issuers", name: "fk_comp_issuer"
   add_foreign_key "ts_composites", "datasources"
   add_foreign_key "ts_composites", "pooled_instruments"
   add_foreign_key "ts_constituents", "datasources"

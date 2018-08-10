@@ -5,7 +5,7 @@ namespace :db do
     job = Kiba.parse do
       source BmoBasketsSource, args[:filepath]
       transform BmoBasketsTransformer, :target_date => args[:target_date]
-      destination BmoBasketsDestination, "postgresql://rails@localhost:5432/etfg_datafeed_etl"
+      destination BmoBasketsDestination
     end
     
     Kiba.run(job)      
@@ -17,7 +17,7 @@ namespace :db do
     job = Kiba.parse do
       source CSVSource, args[:filepath], :headers => true, :liberal_parsing => true
       transform BmoHoldingsTransformer, :target_date => args[:target_date]
-      destination BmoHoldingsDestination, "postgresql://rails@localhost:5432/etfg_datafeed_etl"
+      destination BmoHoldingsDestination
     end
     
     Kiba.run(job)      

@@ -1,0 +1,61 @@
+We need to write to primary import tables in the feed schema (in rake functions called by the direct feed DAGs),
+while the workbench needs to read/write and manage tables in the public schema.
+
+The connection part is relatively easy (described below). It's managing the migrations in the face of multiple schemas
+that isn't well supported by Rails, and needs minorly hacky monkey patches to succeed.
+
+First, the connections are managed by separate database.yml files in /config:
+(database.yml for public, database_feed.yml for the feeds). These point at databases for the different environments,
+and also set the schema_search_path to public or feed, respectively. In this case we are pointing to the same database,
+and only switching schemas. We could also add the "database" key to point to a completely different database, if required.
+
+To access the non-default database.yml file, we load it using the feed_schema initializer into the FEED_SCHEMA variable.
+We then override ActiveRecord::Base for the models we want to go in the feed schema, like so:
+
+class FeedSchemaBase < ActiveRecord::Base  
+  self.abstract_class = true
+  establish_connection FEED_SCHEMA
+end
+
+class ModelInTheFeedSchema < FeedSchemaBase
+end
+...
+
+This ensures ActiveRecord is pointing to the correct database and schema when working with that model.
+
+However, the Rails migration mechanism hard-codes to the default schema. So we can do a migration with only this
+infrastructure -- however, it will not properly initialize the database (no schema_migrations table), and will not
+record anything in schema.db. So, no record of it and, because there is no schema_migrations table, it's not possible to
+revert.
+
+The solution is to duplicate the db directory for feed (db_feed), along with the migrations directory and schema.rb (and seeds.rb).
+How do we get Rails to use the parallel structure? By creating a rake namespace for the schema, delegating the tasks to the
+default versions -- but adding a decorator that runs before and after each delegated task to read the default configuration, 
+replace the hard-coded standard directory and database file with ones specific to this db/schema, and restoring the settings
+afterward.
+
+So, rake db:migrate calls the standard framework, addresses the public schema, and writes to db/schema.db. 
+rake feed:db:migrate wraps the regular migrate and addresses the feed schema, writing to db_feed/schema.db.
+
+The final piece is the generator. If you just call rail g migration ..., it is hard-coded to the public schema. So we have to
+override the generator in lib/generators to do the same wrapping, to write to db_feed/migrate.
+
+Well -- one more twist. What about rails g model? I would like that to work as well. Similarly, I was able to override that
+model generator, so that rails g feed_model ModelName works now, too.
+
+So, here's the process for adding a model in the feed schema:
+
+1) rails g feed_model BmoHolding - adds to db_feed/migrate
+2) Check that the migration class is FeedMigrationBase, not ActiveRecord::Migration[5.2] (the new template should make this substitution)
+3) Change the model file to < FeedSchemaBase instead of < ApplicationRecord (template cannot do this because of threading!)
+   Document that it is in the feed schema in a comment
+4) bundle exec rake feed:db:migrate - this will run the migration, updating db_feed/schema.rb
+5) To change it later, run "rails g feed_migration NameOfMigration", then rake feed:db:migrate again
+
+For reference, see the inspiration for all this at:
+http://www.ostinelli.net/setting-multiple-databases-rails-definitive-guide/ for a how-to!
+
+It is not perfect. add_foreign_key doesn't work across schemas. Maybe I could override and make it work, but... diminishing returns at this
+point. Also, it doesn't seem to do migrations atomically. If a migration creates a table and then an index, and the index creation fails
+(e.g., name too long), it will still create the table, so the next time you run it you'll get an error and have to temporarily comment out
+the table create. But, good enough!

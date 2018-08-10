@@ -28,6 +28,8 @@ module EtfgEtl
     # the framework and any gems in your application.
     config.time_zone = 'Eastern Time (US & Canada)'
 
+    config.paths.add Rails.root.join('lib', 'generators').to_s, :eager_load => true
+
     # Don't generate system test files.
     #config.generators.system_tests = nil
     config.app_generators do |g|

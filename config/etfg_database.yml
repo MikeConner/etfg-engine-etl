@@ -1,9 +1,0 @@
-development: &default
-  adapter: postgresql
-  encoding: unicode
-  pool: 100
-  timeout: 5000
-  host: 172.16.200.104
-  username: etfg
-  password: ShortEverything!
-  schema_search_path: "import"
