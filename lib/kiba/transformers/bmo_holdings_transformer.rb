@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require 'data_validation'
+require 'bmo_helper'
 
 class BmoHoldingsTransformer
   # This file has a single format with the following fields
