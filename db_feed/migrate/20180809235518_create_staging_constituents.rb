@@ -31,6 +31,7 @@ class CreateStagingConstituents < FeedMigrationBase[5.2]
       t.string :industry_group, :limit => 128
       t.string :subindustry, :limit => 128
       t.string :rating, :limit => 32
+      t.boolean :match, :null => false, :default => false
     end
     
     # These don't work cross-schema, at least not in migrations

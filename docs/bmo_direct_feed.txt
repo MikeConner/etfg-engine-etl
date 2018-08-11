@@ -1,0 +1,83 @@
+Algorithm (ETL):
+  Process the holdings file - add to bmo_holdings
+  Process the baskets file - add to bmo_basket_composites, bmo_basket_constituents
+  
+Algorithm (DAGS):
+  Load the mapping from BMO composite tickers -> Figi (so that we can create the pooled instruments)
+  Go through the holdings file, look up in basket_constituents by composite_ticker/constituent_name
+     If not found, look up by composite_ticker/constituent_ticker
+  If there's a match, use the price from the basket_constituents to the holdings row to fill in
+    market_value = bmo_holdings.total_shares_held * bmo_basket_constituents.price
+    Then lookup the composite_ticker in bmo_basket_composites, and fill in the weight:
+    weight = bmo_holdings.market_value / (bmo_basket_composites.nav * bmo_basket_composites.units_outstanding)   
+    (Of course, fetch all the composites with a single query, calculate and cache the denominators so that it's a memory lookup)
+    As each row is complete, write to staging_constituents
+      (don't have market_value/weight columns -- or any extra/calculated columns -- in feed tables)
+  Copy bmo_basket_composites to staging_composites
+    
+    
+The holdings file has the constituents. The date is in the filename: ETFDailyHoldings-20180119.csv
+
+Ticker	InstrumentType	Name	               SEDOL	CUSIP	  SecurityID	Quantity/ParAmount
+BANK	Equity	        AOZORA BANK LTD	       B1G1854		      8304 JP	    200
+BANK	Equity	        ASSOCIATED BANC-CORP   2055718	045487105 ASB US	    320
+
+
+From this file, we need:
+Ticker: (I composite_ticker) -> bmo_holdings.composite_ticker -> staging_constituents.composite_ticker
+Name: (I constituent_name) -> bmo_holdings.constituent_name -> staging_constituents.constituent_name
+Sedol, Cusip: (I instrument ids) -> bmo_holdings.sedol/cusip -> staging_constituents.sedol/cusip
+InstrumentType: unused, but there's a place for it in staging, so -> bmo_holdings.instrument_type -> staging_constituents.security_type (instruments.security_type)
+SecurityID: This is the (I constituent_ticker) + (I exchange_country) -> bmo_holdings.constituent_ticker/constituent_country -> staging_constituents.constituent_ticker/exchange_country
+            NB: If the last three characters are a space and two letters, the two letters are the country, and the rest is the ticker
+                Some don't have this pattern (bonds). If it doesn't match this pattern, the whole thing is the ticker
+Quantity: this is the (I time series total_shares_held) -> bmo_holdings.total_shares_held -> staging_constituents.total_shares_held
+
+The composite instrument country is always Canada. The prices are given in native currencies.
+
+---------------------------------------
+
+The baskets file has the composites -- and a subset of the holdings related in some murky way to how they
+need to manage the buys and sells to minimize tracking errors.
+
+There is a composite header row with these fields:
+
+Ticker	BANK (PI composite_ticker) -> bmo_basket_composites.composite_ticker -> staging_composites.composite_ticker; staging_composites.exchange_country=CA
+Fund Account Number	JH291 -> bmo_basket_composites.account_number (unused)
+Fund Name	BMO GLOBAL BANKS HEDGED TO CAD INDEX ETF (PI composite_name) -> bmo_basket_composites.composite_name -> staging_composites.composite_name
+Units Outstanding	419500 (PI time series shares_outstanding) -> bmo_basket_composites.units_outstanding -> staging_composites.shares_outstanding
+NAV ($)	22.70533 (PI time series nav) -> bmo_basket_composites.nav -> staging_composites.nav
+Proj. Cash Amt. - 22-Jan-18 ($)	-0.07989 (PI time series basket_estimated_cash) -> bmo_basket_composites.projected_cash -> staging_composites.basket_estimated_cash
+Dist. Price Adj. ($)	0 -> bmo_basket_composites.dist_price_adj (unused)
+FX Rate	1.25065 -> bmo_basket_composites.fx_rate (unused)
+MER (%)	0.35 (PI expense_ratio) -> bmo_basket_composites.mer_expense_ratio -> staging_composites.expense_ratio
+Prescribed Number of Units	100000 (PI creation_unit_size) -> bmo_basket_composites.prescribed_units -> staging_composites.creation_unit_size
+CAF(%)	0.15 -> bmo_basket_composites.caf_pct (unused)
+
+
+This is followed by the basket instruments. From this section, we want only the Name, Ticker, and Price
+Take composite_ticker from header -> bmo_basket_constituents.composite_ticker
+Name	RCI CN 03/16/18 C65 -> bmo_basket_constituents.constituent_name
+Ticker	RCI CN 03/16/18 C65 -> bmo_basket_constituents.ticker/constituent_ticker/constituent_country
+                               (If last three characters are a space and two characters, the two characters are the country.
+                                Otherwise, the whole thing is the ticker. Same logic as interpreting the SecurityID in the holdings)
+Name	REGIONS FINANCIAL CORP -> bmo_basket_constituents.constituent_name
+Ticker	RF UN US
+Shares Per Basket	564 -> bmo_basket_constituents.shares_per_basket (unused)
+Price	24.93 -> bmo_basket_constituents.price
+Number of Shares	3048 -> bmo_basket_constituents.number_shares (unused)
+Sedol	B01R311 -> bmo_basket_constituents.sedol                               
+	
+
+Then we have periodic hedge sections, which are ignored:
+Open Currency Forwards Position	Quantity	Hedged Currency (%)	FX Forward Rate	Value Date						
+AUD	-896600	-9.376854324	0.99964	20180202						
+
+Then another header row for the next composite instrument, and so on.
+
+Near the end, the detail rows for fixed incomes will look different (have CUSIPs instead of SEDOLs):
+
+Name	Coupon	Maturity	CUSIP	Par Amt	Price	Proj. Accrued Interest Amt	Market Value + Proj Int			
+
+We ignore the details, and only pick up the composites
+

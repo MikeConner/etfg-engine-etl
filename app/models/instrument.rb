@@ -10,7 +10,7 @@
 #  effective_date       :date
 #  expiration_date      :date
 #  figi                 :string(12)       not null
-#  is_exchange_figi     :boolean          not null
+#  is_exchange_figi     :boolean          default(FALSE), not null
 #  sedol                :string(7)
 #  isin                 :string(12)
 #  cusip                :string(9)
@@ -26,7 +26,7 @@
 #  subindustry          :string(128)
 #  rating               :string(32)
 #  approved             :boolean          default(FALSE), not null
-#  is_valid             :boolean          not null
+#  is_valid             :boolean          default(FALSE), not null
 #  default_instrument   :boolean          default(FALSE), not null
 #  created_at           :datetime         not null
 #  standard_name        :string(128)

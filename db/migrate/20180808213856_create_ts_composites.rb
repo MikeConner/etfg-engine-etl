@@ -8,7 +8,7 @@ class CreateTsComposites < ActiveRecord::Migration[5.2]
       t.string :composite_name, :limit => 128, :null => false
       t.decimal :aum, :precision => 18, :scale => 6
       t.decimal :shares_outstanding, :precision => 18, :scale => 6 
-      t.decimal :share_volue, :precision => 18, :scale => 6
+      t.decimal :share_value, :precision => 18, :scale => 6
       t.decimal :nav, :precision => 18, :scale => 6
       t.decimal :open_price, :precision => 18, :scale => 6
       t.decimal :low_price, :precision => 18, :scale => 6

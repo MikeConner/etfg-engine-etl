@@ -33,6 +33,8 @@ GEM
       activemodel (= 5.2.0)
       activesupport (= 5.2.0)
       arel (>= 9.0)
+    activerecord-import (0.25.0)
+      activerecord (>= 3.2)
     activestorage (5.2.0)
       actionpack (= 5.2.0)
       activerecord (= 5.2.0)
@@ -215,6 +217,7 @@ GEM
       sprockets (>= 2.8, < 4.0)
       sprockets-rails (>= 2.0, < 4.0)
       tilt (>= 1.1, < 3)
+    security_identifiers (0.2.1)
     sexp_processor (4.11.0)
     spring (2.0.2)
       activesupport (>= 4.2)
@@ -257,6 +260,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  activerecord-import (= 0.25.0)
   annotate (= 2.7.4)
   autoprefixer-rails (= 9.0.0)
   better_errors (= 2.4.0)
@@ -282,6 +286,7 @@ DEPENDENCIES
   rspec-rails (= 3.7.2)
   rspec-tag_matchers (= 0.1.2)
   sass-rails (~> 5.0)
+  security_identifiers (= 0.2.1)
   spring
   spring-watcher-listen (~> 2.0.0)
   turbolinks (~> 5)

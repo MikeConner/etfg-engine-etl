@@ -21,6 +21,8 @@ gem 'will_paginate', '3.1.6'
 gem 'foundation-will_paginate', '0.0.1'
 gem "font-awesome-rails", '4.7.0.4'
 gem 'kiba', '2.0.0'
+gem 'security_identifiers', '0.2.1'
+gem 'activerecord-import', '0.25.0'
 
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'mini_racer', platforms: :ruby

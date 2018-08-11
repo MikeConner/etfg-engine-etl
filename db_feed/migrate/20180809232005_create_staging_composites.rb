@@ -1,4 +1,4 @@
-class CreateStagingComposites < FeedMigrationBase
+class CreateStagingComposites < FeedMigrationBase[5.2]
   def change
     create_table :staging_composites do |t|
       t.date :etfg_date, :null => false
@@ -10,7 +10,7 @@ class CreateStagingComposites < FeedMigrationBase
       t.string :composite_description, :limit => 128
       t.decimal :aum, :precision => 18, :scale => 6
       t.decimal :shares_outstanding, :precision => 18, :scale => 6
-      t.decimal :share_volume, :precision => 18, :scale => 6
+      t.decimal :share_value, :precision => 18, :scale => 6
       t.decimal :nav, :precision => 18, :scale => 6
       t.decimal :open_price, :precision => 18, :scale => 6
       t.decimal :low_price, :precision => 18, :scale => 6
@@ -84,6 +84,7 @@ class CreateStagingComposites < FeedMigrationBase
       t.decimal :management_fee, :precision => 18, :scale => 6
       t.string :portfolio_manager, :limit => 128
       t.string :primary_benchmark
+      t.boolean :match, :null => false, :default => false
     end
     
     # These don't work across schemas, at least not in migrations

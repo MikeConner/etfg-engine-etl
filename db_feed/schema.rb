@@ -10,23 +10,50 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_08_09_235518) do
+ActiveRecord::Schema.define(version: 2018_08_10_224730) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
+  create_table "bmo_basket_composites", force: :cascade do |t|
+    t.date "etfg_date", null: false
+    t.string "composite_ticker", limit: 32, null: false
+    t.string "account_number", limit: 32
+    t.string "composite_name", limit: 128
+    t.decimal "units_outstanding", precision: 18, scale: 6
+    t.decimal "nav", precision: 18, scale: 6
+    t.decimal "projected_cash", precision: 18, scale: 6
+    t.decimal "dist_price_adj", precision: 18, scale: 6
+    t.decimal "fx_rate", precision: 18, scale: 6
+    t.decimal "mer_expense_ratio", precision: 18, scale: 6
+    t.decimal "prescribed_units", precision: 18, scale: 6
+    t.decimal "caf_pct", precision: 18, scale: 6
+  end
+
+  create_table "bmo_basket_constituents", force: :cascade do |t|
+    t.date "etfg_date", null: false
+    t.string "composite_ticker", limit: 32, null: false
+    t.string "ticker", limit: 64
+    t.string "constituent_ticker", limit: 64
+    t.string "constituent_name", limit: 128
+    t.string "constituent_country", limit: 32
+    t.decimal "price", precision: 18, scale: 6
+    t.decimal "shares_per_basket", precision: 18, scale: 6
+    t.decimal "number_shares", precision: 18, scale: 6
+    t.string "sedol", limit: 7
+  end
+
   create_table "bmo_holdings", id: false, force: :cascade do |t|
+    t.date "etfg_date", null: false
     t.string "composite_ticker", limit: 32, null: false
     t.string "constituent_ticker", limit: 64, null: false
     t.string "constituent_name", limit: 128
-    t.string "security_id", limit: 32
-    t.string "country", limit: 64
+    t.string "constituent_country", limit: 64
+    t.string "instrument_type", limit: 128
+    t.string "security_id", limit: 64
+    t.decimal "total_shares_held", precision: 18, scale: 6
     t.string "sedol", limit: 7
     t.string "cusip", limit: 9
-    t.string "figi", limit: 12
-    t.decimal "total_shares_held", precision: 18, scale: 6
-    t.decimal "market_value", precision: 18, scale: 6
-    t.decimal "weight", precision: 18, scale: 6
   end
 
   create_table "staging_composites", force: :cascade do |t|
@@ -39,7 +66,7 @@ ActiveRecord::Schema.define(version: 2018_08_09_235518) do
     t.string "composite_description", limit: 128
     t.decimal "aum", precision: 18, scale: 6
     t.decimal "shares_outstanding", precision: 18, scale: 6
-    t.decimal "share_volume", precision: 18, scale: 6
+    t.decimal "share_value", precision: 18, scale: 6
     t.decimal "nav", precision: 18, scale: 6
     t.decimal "open_price", precision: 18, scale: 6
     t.decimal "low_price", precision: 18, scale: 6
@@ -113,6 +140,7 @@ ActiveRecord::Schema.define(version: 2018_08_09_235518) do
     t.decimal "management_fee", precision: 18, scale: 6
     t.string "portfolio_manager", limit: 128
     t.string "primary_benchmark"
+    t.boolean "match", default: false, null: false
     t.index ["as_of_date", "datasource_id"], name: "index_staging_composites_on_as_of_date_and_datasource_id"
     t.index ["composite_ticker", "exchange_country"], name: "ticker_country_composites"
     t.index ["composite_ticker"], name: "index_staging_composites_on_composite_ticker"
@@ -151,6 +179,7 @@ ActiveRecord::Schema.define(version: 2018_08_09_235518) do
     t.string "industry_group", limit: 128
     t.string "subindustry", limit: 128
     t.string "rating", limit: 32
+    t.boolean "match", default: false, null: false
     t.index ["as_of_date", "datasource_id"], name: "index_staging_constituents_on_as_of_date_and_datasource_id"
     t.index ["composite_ticker", "exchange_country"], name: "ticker_country_constituents"
     t.index ["composite_ticker"], name: "index_staging_constituents_on_composite_ticker"
