@@ -25,6 +25,38 @@ ActiveRecord::Schema.define(version: 2018_08_15_042529) do
     t.index ["datasource_id", "file_date"], name: "speed_up_ambigs"
   end
 
+  create_table "bmo_baskets", force: :cascade do |t|
+    t.string "fund_ticker"
+    t.string "fund_account_number"
+    t.string "fund_name"
+    t.decimal "units_outstanding"
+    t.decimal "nav"
+    t.decimal "project_cash_amount"
+    t.decimal "dist_price_adj"
+    t.decimal "fx_rate"
+    t.decimal "mer"
+    t.integer "prescribed_number_of_units"
+    t.decimal "caf"
+    t.string "name"
+    t.string "ticker"
+    t.integer "shares_per_basket"
+    t.decimal "price"
+    t.integer "number_of_shares"
+    t.string "sedol"
+    t.date "etfg_date"
+  end
+
+  create_table "bmo_daily_holdings", force: :cascade do |t|
+    t.string "ticker"
+    t.string "instrument_type"
+    t.string "name"
+    t.string "sedol"
+    t.string "cusip"
+    t.string "security_id"
+    t.integer "quantity_per_paramount"
+    t.date "etfg_date"
+  end
+
   create_table "composite_figis", force: :cascade do |t|
     t.string "figi", limit: 12, null: false
     t.string "composite_figi", limit: 12, null: false
