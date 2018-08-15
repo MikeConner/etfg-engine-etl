@@ -5,9 +5,9 @@
 #  id                    :bigint(8)        not null, primary key
 #  etfg_date             :date             not null
 #  datasource_id         :integer          not null
-#  pooled_instrument_id  :bigint(8)        not null
+#  pooled_instrument_id  :bigint(8)
 #  composite_ticker      :string(32)
-#  composite_name        :string(128)      not null
+#  composite_name        :string(128)
 #  aum                   :decimal(18, 6)
 #  shares_outstanding    :decimal(18, 6)
 #  share_value           :decimal(18, 6)

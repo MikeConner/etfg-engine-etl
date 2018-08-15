@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_08_09_200545) do
+ActiveRecord::Schema.define(version: 2018_08_15_042529) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -216,9 +216,9 @@ ActiveRecord::Schema.define(version: 2018_08_09_200545) do
   create_table "ts_composites", force: :cascade do |t|
     t.date "etfg_date", null: false
     t.integer "datasource_id", limit: 2, null: false
-    t.bigint "pooled_instrument_id", null: false
+    t.bigint "pooled_instrument_id"
     t.string "composite_ticker", limit: 32
-    t.string "composite_name", limit: 128, null: false
+    t.string "composite_name", limit: 128
     t.decimal "aum", precision: 18, scale: 6
     t.decimal "shares_outstanding", precision: 18, scale: 6
     t.decimal "share_value", precision: 18, scale: 6
@@ -243,12 +243,12 @@ ActiveRecord::Schema.define(version: 2018_08_09_200545) do
   create_table "ts_constituents", force: :cascade do |t|
     t.date "etfg_date", null: false
     t.integer "datasource_id", limit: 2, null: false
-    t.bigint "pooled_instrument_id", null: false
-    t.bigint "instrument_id", null: false
+    t.bigint "pooled_instrument_id"
+    t.bigint "instrument_id"
     t.string "composite_ticker", limit: 32
-    t.string "composite_name", limit: 128, null: false
+    t.string "composite_name", limit: 128
     t.string "constituent_ticker", limit: 64
-    t.string "constituent_name", limit: 128, null: false
+    t.string "constituent_name", limit: 128
     t.decimal "weight", precision: 18, scale: 6
     t.decimal "market_value", precision: 18, scale: 6
     t.decimal "notional_value", precision: 18, scale: 6
@@ -279,8 +279,5 @@ ActiveRecord::Schema.define(version: 2018_08_09_200545) do
   end
 
   add_foreign_key "ts_composites", "datasources"
-  add_foreign_key "ts_composites", "pooled_instruments"
   add_foreign_key "ts_constituents", "datasources"
-  add_foreign_key "ts_constituents", "instruments"
-  add_foreign_key "ts_constituents", "pooled_instruments"
 end
