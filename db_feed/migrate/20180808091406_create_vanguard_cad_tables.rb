@@ -23,9 +23,10 @@ class CreateVanguardCadTables < FeedMigrationBase[5.2]
       t.string :country
       t.string :security_depository_receipt_type
       t.integer :market_value
-      t.integer :face_amount
+      t.bigint :face_amount
       t.decimal :coupon_rate
-      t.date :maturity_date
+      t.date :maturity_date_start
+      t.date :maturity_date_end
       t.integer :shares
       t.string :currency_code
       t.string :currency_symbol
