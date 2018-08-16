@@ -1,4 +1,4 @@
-class CreateVanguardCadTables < ActiveRecord::Migration[5.2]
+class CreateVanguardCadTables < FeedMigrationBase[5.2]
   def change
     create_table :vanguard_cad_all_fund_holdings do |t|
       t.string :fund_ticker
