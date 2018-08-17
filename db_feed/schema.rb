@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_08_10_224730) do
+ActiveRecord::Schema.define(version: 2018_08_16_043408) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -54,6 +54,21 @@ ActiveRecord::Schema.define(version: 2018_08_10_224730) do
     t.decimal "total_shares_held", precision: 18, scale: 6
     t.string "sedol", limit: 7
     t.string "cusip", limit: 9
+  end
+
+  create_table "df_composite_identifiers", id: false, force: :cascade do |t|
+    t.integer "datasource_id", limit: 2, null: false
+    t.string "ticker", limit: 32, null: false
+    t.string "name", limit: 128
+    t.string "figi", limit: 12, null: false
+    t.boolean "composite_figi", default: true, null: false
+    t.string "sedol", limit: 7
+    t.string "isin", limit: 12
+    t.string "cusip", limit: 9
+    t.string "secid", limit: 12
+    t.index ["datasource_id", "ticker"], name: "index_df_composite_identifiers_on_datasource_id_and_ticker", unique: true
+    t.index ["figi"], name: "index_df_composite_identifiers_on_figi", unique: true
+    t.index ["ticker"], name: "index_df_composite_identifiers_on_ticker"
   end
 
   create_table "staging_composites", force: :cascade do |t|

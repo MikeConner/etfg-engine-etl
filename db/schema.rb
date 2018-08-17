@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_08_15_042529) do
+ActiveRecord::Schema.define(version: 2018_08_16_195445) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,6 +23,12 @@ ActiveRecord::Schema.define(version: 2018_08_15_042529) do
     t.bigint "resolved_id"
     t.index ["datasource_id", "file_date", "datasource_line"], name: "no_dups_ambigs", unique: true
     t.index ["datasource_id", "file_date"], name: "speed_up_ambigs"
+  end
+
+  create_table "cached_figis", force: :cascade do |t|
+    t.string "input_ids", null: false
+    t.date "last_updated"
+    t.index ["input_ids"], name: "index_cached_figis_on_input_ids", unique: true
   end
 
   create_table "composite_figis", force: :cascade do |t|
@@ -88,6 +94,7 @@ ActiveRecord::Schema.define(version: 2018_08_15_042529) do
     t.string "standard_name", limit: 128
     t.bigint "pooled_instrument_id"
     t.bigint "instrument_id"
+    t.string "secid", limit: 12
     t.index ["cusip"], name: "index_instruments_on_cusip"
     t.index ["figi"], name: "index_instruments_on_figi"
     t.index ["isin"], name: "index_instruments_on_isin"
@@ -208,6 +215,7 @@ ActiveRecord::Schema.define(version: 2018_08_15_042529) do
     t.boolean "approved", default: false, null: false
     t.bigint "pooled_instrument_id"
     t.datetime "created_at", default: -> { "now()" }, null: false
+    t.string "secid", limit: 12
     t.index ["composite_ticker"], name: "index_pooled_instruments_on_composite_ticker"
     t.index ["instrument_id"], name: "index_pooled_instruments_on_instrument_id"
     t.index ["issuer_id"], name: "index_pooled_instruments_on_issuer_id"

@@ -1,4 +1,4 @@
-namespace :db do
+namespace :bmo do
   desc "transform BMO baskets"
   task :transform_baskets, [:target_date, :filepath] => :environment do |t, args|
     # args[:coasdf]
