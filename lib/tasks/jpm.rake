@@ -11,14 +11,15 @@ namespace :jpm do
     files.each do |fname|
       begin
         File.open(fname).each do |line|
-          puts line.strip
-          date = Date.strptime(line.strip, '%m/%d/%y')
+          fields = line.split(/,/)
+	  date = Date.strptime(fields[2].gsub('"',''), '%m/%d/%y')
+          
+	  rename = "#{args[:filepath]}/Flexshares_NAV.#{date.strftime('%Y%m%d')}.csv"
+          FileUtils.mv(fname, rename)
+          successes += 1
           break
         end
         
-        rename = "Flexshares_NAV.#{date.strftime('%Y%m%d')}.csv"
-        FileUtils.mv(fname, rename)
-        successes += 1
       rescue Exception => ex
         puts "Could not process #{fname}: #{ex.message}"
         errors += 1
@@ -32,10 +33,10 @@ namespace :jpm do
         date = nil
         File.open(fname).each do |line|
           break if idx > 3
-          puts line
           
           if line =~ /As Of Date: (.*)/i
             date = Date.strptime($1.strip, '%d-%b-%Y')
+	    break
           end
           
           idx += 1
@@ -47,7 +48,7 @@ namespace :jpm do
           next
         end
         
-        rename = "Flexshares_Positions.#{date.strftime('%Y%m%d')}.csv"
+        rename = "#{args[:filepath]}/Flexshares_Positions.#{date.strftime('%Y%m%d')}.csv"
         FileUtils.mv(fname, rename)
         successes += 1
       rescue Exception => ex
