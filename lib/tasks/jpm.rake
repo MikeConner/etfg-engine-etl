@@ -2,7 +2,7 @@ require 'fileutils'
 
 namespace :jpm do
   desc "Date JPM NAV files"
-  task :date_nav, [:filepath] => :environment do |t, args|
+  task :make_filenames_atomic, [:filepath] => :environment do |t, args|
     # args[:coasdf]
     errors = 0
     successes = 0
@@ -12,9 +12,9 @@ namespace :jpm do
       begin
         File.open(fname).each do |line|
           fields = line.split(/,/)
-	  date = Date.strptime(fields[2].gsub('"',''), '%m/%d/%y')
+	        date = Date.strptime(fields[2].gsub('"',''), '%m/%d/%y')
           
-	  rename = "#{args[:filepath]}/Flexshares_NAV.#{date.strftime('%Y%m%d')}.csv"
+	        rename = "#{args[:filepath]}/Flexshares_NAV.#{date.strftime('%Y%m%d')}.csv"
           FileUtils.mv(fname, rename)
           successes += 1
           break
@@ -36,7 +36,7 @@ namespace :jpm do
           
           if line =~ /As Of Date: (.*)/i
             date = Date.strptime($1.strip, '%d-%b-%Y')
-	    break
+	          break
           end
           
           idx += 1
