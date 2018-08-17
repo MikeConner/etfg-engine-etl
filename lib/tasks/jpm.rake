@@ -10,16 +10,33 @@ namespace :jpm do
     files = Dir["#{args[:filepath]}/raw/FlexsharesALLNAVFTP*"]
     files.each do |fname|
       begin
+        date = nil
         File.open(fname).each do |line|
           fields = line.split(/,/)
 	        date = Date.strptime(fields[2].gsub('"',''), '%m/%d/%y')
-          
-	        rename = "#{args[:filepath]}/Flexshares_NAV.#{date.strftime('%Y%m%d')}.csv"
-          FileUtils.mv(fname, rename)
-          successes += 1
           break
         end
         
+        if date.nil?
+          puts "Could not find date in #{fname}"
+          errors += 1
+        else          
+          rename = "#{args[:filepath]}/Flexshares_NAV.#{date.strftime('%Y%m%d')}.csv"
+          File.open(rename, 'w') do |fout|
+            first = true
+            
+            File.open(fname).each do |line|
+              if first
+                first = false
+              else
+                fout.puts line
+              end
+            end
+          end
+          
+          FileUtils.rm(fname)
+          successes += 1
+        end
       rescue Exception => ex
         puts "Could not process #{fname}: #{ex.message}"
         errors += 1
