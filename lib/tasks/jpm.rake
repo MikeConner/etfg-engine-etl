@@ -13,7 +13,7 @@ namespace :jpm do
         date = nil
         File.open(fname).each do |line|
           fields = line.split(/,/)
-	        date = Date.strptime(fields[2].gsub('"',''), '%m/%d/%y')
+	        date = Date.strptime(fields[2].gsub('"',''), '%m/%d/%Y')
           break
         end
         
