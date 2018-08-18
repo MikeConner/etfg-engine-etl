@@ -66,7 +66,23 @@ namespace :jpm do
         end
         
         rename = "#{args[:filepath]}/Flexshares_Positions.#{date.strftime('%Y%m%d')}.csv"
-        FileUtils.mv(fname, rename)
+        File.open(rename, 'w') do |fout|
+          header = true
+          
+          File.open(fname).each do |line|
+            if header
+              if line =~ /Account Number/
+                header = false
+              else
+                next
+              end
+            end
+            
+            fout.puts line
+          end
+        end
+        
+        FileUtils.rm(fname)
         successes += 1
       rescue Exception => ex
         puts "Could not process #{fname}: #{ex.message}"
@@ -77,5 +93,5 @@ namespace :jpm do
     if errors > 1
       raise "Conversion errors: #{errors} (Converted: #{successes})"
     end
-  end
+  end  
 end
