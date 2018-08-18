@@ -7,7 +7,7 @@ namespace :jpm do
     errors = 0
     successes = 0
     
-    files = Dir["#{args[:filepath]}/raw/FlexsharesALLNAVFTP*"]
+    files = Dir["#{args[:filepath]}/raw/FlexsharesALLNAVFTP*.csv"]
     files.each do |fname|
       begin
         date = nil
@@ -43,7 +43,7 @@ namespace :jpm do
       end
     end
     
-    files = Dir["#{args[:filepath]}/raw/CW_NORTHERNTQ_*"]
+    files = Dir["#{args[:filepath]}/raw/CW_NORTHERNTQ_*.csv"]
     files.each do |fname|
       begin
         idx = 0
@@ -82,7 +82,8 @@ namespace :jpm do
           end
         end
         
-        FileUtils.rm(fname)
+        # Add the check to make sure we're not deleting files that weren't processed!
+        FileUtils.rm(fname) unless header
         successes += 1
       rescue Exception => ex
         puts "Could not process #{fname}: #{ex.message}"
