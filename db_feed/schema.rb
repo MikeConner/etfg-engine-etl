@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_08_17_063724) do
+ActiveRecord::Schema.define(version: 2018_08_20_081053) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -248,6 +248,21 @@ ActiveRecord::Schema.define(version: 2018_08_17_063724) do
     t.integer "application_value"
     t.decimal "sum_of_market_value"
     t.decimal "actualcash"
+    t.date "etfg_date"
+  end
+
+  create_table "vanguard_us_factor_fund_holdings", force: :cascade do |t|
+    t.string "fund_ticker"
+    t.string "fund_name"
+    t.integer "fund_id"
+    t.date "as_of_date"
+    t.string "asset_type"
+    t.string "holding_name"
+    t.string "ticker"
+    t.string "isin"
+    t.decimal "percent_of_fund"
+    t.bigint "market_value"
+    t.bigint "shares"
     t.date "etfg_date"
   end
 
