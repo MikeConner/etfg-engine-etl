@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_08_21_042319) do
+ActiveRecord::Schema.define(version: 2018_08_21_084907) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,6 +38,20 @@ ActiveRecord::Schema.define(version: 2018_08_21_042319) do
     t.decimal "vxx_closing_nav"
     t.decimal "accrued_fees"
     t.decimal "accrued_interest"
+    t.date "etfg_date"
+  end
+
+  create_table "barclays_etns_eod", force: :cascade do |t|
+    t.string "cusip"
+    t.string "isin"
+    t.string "ticker"
+    t.date "date"
+    t.string "name"
+    t.decimal "indicative_value"
+    t.integer "shares_outstanding"
+    t.decimal "index_value"
+    t.decimal "coupon"
+    t.decimal "market_capitalization"
     t.date "etfg_date"
   end
 
