@@ -11,7 +11,9 @@ namespace :jpm do
     files.each do |fname|
       begin
         date = nil
+        puts "Reading #{fname}"
         File.open(fname).each do |line|
+          puts "First line is #{line}"
           fields = line.split(/,/)
 	        date = Date.strptime(fields[2].gsub('"',''), '%m/%d/%Y')
           break
@@ -48,7 +50,9 @@ namespace :jpm do
       begin
         idx = 0
         date = nil
+        puts "Reading #{fname}"
         File.open(fname).each do |line|
+          puts "Line #{idx + 1}: #{line}"
           break if idx > 3
           
           if line =~ /As Of Date: (.*)/i
