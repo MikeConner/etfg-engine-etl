@@ -10,10 +10,36 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_08_16_043408) do
+ActiveRecord::Schema.define(version: 2018_08_21_042319) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "barclays_calendar_letns_eod", force: :cascade do |t|
+    t.string "cusip"
+    t.string "isin"
+    t.string "ticker"
+    t.date "date"
+    t.string "name"
+    t.decimal "indicative_value"
+    t.integer "shares_outstanding"
+    t.decimal "index_value"
+    t.decimal "coupon"
+    t.decimal "market_capitalization"
+    t.decimal "closing_participation"
+    t.decimal "closing_note_financing_level"
+    t.decimal "closing_note_t_bills_amount"
+    t.decimal "closing_note_index_exposure"
+    t.decimal "next_closing_note_financing_level"
+    t.decimal "next_closing_note_t_bills_amount"
+    t.decimal "equity_allocation"
+    t.decimal "vol_allocation"
+    t.decimal "short_vxx_shares"
+    t.decimal "vxx_closing_nav"
+    t.decimal "accrued_fees"
+    t.decimal "accrued_interest"
+    t.date "etfg_date"
+  end
 
   create_table "bmo_basket_composites", force: :cascade do |t|
     t.date "etfg_date", null: false
