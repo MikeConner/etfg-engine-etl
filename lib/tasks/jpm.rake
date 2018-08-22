@@ -13,7 +13,6 @@ namespace :jpm do
         date = nil
         puts "Reading #{fname}"
         File.open(fname).each do |line|
-          puts "First line is #{line}"
           fields = line.split(/,/)
 	        date = Date.strptime(fields[2].gsub('"',''), '%m/%d/%Y')
           break
@@ -24,6 +23,7 @@ namespace :jpm do
           errors += 1
         else          
           rename = "#{args[:filepath]}/Flexshares_NAV.#{date.strftime('%Y%m%d')}.csv"
+          puts "Writing #{rename}"
           File.open(rename, 'w') do |fout|
             first = true
             
@@ -57,7 +57,7 @@ namespace :jpm do
           
           if line =~ /As Of Date: (.*)/i
             date = Date.strptime($1.strip, '%d-%b-%Y')
-	          break
+	    break
           end
           
           idx += 1
@@ -84,11 +84,12 @@ namespace :jpm do
             
             fout.puts line
           end
+	  # Add the check to make sure we're not deleting files that weren't processed
+	  unless header
+            FileUtils.rm(fname)
+            successes += 1
+          end
         end
-        
-        # Add the check to make sure we're not deleting files that weren't processed!
-        FileUtils.rm(fname) unless header
-        successes += 1
       rescue Exception => ex
         puts "Could not process #{fname}: #{ex.message}"
         errors += 1
