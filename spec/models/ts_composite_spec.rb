@@ -23,6 +23,7 @@
 #  avg_midpoint          :decimal(18, 6)
 #  basket_estimated_cash :decimal(18, 6)
 #  publish               :boolean          default(FALSE), not null
+#  as_of_date            :date             not null
 #
 
 RSpec.describe 'TsComposite', type: :model do

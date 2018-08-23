@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_08_16_195445) do
+ActiveRecord::Schema.define(version: 2018_08_23_170610) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -242,6 +242,7 @@ ActiveRecord::Schema.define(version: 2018_08_16_195445) do
     t.decimal "avg_midpoint", precision: 18, scale: 6
     t.decimal "basket_estimated_cash", precision: 18, scale: 6
     t.boolean "publish", default: false, null: false
+    t.date "as_of_date", null: false
     t.index ["datasource_id"], name: "index_ts_composites_on_datasource_id"
     t.index ["etfg_date", "datasource_id"], name: "index_ts_composites_on_etfg_date_and_datasource_id"
     t.index ["etfg_date"], name: "index_ts_composites_on_etfg_date"
@@ -262,6 +263,7 @@ ActiveRecord::Schema.define(version: 2018_08_16_195445) do
     t.decimal "notional_value", precision: 18, scale: 6
     t.decimal "total_shares_held", precision: 18, scale: 6
     t.boolean "publish", default: false, null: false
+    t.date "as_of_date", null: false
     t.index ["datasource_id"], name: "index_ts_constituents_on_datasource_id"
     t.index ["etfg_date", "datasource_id"], name: "index_ts_constituents_on_etfg_date_and_datasource_id"
     t.index ["etfg_date"], name: "index_ts_constituents_on_etfg_date"

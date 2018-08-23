@@ -16,6 +16,7 @@
 #  notional_value       :decimal(18, 6)
 #  total_shares_held    :decimal(18, 6)
 #  publish              :boolean          default(FALSE), not null
+#  as_of_date           :date             not null
 #
 
 class TsConstituent < ApplicationRecord
