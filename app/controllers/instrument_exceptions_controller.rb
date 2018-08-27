@@ -3,9 +3,12 @@ class InstrumentExceptionsController < ApplicationController
   
   def index
     @skipped = 'true' == params[:skipped]
-    @total = InstrumentException.count
+    @datasources = Datasource.find(InstrumentException.all.map(&:datasource_id).uniq)
+    @selected_source = params[:src_id]
     # Included skipped param when we have it
-    @exceptions = InstrumentException.order(:name_in_datasource).limit(50)
+    @exceptions = @selected_source.nil? ? InstrumentException.order(:name_in_datasource).limit(50) : 
+      InstrumentException.where(:datasource_id => @selected_source).order(:name_in_datasource).limit(50)
+    @total = @selected_source.nil? ? InstrumentException.count : InstrumentException.where(:datasource_id => @selected_source).count
     
     render :layout => 'admin'
   end

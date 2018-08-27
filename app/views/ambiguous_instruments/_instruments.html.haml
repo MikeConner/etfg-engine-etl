@@ -1,0 +1,25 @@
+%h1 Ambiguous Instruments
+- if exceptions.empty?
+  %h3 No Exceptions
+- else
+  %table.table.zebra-striped
+    %thead
+      %tr
+        %th Date
+        %th Source
+        %th Line #
+        %th Candidates
+        %th Resolution
+    %tbody
+      - exceptions.each do |exception|
+        %tr
+          %td= exception.file_date
+          %td= exception.datasource.data_source_name
+          %td= exception.datasource_line
+          %td
+            - exception.instrument_list.split(',').each do |i|
+              - instrument = Instrument.find(i)
+              = link_to "#{instrument.standard_name} (#{instrument.instrument_id})", instruments_path(:id_set => exception.instrument_list), :target => '_blank'
+              %br
+          %td= text_field_tag :resolved_id
+            

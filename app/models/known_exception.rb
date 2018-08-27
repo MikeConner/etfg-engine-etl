@@ -13,4 +13,5 @@
 #
 
 class KnownException < ApplicationRecord
+  belongs_to :datasource
 end

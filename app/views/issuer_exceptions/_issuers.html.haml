@@ -1,0 +1,21 @@
+%h1 Issuer Exceptions
+- if exceptions.empty?
+  %h3 No Exceptions
+- else
+  %table.table.zebra-striped
+    %thead
+      %tr
+        %th Date
+        %th Source
+        %th Unknown Name
+        %th
+    %tbody
+      - exceptions.each do |exception|
+        - source = exception.datasource
+        %tr
+          %td= exception.file_date
+          %td
+            = source.data_source_name
+            - df = source.is_direct_feed ? ' (DF)' : ''
+            = df
+          %td= exception.name_in_datasource

@@ -11,4 +11,6 @@
 #
 
 class PooledInstrumentException < ApplicationRecord
+  belongs_to :pooled_instrument
+  belongs_to :datasource
 end

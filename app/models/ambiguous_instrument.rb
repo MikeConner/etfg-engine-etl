@@ -11,4 +11,5 @@
 #
 
 class AmbiguousInstrument < ApplicationRecord
+  belongs_to :datasource
 end

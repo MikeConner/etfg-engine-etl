@@ -1,0 +1,16 @@
+.container
+  .span12
+    .content-block
+      .bd
+        %br
+        %br
+        %div{:style => 'width:20%'}
+          = label_tag :data_source
+          = select_tag :data_source, options_from_collection_for_select(@datasources, :id, :data_source_name, @selected_source), {:prompt => 'Select a Datasource', :onchange => "window.location = '/pooled_instrument_exceptions?skipped=#{@skipped}&src_id=' + $('#data_source').val();"}
+          %br
+        = form_tag bulk_update_pooled_instrument_exceptions_path do
+          = render :partial => 'composite_variants', :locals => {:exceptions => @exceptions, :total => @total, :skipped => @skipped, :src_id => @selected_source}
+          .actions
+            = submit_tag 'Process Variants', :class => 'button btn btn-large btn-primary'
+            %br
+            %br

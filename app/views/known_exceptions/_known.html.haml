@@ -1,0 +1,30 @@
+%h1 Known Exceptions
+- if exceptions.empty?
+  %h3 No Exceptions
+- else
+  %table.table.zebra-striped
+    %thead
+      %tr
+        %th Source
+        %th Constituent Name
+        %th ID Type
+        %th ID Value
+        %th Figi
+        %th Effective
+        %th Expiration
+        %th
+    %tbody
+      - exceptions.each do |exception|
+        - source = exception.datasource
+        %tr
+          %td
+            = source.data_source_name
+            - df = source.is_direct_feed ? ' (DF)' : ''
+            = df
+          %td= exception.constituent_name
+          %td= exception.id_type
+          %td= exception.id_value
+          %td= exception.figi
+          %td= exception.effective_date
+          %td= exception.expiration_date
+          %td

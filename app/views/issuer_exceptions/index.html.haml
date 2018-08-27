@@ -1,0 +1,12 @@
+.container
+  .span12
+    .content-block
+      .bd
+        %br
+        %br
+        = form_tag bulk_update_issuer_exceptions_path do
+          = render :partial => 'issuers', :locals => {:exceptions => @exceptions}
+          .actions
+            = submit_tag 'Update Issuers', :class => 'button btn btn-large btn-primary'
+            %br
+            %br

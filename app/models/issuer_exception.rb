@@ -10,4 +10,5 @@
 #
 
 class IssuerException < ApplicationRecord
+  belongs_to :datasource
 end

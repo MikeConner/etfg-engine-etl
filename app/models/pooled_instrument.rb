@@ -9,7 +9,7 @@
 #  composite_ticker            :string(32)       not null
 #  composite_name_variants     :text             not null
 #  standard_composite_name     :string(128)      not null
-#  composite_description       :string(128)
+#  composite_description       :string
 #  effective_date              :date
 #  expiration_date             :date
 #  exchange_country            :string(64)       not null
@@ -54,13 +54,14 @@
 #  custodian                   :string(128)
 #  distribution_frequency      :string(32)
 #  management_fee              :decimal(18, 6)
-#  portfolio_manager           :string(128)
+#  portfolio_manager           :string
 #  primary_benchmark           :string
 #  total_expenses              :decimal(18, 6)
 #  other_expenses              :decimal(18, 6)
 #  approved                    :boolean          default(FALSE), not null
 #  pooled_instrument_id        :bigint(8)
 #  created_at                  :datetime         not null
+#  secid                       :string(12)
 #
 
 class PooledInstrument < ApplicationRecord

@@ -1,0 +1,12 @@
+.container
+  .span12
+    .content-block
+      .bd
+        %br
+        %br
+        = form_tag bulk_update_ambiguous_instruments_path do
+          = render :partial => 'instruments', :locals => {:exceptions => @exceptions}
+          .actions
+            = submit_tag 'Resolve Instruments', :class => 'button btn btn-large btn-primary'
+            %br
+            %br

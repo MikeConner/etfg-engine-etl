@@ -32,10 +32,13 @@
 #  standard_name        :string(128)
 #  pooled_instrument_id :bigint(8)
 #  instrument_id        :bigint(8)
+#  secid                :string(12)
 #
 
 class Instrument < ApplicationRecord
-  belongs_to :pooled_instrument
+  belongs_to :pooled_instrument, :optional => true
   
   has_many :instrument_exceptions, :dependent => :destroy
+  
+  scope :placeholders, -> { where("figi LIKE 'Unk%'") }
 end

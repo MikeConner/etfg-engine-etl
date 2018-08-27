@@ -1,0 +1,46 @@
+.container
+  .span12
+    .content-block
+      .bd
+        %br
+        %br
+        %h1 Instruments
+        - if 0 == @instruments.count
+          %h3 No Instruments
+        - else
+          - if @paginated
+            .center
+              = will_paginate @instruments
+              = page_entries_info
+          %table.table.zebra-striped
+            %thead
+              %tr
+                %th ID
+                %th Pooled ID
+                %th Issuer
+                %th Ticker
+                %th Name
+                %th Figi
+                %th Sedol
+                %th Isin 
+                %th Cusip
+                %th Country
+                %th Currency
+                %th Exchange
+                %th Default
+            %tbody
+              - @instruments.each do |i|
+                %tr
+                  %td= i.instrument_id
+                  %td= i.pooled_instrument_id
+                  %td= i.issuer
+                  %td= i.ticker
+                  %td= i.standard_name
+                  %td= i.figi
+                  %td= i.sedol
+                  %td= i.isin
+                  %td= i.cusip
+                  %td= i.exchange_country
+                  %td= i.currency
+                  %td= i.exchange
+                  %td= check_box_tag :default_instrument, '1', i.default_instrument

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_08_23_170610) do
+ActiveRecord::Schema.define(version: 2018_08_24_224522) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -99,7 +99,6 @@ ActiveRecord::Schema.define(version: 2018_08_23_170610) do
     t.index ["figi"], name: "index_instruments_on_figi"
     t.index ["isin"], name: "index_instruments_on_isin"
     t.index ["issuer_id"], name: "index_instruments_on_issuer_id"
-    t.index ["pooled_instrument_id"], name: "index_instruments_on_pooled_instrument_id"
     t.index ["sedol"], name: "index_instruments_on_sedol"
   end
 
@@ -163,7 +162,7 @@ ActiveRecord::Schema.define(version: 2018_08_23_170610) do
     t.string "composite_ticker", limit: 32, null: false
     t.text "composite_name_variants", null: false
     t.string "standard_composite_name", limit: 128, null: false
-    t.string "composite_description", limit: 128
+    t.string "composite_description"
     t.date "effective_date"
     t.date "expiration_date"
     t.string "exchange_country", limit: 64, null: false
@@ -208,7 +207,7 @@ ActiveRecord::Schema.define(version: 2018_08_23_170610) do
     t.string "custodian", limit: 128
     t.string "distribution_frequency", limit: 32
     t.decimal "management_fee", precision: 18, scale: 6
-    t.string "portfolio_manager", limit: 128
+    t.string "portfolio_manager"
     t.string "primary_benchmark"
     t.decimal "total_expenses", precision: 18, scale: 6
     t.decimal "other_expenses", precision: 18, scale: 6

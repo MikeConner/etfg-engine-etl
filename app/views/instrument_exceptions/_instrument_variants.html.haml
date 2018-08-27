@@ -4,7 +4,7 @@
 - else
   .center
     == #{pluralize(exceptions.count, 'Exception')} of #{number_with_delimiter(total)}
-  = check_box_tag :skipped, 'true', skipped, :onclick => "window.location = '#{instrument_exceptions_url}?skipped=#{skipped ? 'false' : 'true'}'"
+  = check_box_tag :skipped, 'true', skipped
   Show skipped
   %table.table.zebra-striped
     %caption Instrument Exceptions
@@ -12,6 +12,7 @@
       %tr
         %th Instrument ID
         %th Standard Name
+        %th Composite Ticker
         %th Unknown Name
         %th Figi
         %th Sedol
@@ -31,6 +32,7 @@
             - unless composite.nil?
               == /#{composite.composite_ticker}/#{composite.exchange_country}
           %td= raw instrument.standard_name
+          %td VSS
           %td
             %strong= exception.name_in_datasource
           %td
@@ -48,6 +50,9 @@
             %br
             = radio_button_tag "disposition_#{exception.id}", 'SK'
             Skip
+            %br
+            = radio_button_tag "disposition_#{exception.id}", 'IG'
+            Ignore (Delete)
             %br
             = radio_button_tag "disposition_#{exception.id}", 'CE'
             Create Exception
