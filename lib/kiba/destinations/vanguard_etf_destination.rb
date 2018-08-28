@@ -8,7 +8,6 @@ class VanguardETFDestination
   end
 
   def write(row)
-    puts row
     self.etfs << VanguardEtf.new(:etfg_date => row[:etfg_date],
                                  :trade_date => row[:trade_date],
                                  :ticker => row[:ticker],
@@ -29,7 +28,6 @@ class VanguardETFDestination
   
   def close
     puts "Importing #{self.etfs.count}"
-    puts self.etfs
-    VanguardEtf.import self.etfs
+    VanguardEtf.import(self.etfs)
   end
 end
