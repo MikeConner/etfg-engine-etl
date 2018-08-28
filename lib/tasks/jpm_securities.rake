@@ -86,7 +86,12 @@ namespace :jpms do
     files = Dir["#{path}/raw/#{pattern}.csv"]
     files.each do |fname|
       begin
-        rename = "#{path}/#{fname.split('/').last}"
+        # This gets the fname.date.csv (date is in the wrong format, and needs to be changed)
+        fields = fname.split('/').last.split('.')
+        date = Date.strptime(fields[1], "%m%d%Y")
+        fields[1] = date.strftime("%Y%m%d")
+        
+        rename = "#{path}/#{fields.join(".")}"
         puts "Writing #{rename}"
         header = true
         File.open(rename, 'w') do |fout|         
@@ -97,7 +102,7 @@ namespace :jpms do
                 fout.puts line
               end
             else
-              fout.puts line
+              fout.puts line unless line.blank?
             end
           end
         end
