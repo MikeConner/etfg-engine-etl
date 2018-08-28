@@ -30,7 +30,7 @@ namespace :jpmprod do
             header = false
           end
         else
-          csv << row + [date_str] unless row[0].blank?
+          csv << row[0..13] + [date_str] unless row[0].blank?
         end
       end
     end
