@@ -11,8 +11,9 @@ namespace :jpmprod do
     header = true
     date = nil
     CSV.open(final, 'w') do |csv|
-      csv << ['As Of Date','Account Number','Account Name','Account Status','Base Currency Code','Asset ID','Security Qualifier',
-              'Security Description','Shares Par','Market Price (Local)','Original Cost','Market Value','Unrealized Gain/Loss']
+      csv << ['Account Number','Account Name','Account Status','Base Currency Code','Asset ID','Security Qualifier',
+              'Security Description','Shares Par','Market Price (Local)','Original Cost','Market Value','Unrealized Gain/Loss',
+              'As Of Date']
 
       fname = "#{args[:path]}/#{args[:filename]}"   
       date_str = nil
@@ -26,7 +27,7 @@ namespace :jpmprod do
             header = false
           end
         else
-          csv << [date_str] + row unless row[0].blank?
+          csv << row + [date_str] unless row[0].blank?
         end
       end
     end
