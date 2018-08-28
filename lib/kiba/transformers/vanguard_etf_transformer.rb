@@ -24,12 +24,12 @@ class VanguardETFTransformer
     new_row[:creation_unit_shares] = normalize_float(row['Shares in Creation Units'])
     new_row[:application_value] = normalize_float(row['Application Value'])
     new_row[:sum_market_value] = normalize_float(row['Sum Of Market Value'])
-    new_row[:actual_cash] = normalize_float(row['ActualCash'])
+    new_row[:actual_cash] = normalize_float(row['Actual Cash'])
      
     new_row
   end
   
   def transform_date(date_str)
-    Date.strptime(date_str, "%m/%d/%y")
+    Date.strptime(date_str, "%m/%d/%Y")
   end  
 end

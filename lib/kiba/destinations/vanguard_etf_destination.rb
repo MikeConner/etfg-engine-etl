@@ -29,6 +29,7 @@ class VanguardETFDestination
   
   def close
     puts "Importing #{self.etfs.count}"
+    puts self.etfs
     VanguardEtf.import self.etfs
   end
 end
