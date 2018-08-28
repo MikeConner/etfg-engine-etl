@@ -26,6 +26,12 @@ module DataValidation
     result    
   end
   
+  def normalize_float(value)
+    return nil if value.blank? or value.sub(/-/, '').blank?
+    
+    value.to_f rescue nil  
+  end
+  
   def normalize_figi(value)
     figi = normalize_ticker(value)
     
@@ -47,7 +53,7 @@ module DataValidation
   def normalize_cusip(value)
     cusip = normalize_ticker(value)
     
-    !cusip.blank and is_valid_cusip(cusip) ? cusip : nil    
+    !cusip.blank? and is_valid_cusip(cusip) ? cusip : nil    
   end
 
   def is_valid_cusip(cusip)
