@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_08_16_043408) do
+ActiveRecord::Schema.define(version: 2018_08_28_162019) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -200,6 +200,23 @@ ActiveRecord::Schema.define(version: 2018_08_16_043408) do
     t.index ["composite_ticker"], name: "index_staging_constituents_on_composite_ticker"
     t.index ["etfg_date", "datasource_id"], name: "index_staging_constituents_on_etfg_date_and_datasource_id"
     t.index ["figi"], name: "index_staging_constituents_on_figi"
+  end
+
+  create_table "vanguard_etfs", id: false, force: :cascade do |t|
+    t.date "etfg_date", null: false
+    t.date "trade_date", null: false
+    t.string "ticker", limit: 64
+    t.string "isin", limit: 12
+    t.string "sedol", limit: 7
+    t.string "cusip", limit: 9
+    t.string "description", limit: 128
+    t.string "basket_type", limit: 32
+    t.decimal "nav", precision: 22, scale: 6
+    t.string "status", limit: 32
+    t.decimal "creation_unit_shares", precision: 22, scale: 6
+    t.decimal "application_value", precision: 22, scale: 6
+    t.decimal "sum_market_value", precision: 22, scale: 6
+    t.decimal "actual_cash", precision: 22, scale: 6
   end
 
 end
