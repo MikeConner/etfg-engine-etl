@@ -12,8 +12,6 @@ class VanguardETFTransformer
 
   def process(row)
     new_row = {:etfg_date => self.target_date}
-
-    puts row
     
     new_row[:trade_date] = transform_date(row['Trade Date'])
     new_row[:ticker] = row['Ticker']
