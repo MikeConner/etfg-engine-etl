@@ -11,10 +11,10 @@
 #  composite_name       :string(128)
 #  constituent_ticker   :string(64)
 #  constituent_name     :string(128)
-#  weight               :decimal(18, 6)
-#  market_value         :decimal(18, 6)
-#  notional_value       :decimal(18, 6)
-#  total_shares_held    :decimal(18, 6)
+#  weight               :decimal(22, 6)
+#  market_value         :decimal(22, 6)
+#  notional_value       :decimal(22, 6)
+#  total_shares_held    :decimal(22, 6)
 #  publish              :boolean          default(FALSE), not null
 #  as_of_date           :date             not null
 #

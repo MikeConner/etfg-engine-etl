@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_08_24_224522) do
+ActiveRecord::Schema.define(version: 2018_08_29_044343) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -96,6 +96,7 @@ ActiveRecord::Schema.define(version: 2018_08_24_224522) do
     t.bigint "instrument_id"
     t.string "secid", limit: 12
     t.index ["cusip"], name: "index_instruments_on_cusip"
+    t.index ["cusip"], name: "index_instruments_on_cusip_wtf"
     t.index ["figi"], name: "index_instruments_on_figi"
     t.index ["isin"], name: "index_instruments_on_isin"
     t.index ["issuer_id"], name: "index_instruments_on_issuer_id"
@@ -226,20 +227,20 @@ ActiveRecord::Schema.define(version: 2018_08_24_224522) do
     t.bigint "pooled_instrument_id"
     t.string "composite_ticker", limit: 32
     t.string "composite_name", limit: 128
-    t.decimal "aum", precision: 18, scale: 6
-    t.decimal "shares_outstanding", precision: 18, scale: 6
-    t.decimal "share_value", precision: 18, scale: 6
-    t.decimal "nav", precision: 18, scale: 6
-    t.decimal "open_price", precision: 18, scale: 6
-    t.decimal "low_price", precision: 18, scale: 6
-    t.decimal "high_price", precision: 18, scale: 6
-    t.decimal "close_price", precision: 18, scale: 6
-    t.decimal "daily_return", precision: 18, scale: 6
-    t.decimal "bid_ask_spread", precision: 18, scale: 6
-    t.decimal "avg_bid_size", precision: 18, scale: 6
-    t.decimal "avg_ask_size", precision: 18, scale: 6
-    t.decimal "avg_midpoint", precision: 18, scale: 6
-    t.decimal "basket_estimated_cash", precision: 18, scale: 6
+    t.decimal "aum", precision: 22, scale: 6
+    t.decimal "shares_outstanding", precision: 22, scale: 6
+    t.decimal "share_value", precision: 22, scale: 6
+    t.decimal "nav", precision: 22, scale: 6
+    t.decimal "open_price", precision: 22, scale: 6
+    t.decimal "low_price", precision: 22, scale: 6
+    t.decimal "high_price", precision: 22, scale: 6
+    t.decimal "close_price", precision: 22, scale: 6
+    t.decimal "daily_return", precision: 22, scale: 6
+    t.decimal "bid_ask_spread", precision: 22, scale: 6
+    t.decimal "avg_bid_size", precision: 22, scale: 6
+    t.decimal "avg_ask_size", precision: 22, scale: 6
+    t.decimal "avg_midpoint", precision: 22, scale: 6
+    t.decimal "basket_estimated_cash", precision: 22, scale: 6
     t.boolean "publish", default: false, null: false
     t.date "as_of_date", null: false
     t.index ["datasource_id"], name: "index_ts_composites_on_datasource_id"
@@ -257,10 +258,10 @@ ActiveRecord::Schema.define(version: 2018_08_24_224522) do
     t.string "composite_name", limit: 128
     t.string "constituent_ticker", limit: 64
     t.string "constituent_name", limit: 128
-    t.decimal "weight", precision: 18, scale: 6
-    t.decimal "market_value", precision: 18, scale: 6
-    t.decimal "notional_value", precision: 18, scale: 6
-    t.decimal "total_shares_held", precision: 18, scale: 6
+    t.decimal "weight", precision: 22, scale: 6
+    t.decimal "market_value", precision: 22, scale: 6
+    t.decimal "notional_value", precision: 22, scale: 6
+    t.decimal "total_shares_held", precision: 22, scale: 6
     t.boolean "publish", default: false, null: false
     t.date "as_of_date", null: false
     t.index ["datasource_id"], name: "index_ts_constituents_on_datasource_id"

@@ -13,15 +13,15 @@
 #  cusip              :string(9)
 #  sedol              :string(7)
 #  isin               :string(12)
-#  weight             :decimal(18, 6)
+#  weight             :decimal(22, 6)
 #  sector             :string(64)
 #  country            :string(64)
 #  depository_receipt :string(32)
-#  market_value       :decimal(18, 6)
-#  face_amount        :decimal(18, 6)
-#  coupon_rate        :decimal(18, 6)
+#  market_value       :decimal(22, 6)
+#  face_amount        :decimal(22, 6)
+#  coupon_rate        :decimal(22, 6)
 #  maturity_date      :date
-#  shares             :decimal(18, 6)
+#  shares             :decimal(22, 6)
 #
 
 class VanguardHolding < FeedSchemaBase
