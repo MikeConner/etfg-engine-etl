@@ -23,12 +23,24 @@ namespace :vanguard do
     Kiba.run(job)      
   end
 
+  desc "transform Vanguard Factor holdings"
+  task :transform_factor_holdings, [:target_date, :filepath] => :environment do |t, args|
+    job = Kiba.parse do
+      source VanguardHoldingsSource, args[:filepath]
+      transform VanguardFactorTransformer, :target_date => args[:target_date]
+      destination VanguardFactorDestination
+    end
+    
+    Kiba.run(job)      
+  end
+
   desc "transform Vanguard holdings"
   task :transform_holdings, [:target_date, :filepath] => :environment do |t, args|
     job = Kiba.parse do
-      #source CSVSource, args[:filepath], 7, {:headers => true, :liberal_parsing => true, :encoding => 'iso-8859-1:utf-8'}
-      #transform BmoHoldingsTransformer, :target_date => args[:target_date]
-      #destination BmoHoldingsDestination
+      # Reuse this - just return every non-blank row - no header, no hash; need the raw row
+      source BmoBasketsSource, args[:filepath]
+      transform VanguardHoldingsTransformer, :target_date => args[:target_date]
+      destination VanguardHoldingsDestination
     end
     
     Kiba.run(job)      

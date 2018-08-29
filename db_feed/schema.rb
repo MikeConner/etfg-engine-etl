@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_08_28_162019) do
+ActiveRecord::Schema.define(version: 2018_08_28_212958) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -79,20 +79,20 @@ ActiveRecord::Schema.define(version: 2018_08_28_162019) do
     t.string "composite_ticker", limit: 32
     t.string "composite_name", limit: 128
     t.string "composite_description", limit: 128
-    t.decimal "aum", precision: 18, scale: 6
-    t.decimal "shares_outstanding", precision: 18, scale: 6
-    t.decimal "share_value", precision: 18, scale: 6
-    t.decimal "nav", precision: 18, scale: 6
-    t.decimal "open_price", precision: 18, scale: 6
-    t.decimal "low_price", precision: 18, scale: 6
-    t.decimal "high_price", precision: 18, scale: 6
-    t.decimal "close_price", precision: 18, scale: 6
-    t.decimal "daily_return", precision: 18, scale: 6
-    t.decimal "bid_ask_spread", precision: 18, scale: 6
-    t.decimal "avg_bid_size", precision: 18, scale: 6
-    t.decimal "avg_ask_size", precision: 18, scale: 6
-    t.decimal "avg_midpoint", precision: 18, scale: 6
-    t.decimal "basket_estimated_cash", precision: 18, scale: 6
+    t.decimal "aum", precision: 22, scale: 6
+    t.decimal "shares_outstanding", precision: 22, scale: 6
+    t.decimal "share_value", precision: 22, scale: 6
+    t.decimal "nav", precision: 22, scale: 6
+    t.decimal "open_price", precision: 22, scale: 6
+    t.decimal "low_price", precision: 22, scale: 6
+    t.decimal "high_price", precision: 22, scale: 6
+    t.decimal "close_price", precision: 22, scale: 6
+    t.decimal "daily_return", precision: 22, scale: 6
+    t.decimal "bid_ask_spread", precision: 22, scale: 6
+    t.decimal "avg_bid_size", precision: 22, scale: 6
+    t.decimal "avg_ask_size", precision: 22, scale: 6
+    t.decimal "avg_midpoint", precision: 22, scale: 6
+    t.decimal "basket_estimated_cash", precision: 22, scale: 6
     t.integer "issuer_id"
     t.string "issuer", limit: 32
     t.string "figi", limit: 12
@@ -123,17 +123,17 @@ ActiveRecord::Schema.define(version: 2018_08_28_162019) do
     t.string "related_index", limit: 50
     t.string "related_index_symbol", limit: 16
     t.string "related_index_name", limit: 50
-    t.decimal "net_expenses", precision: 18, scale: 6
-    t.decimal "expense_ratio", precision: 18, scale: 6
-    t.decimal "total_expenses", precision: 18, scale: 6
-    t.decimal "other_expenses", precision: 18, scale: 6
+    t.decimal "net_expenses", precision: 22, scale: 6
+    t.decimal "expense_ratio", precision: 22, scale: 6
+    t.decimal "total_expenses", precision: 22, scale: 6
+    t.decimal "other_expenses", precision: 22, scale: 6
     t.string "listing_exchange", limit: 64
     t.string "asset_class", limit: 28
     t.string "development_class", limit: 32
     t.string "focus", limit: 28
     t.string "lead_market_maker", limit: 128
     t.string "region", limit: 28
-    t.decimal "levered_amount", precision: 18, scale: 6
+    t.decimal "levered_amount", precision: 22, scale: 6
     t.date "maturity_date"
     t.string "exposure_country", limit: 64
     t.string "selection_criteria", limit: 32
@@ -141,18 +141,18 @@ ActiveRecord::Schema.define(version: 2018_08_28_162019) do
     t.string "administrator", limit: 128
     t.string "advisor", limit: 128
     t.string "distributor", limit: 128
-    t.decimal "fee_waivers", precision: 18, scale: 6
+    t.decimal "fee_waivers", precision: 22, scale: 6
     t.string "fiscal_year_end", limit: 16
     t.string "futures_commission_merchant", limit: 128
     t.string "subadvisor", limit: 128
     t.string "tax_classification", limit: 128
     t.string "transfer_agent", limit: 50
     t.string "trustee", limit: 128
-    t.decimal "creation_fee", precision: 18, scale: 6
-    t.decimal "creation_unit_size", precision: 18, scale: 6
+    t.decimal "creation_fee", precision: 22, scale: 6
+    t.decimal "creation_unit_size", precision: 22, scale: 6
     t.string "custodian", limit: 128
     t.string "distribution_frequency", limit: 32
-    t.decimal "management_fee", precision: 18, scale: 6
+    t.decimal "management_fee", precision: 22, scale: 6
     t.string "portfolio_manager", limit: 128
     t.string "primary_benchmark"
     t.boolean "match", default: false, null: false
@@ -173,10 +173,10 @@ ActiveRecord::Schema.define(version: 2018_08_28_162019) do
     t.string "composite_name", limit: 128
     t.string "constituent_ticker", limit: 64
     t.string "constituent_name", limit: 128
-    t.decimal "weight", precision: 18, scale: 6
-    t.decimal "market_value", precision: 18, scale: 6
-    t.decimal "notional_value", precision: 18, scale: 6
-    t.decimal "total_shares_held", precision: 18, scale: 6
+    t.decimal "weight", precision: 22, scale: 6
+    t.decimal "market_value", precision: 22, scale: 6
+    t.decimal "notional_value", precision: 22, scale: 6
+    t.decimal "total_shares_held", precision: 22, scale: 6
     t.integer "issuer_id"
     t.string "issuer", limit: 32
     t.string "figi", limit: 12
@@ -217,6 +217,44 @@ ActiveRecord::Schema.define(version: 2018_08_28_162019) do
     t.decimal "application_value", precision: 22, scale: 6
     t.decimal "sum_market_value", precision: 22, scale: 6
     t.decimal "actual_cash", precision: 22, scale: 6
+  end
+
+  create_table "vanguard_factors", id: false, force: :cascade do |t|
+    t.date "etfg_date", null: false
+    t.date "as_of_date", null: false
+    t.string "composite_ticker", limit: 32, null: false
+    t.string "composite_name", limit: 128, null: false
+    t.string "fund_id", limit: 32
+    t.string "asset_type", limit: 128
+    t.string "constituent_ticker", limit: 64
+    t.string "constituent_name", limit: 128
+    t.string "isin", limit: 12
+    t.decimal "weight", precision: 22, scale: 6
+    t.decimal "market_value", precision: 22, scale: 6
+    t.decimal "shares", precision: 22, scale: 6
+  end
+
+  create_table "vanguard_holdings", id: false, force: :cascade do |t|
+    t.date "etfg_date", null: false
+    t.date "as_of_date", null: false
+    t.string "composite_ticker", limit: 32, null: false
+    t.string "composite_name", limit: 128, null: false
+    t.string "fund_id", limit: 32
+    t.string "asset_type", limit: 128
+    t.string "constituent_ticker", limit: 64
+    t.string "constituent_name", limit: 128
+    t.string "cusip", limit: 9
+    t.string "sedol", limit: 7
+    t.string "isin", limit: 12
+    t.decimal "weight", precision: 22, scale: 6
+    t.string "sector", limit: 64
+    t.string "country", limit: 64
+    t.string "depository_receipt", limit: 32
+    t.decimal "market_value", precision: 22, scale: 6
+    t.decimal "face_amount", precision: 22, scale: 6
+    t.decimal "coupon_rate", precision: 22, scale: 6
+    t.date "maturity_date"
+    t.decimal "shares", precision: 22, scale: 6
   end
 
 end

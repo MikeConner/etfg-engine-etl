@@ -26,7 +26,18 @@ module DataValidation
     result    
   end
   
+  def normalize_date(value, fmt)
+    return nil if value.blank?
+    return value if Date == value.class
+    
+    dval = normalize_ticker(value)
+    
+    dval.nil? ? nil : Date.strptime(dval, fmt) rescue nil
+  end
+  
   def normalize_float(value)
+    return value if value.nil? or (Float == value.class)
+    
     return nil if value.blank? or value.sub(/-/, '').blank?
     
     value.to_f rescue nil  
