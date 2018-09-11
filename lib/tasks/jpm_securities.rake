@@ -102,7 +102,7 @@ namespace :jpms do
                 fout.puts line
               end
             else
-              fout.puts line unless line.blank?
+              fout.puts line unless line =~ /\A,/
             end
           end
         end
