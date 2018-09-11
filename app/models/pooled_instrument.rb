@@ -5,7 +5,7 @@
 #  id                          :bigint(8)        not null, primary key
 #  issuer_id                   :integer
 #  instrument_id               :integer
-#  issuer                      :string(32)       not null
+#  issuer                      :string(32)
 #  composite_ticker            :string(32)       not null
 #  composite_name_variants     :text             not null
 #  standard_composite_name     :string(128)      not null

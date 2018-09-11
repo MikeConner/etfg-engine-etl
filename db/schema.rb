@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_08_29_044343) do
+ActiveRecord::Schema.define(version: 2018_09_11_025131) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -46,6 +46,14 @@ ActiveRecord::Schema.define(version: 2018_08_29_044343) do
     t.index ["composite_figi"], name: "index_composite_figis_on_composite_figi"
     t.index ["figi", "composite_figi"], name: "no_figi_map_dups", unique: true
     t.index ["figi"], name: "index_composite_figis_on_figi"
+  end
+
+  create_table "datasource_ranks", primary_key: ["datasource_id", "composite_ticker", "ranking"], force: :cascade do |t|
+    t.bigint "datasource_id", null: false
+    t.string "composite_ticker", limit: 16, null: false
+    t.integer "ranking", limit: 2, null: false
+    t.boolean "yesterday_backfill"
+    t.index ["datasource_id", "composite_ticker"], name: "ds_comp_uniq", unique: true
   end
 
   create_table "datasources", force: :cascade do |t|
@@ -159,7 +167,7 @@ ActiveRecord::Schema.define(version: 2018_08_29_044343) do
   create_table "pooled_instruments", force: :cascade do |t|
     t.integer "issuer_id"
     t.integer "instrument_id"
-    t.string "issuer", limit: 32, null: false
+    t.string "issuer", limit: 32
     t.string "composite_ticker", limit: 32, null: false
     t.text "composite_name_variants", null: false
     t.string "standard_composite_name", limit: 128, null: false
