@@ -4,7 +4,7 @@ require 'csv'
 class VanguardHoldingsSource
   def initialize(file)
     @file = file
-    `perl -p -i -e 's/\r\n$/\n/g' #{file}`
+    `perl -p -i -e 's/\r+\n$/\n/g' #{file}`
   end
 
   # Yield each row, including blanks for transitions; they are all different lengths

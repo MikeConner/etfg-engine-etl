@@ -37,8 +37,7 @@ namespace :vanguard do
   desc "transform Vanguard holdings"
   task :transform_holdings, [:target_date, :filepath] => :environment do |t, args|
     job = Kiba.parse do
-      # Reuse this - just return every non-blank row - no header, no hash; need the raw row
-      source BmoBasketsSource, args[:filepath]
+      source VanguardHoldingsSource, args[:filepath]
       transform VanguardHoldingsTransformer, :target_date => args[:target_date]
       destination VanguardHoldingsDestination
     end
