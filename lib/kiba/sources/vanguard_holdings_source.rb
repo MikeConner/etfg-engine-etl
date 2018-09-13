@@ -10,7 +10,7 @@ class VanguardHoldingsSource
   # Yield each row, including blanks for transitions; they are all different lengths
   def each
     CSV.foreach(@file, :encoding => 'iso-8859-1:utf-8') do |row|
-      yield row[0].blank? ? row[1, row.length] : row
+      yield row
     end
   end
 end

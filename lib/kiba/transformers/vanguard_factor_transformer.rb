@@ -49,6 +49,8 @@ class VanguardFactorTransformer
     end
       
     def process_row(row)
+      return self, nil if row.nil?
+      
       if 'FUND NAME' == row[0]
         @composite[:composite_name] = row[1].strip
       elsif 'Fund Id' == row[0]
