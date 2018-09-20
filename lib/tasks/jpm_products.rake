@@ -24,7 +24,7 @@ namespace :jpmprod do
       CSV.foreach(fname) do |row|
         if header
           if date_str.nil? and not row[1].blank?
-             date = Date.strptime(row[1], '%m/%d/%y')
+             date = Date.strptime(row[1], '%m/%d/%Y')
              date_str = date.strftime('%Y%m%d')
           elsif 'Fund Name' == row[0]
             header = false
