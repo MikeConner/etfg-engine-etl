@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_08_28_212958) do
+ActiveRecord::Schema.define(version: 2018_09_13_045900) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,6 +69,14 @@ ActiveRecord::Schema.define(version: 2018_08_28_212958) do
     t.index ["datasource_id", "ticker"], name: "index_df_composite_identifiers_on_datasource_id_and_ticker", unique: true
     t.index ["figi"], name: "index_df_composite_identifiers_on_figi", unique: true
     t.index ["ticker"], name: "index_df_composite_identifiers_on_ticker"
+  end
+
+  create_table "ssc_lookups", force: :cascade do |t|
+    t.string "fund_id", limit: 4
+    t.string "fund_name", limit: 128
+    t.string "ticker", limit: 32
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "staging_composites", force: :cascade do |t|

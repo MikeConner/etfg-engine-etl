@@ -17,6 +17,7 @@
 #  total_shares_held    :decimal(22, 6)
 #  publish              :boolean          default(FALSE), not null
 #  as_of_date           :date             not null
+#  currency             :string(3)
 #
 
 class TsConstituent < ApplicationRecord
