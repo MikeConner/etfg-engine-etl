@@ -1,6 +1,6 @@
 namespace :vanguard do
   desc "Clear ETF feed to prevent duplicates"
-  task :clear_etfs, [:target_date] do |t, args|
+  task :clear_etfs, [:target_date] => :environment do |t, args|
     VanguardEtf.where(:etfg_date => Date.parse(args[:target_date])).destroy_all
   end
   
