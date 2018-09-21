@@ -1,4 +1,9 @@
 namespace :vanguard do
+  desc "Clear ETF feed to prevent duplicates"
+  task :clear_etfs, [:target_date] do |t, args|
+    VanguardEtf.where(:etfg_date => Date.parse(args[:target_date])).destroy_all
+  end
+  
   desc "transform Vanguard ETFs"
   task :transform_etfs, [:target_date, :filepath] => :environment do |t, args|
     # args[:coasdf]
@@ -31,6 +36,8 @@ namespace :vanguard do
       destination VanguardFactorDestination
     end
     
+    VanguardFactor.where(:etfg_date => Date.parse(args[:target_date])).destroy_all
+
     Kiba.run(job)      
   end
 
@@ -42,6 +49,8 @@ namespace :vanguard do
       destination VanguardHoldingsDestination
     end
     
+    VanguardHolding.where(:etfg_date => Date.parse(args[:target_date])).destroy_all
+
     Kiba.run(job)      
   end
 end
