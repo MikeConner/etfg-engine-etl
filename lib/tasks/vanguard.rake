@@ -36,7 +36,7 @@ namespace :vanguard do
       destination VanguardFactorDestination
     end
     
-    VanguardFactor.where(:etfg_date => Date.parse(args[:target_date])).destroy_all
+    VanguardFactor.where(:etfg_date => Date.parse(args[:target_date])).delete_all
 
     Kiba.run(job)      
   end
@@ -49,7 +49,7 @@ namespace :vanguard do
       destination VanguardHoldingsDestination
     end
     
-    VanguardHolding.where(:etfg_date => Date.parse(args[:target_date])).destroy_all
+    VanguardHolding.where(:etfg_date => Date.parse(args[:target_date])).delete_all
 
     Kiba.run(job)      
   end
