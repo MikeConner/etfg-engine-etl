@@ -2029,6 +2029,7 @@ ActiveRecord::Schema.define(version: 2018_09_25_025925) do
     t.string "ticker", limit: 32
     t.date "effective_date"
     t.date "expiration_date"
+    t.string "fund_id_alias", limit: 4
   end
 
   create_table "ssc_nav", id: false, force: :cascade do |t|
