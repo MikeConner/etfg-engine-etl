@@ -12,7 +12,7 @@
 #  composite_name       :string(128)
 #  constituent_ticker   :string(64)
 #  constituent_name     :string(128)
-#  weight               :decimal(22, 6)
+#  weight               :decimal(18, 10)
 #  market_value         :decimal(22, 6)
 #  notional_value       :decimal(22, 6)
 #  total_shares_held    :decimal(22, 6)

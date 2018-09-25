@@ -9,8 +9,6 @@
 #  expiration_date :date
 #
 
-require 'rails_helper'
-
-RSpec.describe SscLookup, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+class SscLookup < FeedSchemaBase
+  SscLookup.record_timestamps = false
 end

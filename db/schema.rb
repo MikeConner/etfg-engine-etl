@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_21_224316) do
+ActiveRecord::Schema.define(version: 2018_09_25_022049) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -132,6 +132,8 @@ ActiveRecord::Schema.define(version: 2018_09_21_224316) do
 
   create_table "issuers", force: :cascade do |t|
     t.string "name", limit: 32, null: false
+    t.date "effective_date"
+    t.date "expiration_date"
     t.index ["name"], name: "index_issuers_on_name", unique: true
   end
 
@@ -322,7 +324,7 @@ ActiveRecord::Schema.define(version: 2018_09_21_224316) do
     t.decimal "total_shares_held", precision: 22, scale: 6
     t.boolean "publish", default: false, null: false
     t.date "as_of_date", null: false
-    t.string "currency", limit: 3
+    t.string "currency", limit: 16
     t.index ["datasource_id"], name: "index_ts_constituents_on_datasource_id"
     t.index ["etfg_date", "datasource_id"], name: "index_ts_constituents_on_etfg_date_and_datasource_id"
     t.index ["etfg_date"], name: "index_ts_constituents_on_etfg_date"
