@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_25_025925) do
+ActiveRecord::Schema.define(version: 2018_09_26_175210) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -2380,6 +2380,8 @@ ActiveRecord::Schema.define(version: 2018_09_25_025925) do
     t.string "subindustry", limit: 128
     t.string "rating", limit: 32
     t.boolean "match", default: false, null: false
+    t.string "disposition", limit: 32
+    t.text "trace"
     t.index ["as_of_date", "datasource_id"], name: "index_staging_constituents_on_as_of_date_and_datasource_id"
     t.index ["composite_ticker", "exchange_country"], name: "ticker_country_constituents"
     t.index ["composite_ticker"], name: "index_staging_constituents_on_composite_ticker"

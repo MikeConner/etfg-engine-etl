@@ -34,6 +34,8 @@
 #  subindustry          :string(128)
 #  rating               :string(32)
 #  match                :boolean          default(FALSE), not null
+#  disposition          :string(32)
+#  trace                :text
 #
 
 require 'rails_helper'
