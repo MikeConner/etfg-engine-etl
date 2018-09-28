@@ -56,7 +56,8 @@ class VanguardFactorTransformer
       elsif 'Fund Id' == row[0]
         @composite[:fund_id] = row[1].strip
       elsif 'As of date' == row[0]
-        @composite[:as_of_date] = Date.strptime(row[1], '%d-%b-%y')
+        fmt = 2 == row[1].split('-').last.length ? '%d-%b-%y' : '%d-%b-%Y'
+        @composite[:as_of_date] = Date.strptime(row[1], fmt)
       end
       
       if is_holdings_header(row)
