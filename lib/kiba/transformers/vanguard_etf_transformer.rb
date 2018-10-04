@@ -25,6 +25,7 @@ class VanguardETFTransformer
     new_row[:application_value] = normalize_float(row['Application Value'])
     new_row[:sum_market_value] = normalize_float(row['Sum Of Market Value'])
     new_row[:actual_cash] = normalize_float(row['Actual Cash'])
+    new_row[:source_name] = 'ETF'
      
     new_row
   end

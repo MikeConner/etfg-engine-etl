@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_26_175210) do
+ActiveRecord::Schema.define(version: 2018_10_04_053151) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -252,6 +252,7 @@ ActiveRecord::Schema.define(version: 2018_09_26_175210) do
     t.text "client_fund_id"
     t.text "share_class_name"
     t.text "futval"
+    t.string "source_name", limit: 16
     t.index ["etfg_date"], name: "bbh_nav_etfg_date"
   end
 
@@ -351,7 +352,150 @@ ActiveRecord::Schema.define(version: 2018_09_26_175210) do
     t.text "futval"
   end
 
-  create_table "bbh_pval", id: false, force: :cascade do |t|
+  create_table "bbh_pval", force: :cascade do |t|
+    t.date "etfg_date"
+    t.text "accounting_basis"
+    t.text "accounting_date"
+    t.text "asset_currency"
+    t.text "average_days_to_maturity"
+    t.text "average_years_to_maturity"
+    t.text "bbh_security_id"
+    t.text "base_amortized_cost"
+    t.text "base_currency_code"
+    t.text "base_interest_receivable"
+    t.decimal "base_market_value", precision: 22, scale: 6
+    t.text "base_market_value_change"
+    t.text "base_notional_amount"
+    t.text "base_original_cost"
+    t.text "base_price"
+    t.text "base_price_change"
+    t.text "base_total_unrealized_gain"
+    t.text "base_total_unrealized_loss"
+    t.text "base_unit_cost"
+    t.text "base_unrealized_currency_gain"
+    t.text "base_unrealized_currency_loss"
+    t.text "base_unrealized_security_gain"
+    t.text "base_unrealized_security_loss"
+    t.text "bloomberg_industry_group"
+    t.text "bloomberg_industry_sector"
+    t.text "bloomberg_industry_subgroup_code"
+    t.text "bloomberg_industry_subgroup_description"
+    t.text "cpi_index_ratio"
+    t.text "cusip"
+    t.text "close_event_id"
+    t.text "cost_method"
+    t.text "country_code"
+    t.text "country_description"
+    t.text "currency_description"
+    t.text "current_face"
+    t.text "custody_head_account_number"
+    t.text "days_to_maturity"
+    t.text "entity_name"
+    t.text "entity_number"
+    t.text "fx_rate"
+    t.text "isin"
+    t.text "industry_type_code"
+    t.text "interest_rate"
+    t.text "investment_type_code"
+    t.text "investment_type_description"
+    t.text "issue_date"
+    t.text "issue_price"
+    t.text "local_amortized_cost"
+    t.text "local_currency_code"
+    t.text "local_market_value"
+    t.text "local_market_value_change"
+    t.text "local_notional_amount"
+    t.text "local_original_cost"
+    t.text "local_price"
+    t.text "local_price_change"
+    t.text "local_price_change_percent"
+    t.text "local_unit_cost"
+    t.text "local_unrealized_security_gain"
+    t.text "local_unrealized_security_loss"
+    t.text "long_short_indicator"
+    t.text "maturity_date"
+    t.text "maturity_tier_code"
+    t.text "maturity_tier_description"
+    t.text "monthly_daily_indicator"
+    t.text "moodys_rating"
+    t.text "moodys_rating_date"
+    t.decimal "nav", precision: 22, scale: 10
+    t.text "net_assets_excluding_securities"
+    t.text "open_event_id"
+    t.text "original_face"
+    t.text "per_share_nav_impact"
+    t.text "percent_change_in_market_value"
+    t.text "percent_mv"
+    t.text "percent_tna"
+    t.text "previous_accounting_date"
+    t.text "previous_base_amortized_cost"
+    t.text "previous_base_market_value"
+    t.text "previous_base_price"
+    t.text "previous_base_unit_cost"
+    t.text "previous_base_unrealized_gl"
+    t.text "previous_capital_gl"
+    t.text "previous_currency_gl"
+    t.text "previous_fx_rate"
+    t.text "previous_local_amortized_cost"
+    t.text "previous_local_market_value"
+    t.text "previous_local_price"
+    t.text "previous_local_unit_cost"
+    t.text "previous_local_unrealized_gl"
+    t.text "previous_nav"
+    t.text "previous_outstanding_settled_shares"
+    t.text "previous_price_date"
+    t.text "previous_quantity"
+    t.text "previous_shares_outstanding"
+    t.text "previous_total_base_market_value"
+    t.text "price_effective_date"
+    t.text "price_factor"
+    t.text "primary_traded_exchange_by_security_by_fund"
+    t.text "private_placement_indicator"
+    t.text "processing_security_type"
+    t.decimal "quantity", precision: 22, scale: 10
+    t.text "quantity_change"
+    t.text "quantity_scale"
+    t.text "report_type"
+    t.text "sedol"
+    t.text "sic_code"
+    t.text "securities_at_market_value"
+    t.text "restricted_flag"
+    t.text "security_alias_id"
+    t.text "security_description"
+    t.text "security_id"
+    t.text "security_id_type"
+    t.text "security_long_description"
+    t.text "security_type_code"
+    t.text "security_type_description"
+    t.text "settlement_date"
+    t.decimal "shares_outstanding", precision: 22, scale: 10
+    t.text "source_c"
+    t.text "state_code"
+    t.text "sub_security_type_code"
+    t.text "sub_security_type_description"
+    t.text "ticker_symbol"
+    t.text "total_base_market_value"
+    t.text "total_current_assets"
+    t.text "total_current_liabilities"
+    t.text "total_dividend_marked_to_market"
+    t.text "total_forward_currency_marked_to_market"
+    t.text "total_interest_marked_to_market"
+    t.decimal "total_net_assets", precision: 22, scale: 10
+    t.text "total_outstanding_settled_shares"
+    t.text "trade_date"
+    t.text "trade_date_fx_rate"
+    t.text "underlying_security_description"
+    t.text "underlying_security_id"
+    t.text "variable_rate_frequency"
+    t.text "income_currency"
+    t.text "sector_entity_id"
+    t.string "source_name", limit: 16
+    t.decimal "weight", precision: 18, scale: 10
+    t.string "composite_ticker", limit: 32
+    t.index ["etfg_date"], name: "bbh_pval_date"
+  end
+
+  create_table "bbh_pval_old", id: false, force: :cascade do |t|
     t.date "etfg_date"
     t.text "accounting_basis"
     t.text "accounting_date"
@@ -488,6 +632,8 @@ ActiveRecord::Schema.define(version: 2018_09_26_175210) do
     t.text "variable_rate_frequency"
     t.text "income_currency"
     t.text "sector_entity_id"
+    t.decimal "weight", precision: 18, scale: 10
+    t.string "composite_ticker", limit: 32
     t.index ["etfg_date"], name: "bbh_pval_etfg_date"
   end
 
@@ -1217,6 +1363,7 @@ ActiveRecord::Schema.define(version: 2018_09_26_175210) do
     t.decimal "price", precision: 22, scale: 6
     t.decimal "market_value", precision: 22, scale: 6
     t.text "futval"
+    t.string "source_name", limit: 16
   end
 
   create_table "citi_hold_template", id: false, force: :cascade do |t|
@@ -1245,6 +1392,7 @@ ActiveRecord::Schema.define(version: 2018_09_26_175210) do
     t.decimal "total_assets", precision: 22, scale: 6
     t.decimal "net_assets", precision: 22, scale: 6
     t.text "futval"
+    t.string "source_name", limit: 16
   end
 
   create_table "citi_nav_template", id: false, force: :cascade do |t|
@@ -1671,6 +1819,7 @@ ActiveRecord::Schema.define(version: 2018_09_26_175210) do
     t.text "distribution_factor"
     t.text "st_cap_gains"
     t.text "lt_cap_gains"
+    t.string "source_name", limit: 32
   end
 
   create_table "jpms_nav_template", id: false, force: :cascade do |t|
@@ -1715,6 +1864,21 @@ ActiveRecord::Schema.define(version: 2018_09_26_175210) do
     t.string "account_number", limit: 32
     t.string "account_name", limit: 128
     t.string "ticker", limit: 32
+  end
+
+  create_table "jpms_profund_nav", id: false, force: :cascade do |t|
+    t.date "etfg_date"
+    t.text "fund_name"
+    t.text "ticker"
+    t.text "cusip"
+    t.decimal "nav", precision: 22, scale: 6
+    t.decimal "pop", precision: 22, scale: 6
+    t.decimal "nav_change", precision: 22, scale: 6
+    t.decimal "net_assets", precision: 22, scale: 6
+    t.decimal "shares_outstanding", precision: 18, scale: 6
+    t.text "distribution_factor"
+    t.text "st_cap_gains"
+    t.text "lt_cap_gains"
   end
 
   create_table "jpms_profund_template", id: false, force: :cascade do |t|
@@ -2059,6 +2223,7 @@ ActiveRecord::Schema.define(version: 2018_09_26_175210) do
     t.string "composite_fund_number", limit: 32
     t.string "cls_class_code", limit: 32
     t.string "cls_class_name", limit: 128
+    t.string "source_name", limit: 32
   end
 
   create_table "ssc_nav_template", id: false, force: :cascade do |t|
@@ -2171,6 +2336,7 @@ ActiveRecord::Schema.define(version: 2018_09_26_175210) do
     t.string "incm_currency", limit: 3
     t.string "fvm_code", limit: 32
     t.decimal "weight", precision: 18, scale: 10
+    t.string "source_name", limit: 32
     t.index ["etfg_date"], name: "date_idx_ssc"
   end
 
@@ -2625,6 +2791,7 @@ ActiveRecord::Schema.define(version: 2018_09_26_175210) do
     t.decimal "application_value", precision: 22, scale: 6
     t.decimal "sum_market_value", precision: 22, scale: 6
     t.decimal "actual_cash", precision: 22, scale: 6
+    t.string "source_name", limit: 32
   end
 
   create_table "vanguard_factors", id: false, force: :cascade do |t|
@@ -2667,7 +2834,7 @@ ActiveRecord::Schema.define(version: 2018_09_26_175210) do
 
   create_table "velocity", id: false, force: :cascade do |t|
     t.date "etf_date"
-    t.text "etf_ticker"
+    t.string "etf_ticker", limit: 32
     t.decimal "etf_value", precision: 18, scale: 6
     t.decimal "etf_shares", precision: 18, scale: 6
   end
