@@ -5,7 +5,7 @@ namespace :jpms do
   task :make_filenames_atomic, [:filepath] => :environment do |t, args|    
     process_file(args[:filepath], "CW_PROFUND_*_AllPositionsTemplate", "CW_PROFUND")
     process_file(args[:filepath], "CW_FFCM_*_FQFTrustPricedPositionsforETFGlobal", "CW_FFCM")
-    process_file(args[:filepath], "reortega_*_O_SharesPositionsforETFGlobal", "REO_OShares")
+    process_file(args[:filepath], "reortega_*_O_SharesPositionsforETFGlobal", "REO_OShares", 10)
     # Skip these, since there are no dates!
     # process_file(args[:filepath], "reortega_*_ETFSTrustPositionstoETFG.csv", "REO_ETFSTrust")
     
@@ -126,7 +126,7 @@ namespace :jpms do
     end
   end
     
-  def process_file(path, pattern, replacement)
+  def process_file(path, pattern, replacement, row_len = nil)
     errors = 0
     successes = 0
 
@@ -161,7 +161,7 @@ namespace :jpms do
                   fout.puts line
                 end
               else
-                fout.puts line
+                fout.puts line if row_len.nil? or (row_len == line.split(',').count)
               end
             end
           end
