@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_08_011741) do
+ActiveRecord::Schema.define(version: 2018_10_10_071033) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -693,6 +693,12 @@ ActiveRecord::Schema.define(version: 2018_10_08_011741) do
     t.text "local_currency"
     t.text "cost_basis"
     t.text "country"
+  end
+
+  create_table "bny_lookups", id: false, force: :cascade do |t|
+    t.string "fund_id", limit: 32
+    t.string "account_name", limit: 128
+    t.string "ticker", limit: 32
   end
 
   create_table "bny_nav", id: false, force: :cascade do |t|
