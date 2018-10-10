@@ -16,6 +16,7 @@
 #  application_value    :decimal(22, 6)
 #  sum_market_value     :decimal(22, 6)
 #  actual_cash          :decimal(22, 6)
+#  source_name          :string(32)
 #
 
 class VanguardEtf < FeedSchemaBase

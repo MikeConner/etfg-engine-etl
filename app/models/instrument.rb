@@ -33,6 +33,8 @@
 #  pooled_instrument_id :bigint(8)
 #  instrument_id        :bigint(8)
 #  secid                :string(12)
+#  datasource_id        :integer
+#  notes                :text
 #
 
 class Instrument < ApplicationRecord

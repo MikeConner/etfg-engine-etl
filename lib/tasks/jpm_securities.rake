@@ -5,7 +5,9 @@ namespace :jpms do
   task :make_filenames_atomic, [:filepath] => :environment do |t, args|    
     process_file(args[:filepath], "CW_PROFUND_*_AllPositionsTemplate", "CW_PROFUND")
     process_file(args[:filepath], "CW_FFCM_*_FQFTrustPricedPositionsforETFGlobal", "CW_FFCM")
-    process_file(args[:filepath], "reortega_*_O_SharesPositionsforETFGlobal", "REO_OShares", 10)
+    # Can add a row count if you want to delete malformed lines
+    # (Will silently fail for "short" files, though)
+    process_file(args[:filepath], "reortega_*_O_SharesPositionsforETFGlobal", "REO_OShares")
     # Skip these, since there are no dates!
     # process_file(args[:filepath], "reortega_*_ETFSTrustPositionstoETFG.csv", "REO_ETFSTrust")
     

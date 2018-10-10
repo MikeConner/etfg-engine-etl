@@ -36,6 +36,7 @@
 #  match                :boolean          default(FALSE), not null
 #  disposition          :string(32)
 #  trace                :text
+#  exclude_from_ts      :boolean          default(FALSE), not null
 #
 
 require 'rails_helper'

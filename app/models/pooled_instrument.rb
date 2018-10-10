@@ -68,6 +68,7 @@
 #  isin                        :string(12)
 #  cusip                       :string(9)
 #  datasource_id               :integer
+#  exclude_from_ts             :boolean          default(FALSE), not null
 #
 
 class PooledInstrument < ApplicationRecord

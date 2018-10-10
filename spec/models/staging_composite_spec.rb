@@ -87,6 +87,7 @@
 #  portfolio_manager           :string(128)
 #  primary_benchmark           :string
 #  match                       :boolean          default(FALSE), not null
+#  exclude_from_ts             :boolean          default(FALSE), not null
 #
 
 require 'rails_helper'
