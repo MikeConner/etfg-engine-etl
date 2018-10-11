@@ -9,8 +9,8 @@
 #  name_variants        :text             not null
 #  effective_date       :date
 #  expiration_date      :date
-#  figi                 :string(12)       not null
-#  is_exchange_figi     :boolean          default(FALSE), not null
+#  figi                 :string(12)
+#  is_exchange_figi     :boolean
 #  sedol                :string(7)
 #  isin                 :string(12)
 #  cusip                :string(9)
