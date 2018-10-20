@@ -37,6 +37,8 @@
 #  disposition          :string(32)
 #  trace                :text
 #  exclude_from_ts      :boolean          default(FALSE), not null
+#  coupon               :decimal(22, 6)
+#  maturity_date        :date
 #
 
 class StagingConstituent < FeedSchemaBase

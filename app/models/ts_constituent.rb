@@ -18,6 +18,8 @@
 #  publish              :boolean          default(FALSE), not null
 #  as_of_date           :date             not null
 #  currency             :string(16)
+#  coupon               :decimal(22, 6)
+#  maturity_date        :date
 #
 
 class TsConstituent < ApplicationRecord

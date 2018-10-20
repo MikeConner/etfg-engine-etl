@@ -6,3 +6,24 @@
           %h2
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             ETFG ETL
+          - if @dags.empty?
+            %h2 Nothing running
+          - else
+            %table.table.zebra-striped
+              %thead
+                %tr
+                  %th ETFG Date
+                  %th Data Source
+                  %th Process
+                  %th Status
+                  %th Started
+                  %th Updated
+              %tbody
+                - @dags.each do |dag|
+                  %tr
+                    %td= dag.etfg_date.strftime(ApplicationHelper::DATE_FORMAT)
+                    %td= dag.datasource
+                    %td= dag.process
+                    %td= dag.status
+                    %td= dag.created_at.strftime(ApplicationHelper::DATE_FORMAT)  
+                    %td= dag.updated_at.strftime(ApplicationHelper::DATE_FORMAT)  
