@@ -61,7 +61,8 @@ ActiveRecord::Schema.define(version: 2018_10_20_041815) do
     t.boolean "is_direct_feed", default: true, null: false
   end
 
-  create_table "holidays", primary_key: "market_day", id: :date, force: :cascade do |t|
+  create_table "holidays", id: false, force: :cascade do |t|
+    t.date "market_day", null: false
     t.boolean "is_open", null: false
     t.string "description"
   end
@@ -112,10 +113,8 @@ ActiveRecord::Schema.define(version: 2018_10_20_041815) do
     t.text "notes"
     t.index ["currency"], name: "index_instruments_on_currency"
     t.index ["cusip"], name: "index_instruments_on_cusip"
-    t.index ["cusip"], name: "index_instruments_on_cusip_wtf"
     t.index ["figi", "sedol", "isin", "cusip"], name: "all_indexes_instruments"
     t.index ["figi"], name: "index_instruments_on_figi"
-    t.index ["instrument_id"], name: "index_instruments_on_id"
     t.index ["isin"], name: "index_instruments_on_isin"
     t.index ["issuer_id"], name: "index_instruments_on_issuer_id"
     t.index ["sedol"], name: "index_instruments_on_sedol"
@@ -171,6 +170,7 @@ ActiveRecord::Schema.define(version: 2018_10_20_041815) do
 
   create_table "pooled_instruments", force: :cascade do |t|
     t.integer "issuer_id"
+    t.integer "instrument_id"
     t.string "issuer", limit: 32
     t.string "composite_ticker", limit: 32, null: false
     t.text "composite_name_variants", null: false
@@ -228,7 +228,6 @@ ActiveRecord::Schema.define(version: 2018_10_20_041815) do
     t.bigint "pooled_instrument_id"
     t.datetime "created_at", default: -> { "now()" }, null: false
     t.string "secid", limit: 12
-    t.bigint "instrument_id"
     t.string "figi", limit: 12
     t.boolean "is_exchange_figi", default: false, null: false
     t.string "sedol", limit: 7
@@ -237,21 +236,8 @@ ActiveRecord::Schema.define(version: 2018_10_20_041815) do
     t.integer "datasource_id"
     t.boolean "exclude_from_ts", default: false, null: false
     t.index ["composite_ticker"], name: "index_pooled_instruments_on_composite_ticker"
+    t.index ["instrument_id"], name: "index_pooled_instruments_on_instrument_id"
     t.index ["issuer_id"], name: "index_pooled_instruments_on_issuer_id"
-  end
-
-  create_table "temp_dates", primary_key: "pi_id", id: :bigint, default: nil, force: :cascade do |t|
-    t.bigint "pooled_instrument_id"
-    t.bigint "instrument_id"
-    t.string "figi", limit: 12
-    t.string "composite_ticker", limit: 64
-    t.date "inception_date"
-    t.date "effective_date"
-    t.date "expiration_date"
-  end
-
-  create_table "temp_pool", id: false, force: :cascade do |t|
-    t.string "ticker", limit: 32
   end
 
   create_table "ts_composites", force: :cascade do |t|
@@ -282,6 +268,56 @@ ActiveRecord::Schema.define(version: 2018_10_20_041815) do
     t.index ["pooled_instrument_id"], name: "index_ts_composites_on_pooled_instrument_id"
   end
 
+  create_table "ts_composites_0918", id: false, force: :cascade do |t|
+    t.bigint "id"
+    t.date "etfg_date"
+    t.integer "datasource_id", limit: 2
+    t.bigint "pooled_instrument_id"
+    t.string "composite_ticker", limit: 32
+    t.string "composite_name", limit: 128
+    t.decimal "aum", precision: 22, scale: 6
+    t.decimal "shares_outstanding", precision: 22, scale: 6
+    t.decimal "share_value", precision: 22, scale: 6
+    t.decimal "nav", precision: 22, scale: 6
+    t.decimal "open_price", precision: 22, scale: 6
+    t.decimal "low_price", precision: 22, scale: 6
+    t.decimal "high_price", precision: 22, scale: 6
+    t.decimal "close_price", precision: 22, scale: 6
+    t.decimal "daily_return", precision: 22, scale: 6
+    t.decimal "bid_ask_spread", precision: 22, scale: 6
+    t.decimal "avg_bid_size", precision: 22, scale: 6
+    t.decimal "avg_ask_size", precision: 22, scale: 6
+    t.decimal "avg_midpoint", precision: 22, scale: 6
+    t.decimal "basket_estimated_cash", precision: 22, scale: 6
+    t.boolean "publish"
+    t.date "as_of_date"
+  end
+
+  create_table "ts_composites_092118", id: false, force: :cascade do |t|
+    t.bigint "id"
+    t.date "etfg_date"
+    t.integer "datasource_id", limit: 2
+    t.bigint "pooled_instrument_id"
+    t.string "composite_ticker", limit: 32
+    t.string "composite_name", limit: 128
+    t.decimal "aum", precision: 22, scale: 6
+    t.decimal "shares_outstanding", precision: 22, scale: 6
+    t.decimal "share_value", precision: 22, scale: 6
+    t.decimal "nav", precision: 22, scale: 6
+    t.decimal "open_price", precision: 22, scale: 6
+    t.decimal "low_price", precision: 22, scale: 6
+    t.decimal "high_price", precision: 22, scale: 6
+    t.decimal "close_price", precision: 22, scale: 6
+    t.decimal "daily_return", precision: 22, scale: 6
+    t.decimal "bid_ask_spread", precision: 22, scale: 6
+    t.decimal "avg_bid_size", precision: 22, scale: 6
+    t.decimal "avg_ask_size", precision: 22, scale: 6
+    t.decimal "avg_midpoint", precision: 22, scale: 6
+    t.decimal "basket_estimated_cash", precision: 22, scale: 6
+    t.boolean "publish"
+    t.date "as_of_date"
+  end
+
   create_table "ts_constituents", force: :cascade do |t|
     t.date "etfg_date", null: false
     t.integer "datasource_id", limit: 2, null: false
@@ -305,6 +341,42 @@ ActiveRecord::Schema.define(version: 2018_10_20_041815) do
     t.index ["etfg_date"], name: "index_ts_constituents_on_etfg_date"
     t.index ["instrument_id"], name: "index_ts_constituents_on_instrument_id"
     t.index ["pooled_instrument_id"], name: "index_ts_constituents_on_pooled_instrument_id"
+  end
+
+  create_table "ts_constituents_0918", id: false, force: :cascade do |t|
+    t.bigint "id"
+    t.date "etfg_date"
+    t.integer "datasource_id", limit: 2
+    t.bigint "pooled_instrument_id"
+    t.bigint "instrument_id"
+    t.string "composite_ticker", limit: 32
+    t.string "composite_name", limit: 128
+    t.string "constituent_ticker", limit: 64
+    t.string "constituent_name", limit: 128
+    t.decimal "weight", precision: 22, scale: 6
+    t.decimal "market_value", precision: 22, scale: 6
+    t.decimal "notional_value", precision: 22, scale: 6
+    t.decimal "total_shares_held", precision: 22, scale: 6
+    t.boolean "publish"
+    t.date "as_of_date"
+  end
+
+  create_table "ts_constituents_092118", id: false, force: :cascade do |t|
+    t.bigint "id"
+    t.date "etfg_date"
+    t.integer "datasource_id", limit: 2
+    t.bigint "pooled_instrument_id"
+    t.bigint "instrument_id"
+    t.string "composite_ticker", limit: 32
+    t.string "composite_name", limit: 128
+    t.string "constituent_ticker", limit: 64
+    t.string "constituent_name", limit: 128
+    t.decimal "weight", precision: 22, scale: 6
+    t.decimal "market_value", precision: 22, scale: 6
+    t.decimal "notional_value", precision: 22, scale: 6
+    t.decimal "total_shares_held", precision: 22, scale: 6
+    t.boolean "publish"
+    t.date "as_of_date"
   end
 
   create_table "ts_exposures", force: :cascade do |t|
