@@ -2,9 +2,10 @@
 #
 # Table name: ssc_lookups
 #
-#  fund_id         :string(4)
+#  id              :bigint(8)        not null, primary key
+#  fund_id         :string(4)        not null
 #  fund_name       :string(128)
-#  ticker          :string(32)
+#  ticker          :string(32)       not null
 #  effective_date  :date
 #  expiration_date :date
 #  fund_id_alias   :string(4)

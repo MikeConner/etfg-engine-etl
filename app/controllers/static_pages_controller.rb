@@ -6,4 +6,8 @@ class StaticPagesController < ApplicationController
     
     render :layout => 'admin'
   end
+  
+  def lookups
+    render :layout => 'admin'
+  end
 end

@@ -1,0 +1,43 @@
+.container
+  .span12
+    .content-block
+      .bd
+        %br
+        %br
+        .div{:style => 'width:10%'}
+          = label_tag :data_source
+          = select_tag :data_source, options_for_select(JpmLookup::VALID_SOURCES, @selected_source), {:prompt => 'Select a Source', :onchange => "window.location = '/jpm_lookups?source=' + $('#data_source').val();"}
+        %table.table.zebra-striped
+          %thead
+            %tr
+              %th Source
+              %th Account Number
+              %th Account Name 
+              %th Ticker
+              %th
+          %tbody
+            - @tickers.each do |t|
+              %tr
+                %td= t.source
+                %td= t.account_number
+                %td= t.account_name
+                %td= t.ticker
+                %td= link_to 'Delete', t, :method => :delete, :data => { :confirm => 'Are you sure?' }
+        = form_for @lookup do |f|
+          %table.table
+            %caption New lookup table entry
+            %tbody
+              %tr{:style => 'width:50%'}
+                %td
+                  = f.label :source
+                  = f.select :source, options_for_select(JpmLookup::VALID_SOURCES)
+                %td
+                  = f.label :account_number
+                  = f.text_field :account_number
+                %td
+                  = f.label :account_name
+                  = f.text_field :account_name
+                %td
+                  = f.label :ticker
+                  = f.text_field :ticker
+                %td= f.submit 'Add Entry', :class => 'button', :style => 'margin-top:20px'

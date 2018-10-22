@@ -41,6 +41,4 @@ class Instrument < ApplicationRecord
   belongs_to :pooled_instrument, :optional => true
   
   has_many :instrument_exceptions, :dependent => :destroy
-  
-  scope :placeholders, -> { where("figi LIKE 'Unk%'") }
 end

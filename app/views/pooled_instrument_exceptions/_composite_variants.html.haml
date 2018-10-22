@@ -4,8 +4,6 @@
 - else
   .center
     == #{pluralize(exceptions.count, 'Exception')} of #{number_with_delimiter(total)}
-  = check_box_tag :skipped, 'true', skipped
-  Show skipped
   %table.table.zebra-striped
     %caption Composite Exceptions
     %thead
@@ -13,43 +11,43 @@
         %th Composite ID
         %th Standard Name
         %th Unknown Name
-        -#
-          %th Figi
-          %th Sedol
-          %th Isin 
-          %th Cusip
         %th Variants
         %th
     %tbody
       - exceptions.each do |exception|
-        -# instrument = exception.instrument
         - composite = exception.pooled_instrument
         %tr
           %td{:style => 'width:150px'}
-            = exception.file_date
+            - if date_map.has_key?(exception.id)
+              = date_map[exception.id][0].try(:strftime, ApplicationHelper::DATE_FORMAT)
+              \-
+              %br= date_map[exception.id][1].try(:strftime, ApplicationHelper::DATE_FORMAT)
+            - else
+              = exception.file_date.try(:strftime, ApplicationHelper::DATE_FORMAT)
             %br
             = composite.id
-            -# unless composite.nil?
             == /#{composite.composite_ticker}/#{composite.exchange_country}
-          %td= raw composite.standard_composite_name
+            - unless composite.figi.nil?
+              %br= composite.figi
+            - unless composite.sedol.nil?
+              %br= composite.sedol
+            - unless composite.isin.nil?
+              %br= composite.isin
+            - unless composite.cusip.nil?
+              %br= composite.cusip
+          %td= composite.standard_composite_name
+          -#
+            = text_area_tag "standard_name_#{composite.id}", composite.standard_composite_name, {:size => '20x8', :onchange => "update_composite_name(#{composite.id})"}
           %td
             %strong= exception.name_in_datasource
-          -#
-            %td
-              = instrument.figi
-              - if instrument.is_exchange_figi
-                &nbsp;(Exchange)
-            %td= instrument.sedol
-            %td= instrument.isin
-            %td= instrument.cusip
           %td{:style => 'width:370px'}
             = text_area_tag :tat, composite.composite_name_variants.split('^').join(","), :style => 'height:150px'
           %td{:style => 'width:450px'}
-            = radio_button_tag "disposition_#{exception.id}", 'AV'
+            = radio_button_tag "disposition_#{exception.id}", 'Accept'
             Accept
             %br
-            = radio_button_tag "disposition_#{exception.id}", 'SK'
+            = radio_button_tag "disposition_#{exception.id}", 'Skip'
             Skip
             %br
-            = radio_button_tag "disposition_#{exception.id}", 'IG'
+            = radio_button_tag "disposition_#{exception.id}", 'Ignore'
             Ignore (Delete)

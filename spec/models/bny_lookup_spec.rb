@@ -2,9 +2,9 @@
 #
 # Table name: bny_lookups
 #
-#  fund_id      :string(32)
-#  account_name :string(128)
-#  ticker       :string(32)
+#  fund_id      :string(32)       not null, primary key
+#  account_name :string(128)      not null
+#  ticker       :string(32)       not null
 #
 
 require 'rails_helper'

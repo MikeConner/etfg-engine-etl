@@ -17,10 +17,4 @@ class InstrumentsController < ApplicationController
     
     render :layout => 'admin'
   end
-  
-  def placeholder
-    @instruments = Instrument.placeholders
-    
-    render 'index', :layout => 'admin'
-  end  
 end

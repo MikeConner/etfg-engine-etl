@@ -23,9 +23,19 @@ Rails.application.routes.draw do
     post :bulk_update, :on => :collection
   end
   
-  resources :instruments, :only => [:index, :show] do
-    get 'placeholder', :on => :collection
+  resources :instruments, :only => [:index, :show]
+  
+  resources :bny_lookups, :only => [:index, :destroy, :create]
+  
+  resources :ssc_lookups, :only => [:index, :destroy, :create] do
+    member do 
+      put :update_effective_date
+      put :update_expiration_date
+    end
   end
   
+  resources :jpm_lookups, :only => [:index, :destroy, :create]
+  
   get "/workbench" => "static_pages#workbench"
+  get "/lookups" => "static_pages#lookups"
 end

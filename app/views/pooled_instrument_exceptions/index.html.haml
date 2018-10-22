@@ -8,8 +8,12 @@
           = label_tag :data_source
           = select_tag :data_source, options_from_collection_for_select(@datasources, :id, :data_source_name, @selected_source), {:prompt => 'Select a Datasource', :onchange => "window.location = '/pooled_instrument_exceptions?skipped=#{@skipped}&src_id=' + $('#data_source').val();"}
           %br
+          = check_box_tag :skipped, 'true', @skipped, :onclick => "window.location='#{pooled_instrument_exceptions_url(:skipped => !@skipped,:src_id => @selected_source)}'"
+          Show skipped
         = form_tag bulk_update_pooled_instrument_exceptions_path do
-          = render :partial => 'composite_variants', :locals => {:exceptions => @exceptions, :total => @total, :skipped => @skipped, :src_id => @selected_source}
+          = hidden_field_tag 'skipped', @skipped
+          = hidden_field_tag 'source_id', @selected_source
+          = render :partial => 'composite_variants', :locals => {:exceptions => @exceptions, :date_map => @date_map, :total => @total, :skipped => @skipped, :src_id => @selected_source}
           .actions
             = submit_tag 'Process Variants', :class => 'button btn btn-large btn-primary'
             %br

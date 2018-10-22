@@ -16,7 +16,6 @@
                   %th Data Source
                   %th Process
                   %th Status
-                  %th Started
                   %th Updated
               %tbody
                 - @dags.each do |dag|
@@ -25,5 +24,4 @@
                     %td= dag.datasource
                     %td= dag.process
                     %td= dag.status
-                    %td= dag.created_at.strftime(ApplicationHelper::DATE_FORMAT)  
                     %td= dag.updated_at.strftime(ApplicationHelper::DATE_FORMAT)  
