@@ -23,6 +23,8 @@ Rails.application.routes.draw do
     post :bulk_update, :on => :collection
   end
   
+  resources :pooled_instruments
+  
   resources :instruments, :only => [:index, :show]
   
   resources :bny_lookups, :only => [:index, :destroy, :create]

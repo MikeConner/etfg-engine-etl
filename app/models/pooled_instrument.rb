@@ -4,7 +4,7 @@
 #
 #  id                          :bigint(8)        not null, primary key
 #  issuer_id                   :integer
-#  issuer                      :string(32)
+#  issuer                      :string(64)
 #  composite_ticker            :string(32)       not null
 #  composite_name_variants     :text             not null
 #  standard_composite_name     :string(128)      not null
@@ -72,4 +72,8 @@
 #
 
 class PooledInstrument < ApplicationRecord
+  belongs_to :datasource, :optional => true
+  
+  validates_length_of :composite_ticker, :distribution_frequency, :maximum => 32
+  validates_length_of :issuer, :maximum => 64
 end

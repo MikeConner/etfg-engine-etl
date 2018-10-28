@@ -9,7 +9,12 @@
 #  constituent_name :text             not null
 #  id_type          :string(8)        not null
 #  id_value         :string(12)       not null
+#  country          :string(64)
+#  currency         :string(16)
 #  figi             :string(12)
+#  sedol            :string(7)
+#  isin             :string(12)
+#  cusip            :string(9)
 #
 
 class KnownException < ApplicationRecord

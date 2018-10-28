@@ -1,0 +1,86 @@
+.container
+  .span12
+    .content-block
+      .bd
+        %br
+        %br
+        - if 1 == @instruments.count
+          - pi = @instruments.first
+          - approval = pi.approved? ? 'Approved Pooled Instrument' : 'Pending Pooled Instrument'
+          %table.table.zebra-striped
+            %caption= approval
+            %tbody
+              %tr
+                %td ID
+                %td{:title => pi.id}= pi.pooled_instrument_id
+              %tr
+                %td Ticker
+                %td= pi.composite_ticker
+              %tr
+                %td Country
+                %td= pi.exchange_country
+              %tr
+                %td Name
+                %td= pi.standard_composite_name
+              %tr
+                %td Index
+                %td= pi.is_index ? 'Yes' : 'No'
+              %tr
+                %td Figi
+                %td
+                  = pi.figi
+                  - unless pi.figi.blank?
+                    = pi.is_exchange_figi ? ' (Exchange)' : ''
+              %tr
+                %td Sedol
+                %td= pi.sedol
+              %tr
+                %td Isin
+                %td= pi.isin
+              %tr
+                %td Cusip
+                %td= pi.cusip
+              %tr 
+                %td Created
+                %td= pi.created_at.try(:strftime, ApplicationHelper::DATE_FORMAT)
+              %tr
+                %td Datasource
+                %td= pi.datasource.nil? ? 'Unknown' : pi.datasource.data_source_name
+              %tr
+                %td TS Excluded
+                %td= pi.exclude_from_ts ? 'Yes' : 'No'
+        - else
+          %table.table.zebra-striped
+            %thead
+              %tr
+                %th ID
+                %th Ticker
+                %th Country
+                %th Effective
+                %th Expiration
+                %th Name
+                %th Figi
+                %th Sedol
+                %th Isin
+                %th Cusip
+                %th Created
+                %th Datasource
+                %th TS Excluded
+            %tbody
+              - @instruments.each do |pi|
+                %td{:title => pi.id}= pi.pooled_instrument_id
+                %td= pi.composite_ticker
+                %td= pi.exchange_country
+                %td= pi.effective_date.try(:strftime, ApplicationHelper::DATE_FORMAT)
+                %td= pi.expiration_date.try(:strftime, ApplicationHelper::DATE_FORMAT)
+                %td= pi.standard_composite_name
+                %td
+                  = pi.figi
+                  - unless pi.figi.blank?
+                    = pi.is_exchange_figi ? ' (Exchange)' : ''
+                %td= pi.sedol
+                %td= pi.isin
+                %td= pi.cusip
+                %td= pi.created_at.try(:strftime, ApplicationHelper::DATE_FORMAT)
+                %td= pi.datasource.nil? ? 'Unknown' : pi.datasource.data_source_name
+                %td= pi.exclude_from_ts ? 'Yes' : 'No'

@@ -299,7 +299,7 @@ namespace :db do
     updates = 0
     misses = 0
     found = 0
-    CSV.foreach('etpr_ric_etp_expenses_rpt 8.17.18.csv') do |row|
+    CSV.foreach('etpr_ric_etp_expenses_rpt 10.8.18.csv', :headers => true, :encoding => 'windows-1252') do |row|
       # 0 id
       # 1 ticker
       # 2 issue_name
@@ -357,7 +357,7 @@ namespace :db do
     updates = 0
     misses = 0
     found = 0
-    CSV.foreach('etpr_non_ric_etp_expenses_rpt 8.17.18.csv') do |row|
+    CSV.foreach('etpr_non_ric_etp_expenses_rpt 10.8.18.csv', :headers => true, :encoding => 'windows-1252') do |row|
       # 0 id
       # 1 ticker
       # 2 issue_name
@@ -415,7 +415,7 @@ namespace :db do
     updates = 0
     misses = 0
     found = 0
-    CSV.foreach('etpr_etp_tax_classification_rpt 8.20.18.csv') do |row|
+    CSV.foreach('etpr_etp_tax_classification_rpt 10.8.18.csv', :headers => true, :encoding => 'windows-1252') do |row|
       # 0 id
       # 1 ticker
       # 2 issue_name
@@ -447,7 +447,7 @@ namespace :db do
     updates = 0
     misses = 0
     found = 0
-    CSV.foreach('etpr_etp_service_providers_rpt 8.20.18.csv') do |row|
+    CSV.foreach('etpr_etp_service_providers_rpt 10.8.18.csv', :headers => true, :encoding => 'windows-1252') do |row|
       # 0 id
       # 1 ticker -> composite_ticker
       # 2 issue_name -> composite_name
@@ -548,15 +548,43 @@ namespace :db do
     # 8 listing_exchange -> listing_exchange
     # 9 creation_unit_size -> creation_unit_size
     # 10 creation_fee -> creation_fee
-    CSV.foreach('etpr_etp_additional_content_rpt 8.21.18.csv') do |row|
+    CSV.foreach('etpr_etp_additional_content_rpt 10.8.18.csv', :encoding => 'windows-1252', :headers => true) do |row|
       pi = PooledInstrument.find_by_composite_ticker_and_exchange_country(row[1], 'US')
-      if pi.nil?
+      if pi.nil? and not row[1].blank?
         puts "#{row[1]} not found"
         misses += 1
+        issuer_id = nil
+        issuer = Issuer.find_by_name(row[3])
+        unless issuer.nil?
+          issuer_id = issuer.id
+        end
+        inception_date = Date.strptime(row[4], "%m/%d/%y") rescue nil
+        fiscal_year = Date.strptime(row[6], "%m/%d/%y") rescue nil
+        pi = PooledInstrument.new(:issuer => row[3],
+                                  :issuer_id => issuer_id,
+                                  :composite_ticker => row[1],
+                                  :standard_composite_name => row[2],
+                                  :composite_name_variants => row[2],
+                                  :inception_date => inception_date,
+                                  :exchange_country => 'US',
+                                  :listing_exchange => row[8],
+                                  :distribution_frequency => row[7],
+                                  :creation_unit_size => row[9].blank? ? nil : row[9].to_f,
+                                  :creation_fee => row[10].blank? ? nil : row[10].to_f,
+                                  :fiscal_year_end => fiscal_year,
+                                  :approved => true)
+        if pi.valid?
+          pi.save!
+          pi.update_attribute(:pooled_instrument_id, pi.id)
+          puts "#{row[1]} created"
+        else
+            puts pi.errors.full_messages.to_sentence
+            raise "Invalid!"
+        end
       else
         found += 1
         puts found if 0 == found % 10
-                
+        
         updates += update_composite_name(pi, row[2])
       
         # These run in order, so don't overwrite previous values
@@ -610,7 +638,7 @@ namespace :db do
     misses = 0
     found = 0
           
-    CSV.foreach('etpr_etn_directory_rpt 8.17.18.csv') do |row|
+    CSV.foreach('etpr_etn_directory_rpt 10.8.18.csv', :headers => true) do |row|
       pi = PooledInstrument.find_by_composite_ticker_and_exchange_country(row[1], 'US')
  
       if pi.nil?

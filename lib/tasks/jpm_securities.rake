@@ -8,6 +8,7 @@ namespace :jpms do
     # Can add a row count if you want to delete malformed lines
     # (Will silently fail for "short" files, though)
     process_file(args[:filepath], "reortega_*_O_SharesPositionsforETFGlobal", "REO_OShares")
+    process_file(args[:filepath], "reortega_*_ETFSTrustPositionstoETFG", "REO_RelMgr")
     # Skip these, since there are no dates!
     # process_file(args[:filepath], "reortega_*_ETFSTrustPositionstoETFG.csv", "REO_ETFSTrust")
     

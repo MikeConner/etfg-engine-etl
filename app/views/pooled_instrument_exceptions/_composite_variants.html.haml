@@ -25,7 +25,7 @@
             - else
               = exception.file_date.try(:strftime, ApplicationHelper::DATE_FORMAT)
             %br
-            = composite.id
+            = link_to composite.pooled_instrument_id, pooled_instrument_path(composite)
             == /#{composite.composite_ticker}/#{composite.exchange_country}
             - unless composite.figi.nil?
               %br= composite.figi
