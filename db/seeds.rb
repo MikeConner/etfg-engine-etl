@@ -7,7 +7,7 @@ pg_dump --encoding=utf8 --no-owner -t public.ambiguous_instruments etfg > ambigu
 
 Then at the rails console destination:
 
-psql etfg_etl -f ambiguous_instruments.sql 
+psql etfg_etl -f ambiguous_instruments.sql
 =end
 
 if File.exists?('composite_figis.csv') and (0 == CompositeFigi.count)
@@ -30,14 +30,15 @@ end
    Datasource.create(:data_source_name => ds, :is_direct_feed => false)
  end
 
-["MasterDataReports", "FirstBridge", "VelocityShares", "PurposeHoldings", "Gsam", "Yahoo", "Xignite", "NYSE", "Nasdaq", "ShortSqueeze", "HOD", "ETPR", 
- "RBC", "AGFi", "BMO", "CanadianMint", "Harvest", "SSC", "BNY", "BlackRock", "Vanguard", "Barclays", "Sei", "BBH", "Gemini", "Citi", "JPMorgan", 
+["MasterDataReports", "FirstBridge", "VelocityShares", "PurposeHoldings", "Gsam", "Yahoo", "Xignite", "NYSE", "Nasdaq", "ShortSqueeze", "HOD", "ETPR",
+ "RBC", "AGFi", "BMO", "CanadianMint", "Harvest", "SSC", "BNY", "BlackRock", "Vanguard", "Barclays", "Sei", "BBH", "Gemini", "Citi", "JPMorgan",
  "USBank"].each do |ds|
    Datasource.create(:data_source_name => ds)
  end
 
 if File.exists?('instruments.csv') and (0 == Instrument.count)
   CSV.foreach("instruments.csv") do |line|
+    next if $. == 1 # Skip header line
     Instrument.create(:issuer_id => line[0],
                       :issuer => line[1],
                       :ticker => line[2],
@@ -72,6 +73,7 @@ end
 
 if File.exists?('issuer_variants.csv') and (0 == Issuer.count)
   CSV.foreach("issuer_variants.csv") do |line|
+    next if $. == 1 # Skip header line
     Issuer.create(:name => line[0])
     IssuerVariant.create(:name => line[0], :datasource_id => line[1], :issuer_id => line[2])
   end
@@ -79,6 +81,7 @@ end
 
 if File.exists?('pooled_instruments.csv') and (0 == PooledInstrument.count)
   CSV.foreach("pooled_instruments.csv") do |line|
+    next if $. == 1 # Skip header line
     PooledInstrument.create(:issuer_id => line[0],
                             :instrument_id => line[1],
                             :issuer => line[2],
@@ -99,7 +102,7 @@ if File.exists?('pooled_instruments.csv') and (0 == PooledInstrument.count)
                             :inception_date => line[17],
                             :etp_structure_type => line[18],
                             :category => line[19],
-                            :related_index => line[20],      
+                            :related_index => line[20],
                             :related_index_symbol => line[21],
                             :related_index_name => line[22],
                             :net_expenses => line[23],
