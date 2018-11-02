@@ -31,7 +31,7 @@ namespace :jpms do
     # If necessary, convert to csv (will work whether it sends xls or pre-converted csv)
     files = Dir["#{path}/raw/#{pattern}.xml"]
     files.each do |fname|
-      puts fname
+      puts "Converting #{fname}"
       rename = fname.gsub(/\.xml/, '.csv')
       excel = Roo::Spreadsheet.open(fname, :extension => 'xml')
       
@@ -39,7 +39,8 @@ namespace :jpms do
         1.upto(excel.last_row) do |line|
           fout.write CSV.generate_line excel.row(line)
         end            
-      end      
+      end  
+      FileUtils.rm(fname)    
     end
     
     # Now process the csv file
