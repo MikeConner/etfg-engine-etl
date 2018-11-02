@@ -4,7 +4,8 @@ namespace :jpms do
   desc "Date JPM Securities files"
   task :make_filenames_atomic, [:filepath] => :environment do |t, args|    
     process_file(args[:filepath], "CW_PROFUND_*_AllPositionsTemplate", "CW_PROFUND")
-    process_file(args[:filepath], "CW_FFCM_*_FQFTrustPricedPositionsforETFGlobal", "CW_FFCM")
+    # Turning off FFCM
+    #process_file(args[:filepath], "CW_FFCM_*_FQFTrustPricedPositionsforETFGlobal", "CW_FFCM")
     # Can add a row count if you want to delete malformed lines
     # (Will silently fail for "short" files, though)
     process_file(args[:filepath], "reortega_*_O_SharesPositionsforETFGlobal", "REO_OShares")
@@ -20,8 +21,83 @@ namespace :jpms do
     # QuantShares_ALLNAV_02082018.xlsx
     # Convert to CSV first
     convert_to_csv(args[:filepath], "QuantShares_ALLNAV_*.xls*", "QuantShares_ALLNAV_(\\d+).(xlsx?)", "QuantShares_ALLNAV")
+    convert_ffcm(args[:filepath], "FFCM_Positions_for_Morningstar_*", "FFCM_Positions")
   end
 
+  def convert_ffcm(path, pattern, replacement)
+    errors = 0
+    successes = 0
+
+    # If necessary, convert to csv (will work whether it sends xls or pre-converted csv)
+    files = Dir["#{path}/raw/#{pattern}.xml"]
+    files.each do |fname|
+      puts fname
+      rename = fname.gsub(/\.xml/, '.csv')
+      excel = Roo::Spreadsheet.open(fname, :extension => 'xml')
+      
+      File.open(rename, 'w') do |fout|            
+        1.upto(excel.last_row) do |line|
+          fout.write CSV.generate_line excel.row(line)
+        end            
+      end      
+    end
+    
+    # Now process the csv file
+    files = Dir["#{path}/raw/#{pattern}.csv"]
+    files.each do |fname|
+      begin
+        date = nil
+        puts "Reading #{fname}"
+        File.open(fname).each do |line|
+          s = line.gsub('"', '')
+          break if line =~ /\AEffective/i
+          
+          if s =~ /As Of Date: (.*)/i
+             date = Date.strptime($1, '%d-%b-%Y')
+             break
+          end 
+        end
+        
+        if date.nil?
+          puts "Could not find date in #{fname}"
+          errors += 1
+        else          
+          rename = "#{path}/#{replacement}.#{date.strftime('%Y%m%d')}.csv"
+          puts "Writing #{rename}"
+          header = true
+
+          File.open(rename, 'w') do |fout|            
+            File.open(fname).each do |line|
+              if header
+                if line.gsub('"', '') =~ /\AEffective/
+                  header = false
+                  fout.puts line
+                end
+              else
+                fout.puts line
+              end
+            end
+          end
+          
+          if header
+            puts "Could not find content in #{fname}"
+            errors += 1
+          else
+            FileUtils.rm(fname)
+            successes += 1
+          end
+        end
+      rescue Exception => ex
+        puts "Could not process #{fname}: #{ex.message}"
+        errors += 1
+      end
+    end   
+    
+    if errors > 1
+      raise "Conversion errors: #{errors} (Converted: #{successes})"
+    end
+  end
+  
   def convert_to_csv(path, pattern, re_pattern, replacement)  
     errors = 0
     successes = 0

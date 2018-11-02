@@ -25,6 +25,7 @@ gem 'security_identifiers', '0.2.1'
 gem 'activerecord-import', '0.25.0'
 gem 'blazer', '1.9.0'
 gem 'roo', '2.7.1'
+gem 'roo-xls', '1.2.0'
 gem 'carrierwave', '1.2.3'
 
 # See https://github.com/rails/execjs#readme for more supported runtimes
