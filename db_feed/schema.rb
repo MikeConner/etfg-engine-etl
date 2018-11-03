@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_23_210229) do
+ActiveRecord::Schema.define(version: 2018_11_02_213141) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1286,6 +1286,8 @@ ActiveRecord::Schema.define(version: 2018_10_23_210229) do
     t.string "fund_id", limit: 32, null: false
     t.string "account_name", limit: 128, null: false
     t.string "ticker", limit: 32, null: false
+    t.date "effective_date"
+    t.date "expiration_date"
     t.index ["fund_id"], name: "index_bny_lookups_on_fund_id", unique: true
   end
 
@@ -1414,21 +1416,6 @@ ActiveRecord::Schema.define(version: 2018_10_23_210229) do
     t.decimal "total_assets", precision: 22, scale: 6
     t.decimal "net_assets", precision: 22, scale: 6
     t.text "futval"
-  end
-
-  create_table "df_composite_identifiers", id: false, force: :cascade do |t|
-    t.integer "datasource_id", limit: 2, null: false
-    t.string "ticker", limit: 32, null: false
-    t.string "name", limit: 128
-    t.string "figi", limit: 12, null: false
-    t.boolean "composite_figi", default: true, null: false
-    t.string "sedol", limit: 7
-    t.string "isin", limit: 12
-    t.string "cusip", limit: 9
-    t.string "secid", limit: 12
-    t.index ["datasource_id", "ticker"], name: "index_df_composite_identifiers_on_datasource_id_and_ticker", unique: true
-    t.index ["figi"], name: "index_df_composite_identifiers_on_figi", unique: true
-    t.index ["ticker"], name: "index_df_composite_identifiers_on_ticker"
   end
 
   create_table "etfmg_hold", force: :cascade do |t|
@@ -1739,6 +1726,8 @@ ActiveRecord::Schema.define(version: 2018_10_23_210229) do
     t.string "account_number", limit: 32, null: false
     t.string "account_name", limit: 128
     t.string "ticker", limit: 32, null: false
+    t.date "effective_date"
+    t.date "expiration_date"
     t.index ["source", "account_number"], name: "index_jpm_lookups_on_source_and_account_number", unique: true
   end
 
@@ -2601,6 +2590,23 @@ ActiveRecord::Schema.define(version: 2018_10_23_210229) do
     t.index ["etfg_date"], name: "index_staging_constituents_on_etfg_date"
     t.index ["figi"], name: "index_staging_constituents_on_figi"
     t.index ["instrument_id"], name: "index_staging_constituents_on_instrument_id"
+  end
+
+  create_table "staging_instrument_exceptions", force: :cascade do |t|
+    t.integer "datasource_id", limit: 2, null: false
+    t.bigint "instrument_id", null: false
+    t.string "name_in_datasource", limit: 128, null: false
+    t.date "etfg_date", null: false
+    t.string "figi", limit: 12
+    t.string "sedol", limit: 7
+    t.string "isin", limit: 12
+    t.string "cusip", limit: 9
+    t.string "composite_ticker", limit: 32
+    t.bigint "pooled_instrument_id"
+    t.text "trace"
+    t.index ["datasource_id"], name: "index_staging_instrument_exceptions_on_datasource_id"
+    t.index ["etfg_date"], name: "index_staging_instrument_exceptions_on_etfg_date"
+    t.index ["instrument_id"], name: "index_staging_instrument_exceptions_on_instrument_id"
   end
 
   create_table "ubs_etracs", id: false, force: :cascade do |t|

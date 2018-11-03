@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_26_181247) do
+ActiveRecord::Schema.define(version: 2018_11_03_043348) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,13 +69,26 @@ ActiveRecord::Schema.define(version: 2018_10_26_181247) do
 
   create_table "instrument_exceptions", force: :cascade do |t|
     t.integer "datasource_id", limit: 2, null: false
-    t.date "file_date", null: false
     t.bigint "instrument_id", null: false
-    t.string "name_in_datasource", limit: 128, null: false
-    t.text "datasource_lines", null: false
-    t.index ["datasource_id", "file_date"], name: "idx_data_on_date"
+    t.string "candidate_name", limit: 128, null: false
+    t.string "standard_name", limit: 128, null: false
+    t.string "composite_ticker", limit: 32
+    t.bigint "pooled_instrument_id"
+    t.string "figi", limit: 12
+    t.string "sedol", limit: 7
+    t.string "isin", limit: 12
+    t.string "cusip", limit: 9
+    t.date "start_date"
+    t.date "end_date"
+    t.boolean "skipped", default: false, null: false
+    t.string "resolution", limit: 16
+    t.integer "score"
+    t.index ["composite_ticker"], name: "index_instrument_exceptions_on_composite_ticker"
+    t.index ["datasource_id", "instrument_id", "candidate_name"], name: "ie_row", unique: true
     t.index ["datasource_id"], name: "index_instrument_exceptions_on_datasource_id"
     t.index ["instrument_id"], name: "index_instrument_exceptions_on_instrument_id"
+    t.index ["score", "end_date"], name: "index_instrument_exceptions_on_score_and_end_date"
+    t.index ["score"], name: "index_instrument_exceptions_on_score"
   end
 
   create_table "instruments", force: :cascade do |t|
@@ -111,6 +124,7 @@ ActiveRecord::Schema.define(version: 2018_10_26_181247) do
     t.string "secid", limit: 12
     t.integer "datasource_id"
     t.text "notes"
+    t.string "cusip_validated", limit: 16
     t.index ["currency"], name: "index_instruments_on_currency"
     t.index ["cusip"], name: "index_instruments_on_cusip"
     t.index ["figi", "sedol", "isin", "cusip"], name: "all_indexes_instruments"
@@ -268,6 +282,8 @@ ActiveRecord::Schema.define(version: 2018_10_26_181247) do
     t.decimal "basket_estimated_cash", precision: 22, scale: 6
     t.boolean "publish", default: false, null: false
     t.date "as_of_date", null: false
+    t.decimal "factor", precision: 22, scale: 6, default: "1.0"
+    t.decimal "factor_shares_outstanding", precision: 22, scale: 6
     t.index ["datasource_id"], name: "index_ts_composites_on_datasource_id"
     t.index ["etfg_date", "datasource_id"], name: "index_ts_composites_on_etfg_date_and_datasource_id"
     t.index ["etfg_date"], name: "index_ts_composites_on_etfg_date"

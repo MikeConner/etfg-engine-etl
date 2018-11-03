@@ -20,20 +20,8 @@
 #  score                :integer
 #
 
-class InstrumentException < ApplicationRecord
-  belongs_to :datasource
-  belongs_to :instrument
-  belongs_to :pooled_instrument, :optional => true
- 
-  SKIP = 'Skip'
-  ACCEPT = 'Accept'
-  IGNORE = 'Ignore'
-  EXCEPTION = 'Exception'
-  CORP_ACTION = 'Action'
-  
-  scope :skipped, -> { where("skipped=#{ActiveRecord::Base.connection.quoted_true}") }
+require 'rails_helper'
 
-  def hide?
-    [EXCEPTION, CORP_ACTION].include?(self.resolution)
-  end
+RSpec.describe InstrumentException, type: :model do
+  pending "add some examples to (or delete) #{__FILE__}"
 end

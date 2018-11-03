@@ -18,8 +18,11 @@
           %td= exception.datasource_line
           %td
             - exception.instrument_list.split(',').each do |i|
-              - instrument = Instrument.find(i)
-              = link_to "#{instrument.standard_name} (#{instrument.instrument_id})", instruments_path(:id_set => exception.instrument_list), :target => '_blank'
-              %br
+              - instrument = Instrument.find_by_id(i)
+              - if instrument.nil?
+                Instrument deleted
+              - else
+                = link_to "#{instrument.standard_name} (#{instrument.instrument_id})", instruments_path(:id_set => exception.instrument_list), :target => '_blank'
+                %br
           %td= text_field_tag :resolved_id
             

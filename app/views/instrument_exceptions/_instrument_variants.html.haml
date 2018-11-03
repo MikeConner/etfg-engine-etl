@@ -4,8 +4,6 @@
 - else
   .center
     == #{pluralize(exceptions.count, 'Exception')} of #{number_with_delimiter(total)}
-  = check_box_tag :skipped, 'true', skipped
-  Show skipped
   %table.table.zebra-striped
     %caption Instrument Exceptions
     %thead
@@ -26,15 +24,22 @@
         - composite = instrument.pooled_instrument
         %tr
           %td{:style => 'width:150px'}
-            = exception.file_date
+            - if exception.start_date == exception.end_date
+              = exception.start_date.try(:strftime, ApplicationHelper::DATE_FORMAT)
+            - else
+              = exception.start_date .try(:strftime, ApplicationHelper::DATE_FORMAT)
+              \-
+              %br= exception.end_date.try(:strftime, ApplicationHelper::DATE_FORMAT)
+            %br
             %br
             = instrument.id
-            - unless composite.nil?
-              == /#{composite.composite_ticker}/#{composite.exchange_country}
           %td= raw instrument.standard_name
-          %td VSS
           %td
-            %strong= exception.name_in_datasource
+            = exception.composite_ticker
+            - unless composite.nil?
+              == /#{composite.exchange_country}
+          %td
+            %strong= exception.candidate_name
           %td
             = instrument.figi
             - if instrument.is_exchange_figi
@@ -45,15 +50,17 @@
           %td{:style => 'width:370px'}
             = text_area_tag :tat, instrument.name_variants.split('^').join(","), :style => 'height:150px'
           %td{:style => 'width:450px'}
-            = radio_button_tag "disposition_#{exception.id}", 'AV'
+            = radio_button_tag "disposition_#{exception.id}", InstrumentException::ACCEPT
             Accept
             %br
-            = radio_button_tag "disposition_#{exception.id}", 'SK'
+            = radio_button_tag "disposition_#{exception.id}", InstrumentException::SKIP
             Skip
             %br
-            = radio_button_tag "disposition_#{exception.id}", 'IG'
+            = radio_button_tag "disposition_#{exception.id}", InstrumentException::IGNORE
             Ignore (Delete)
             %br
-            = radio_button_tag "disposition_#{exception.id}", 'CE'
-            Create Exception
-            = text_field_tag "exception_figi_#{exception.id}", nil, :placeholder => 'Enter Correct FIGI'
+            = radio_button_tag "disposition_#{exception.id}", InstrumentException::EXCEPTION
+            Add Known Exception
+            %br
+            = radio_button_tag "disposition_#{exception.id}", InstrumentException::CORP_ACTION
+            Corporate Action

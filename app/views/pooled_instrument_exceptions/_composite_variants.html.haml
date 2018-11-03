@@ -18,10 +18,13 @@
         - composite = exception.pooled_instrument
         %tr
           %td{:style => 'width:150px'}
-            - if date_map.has_key?(exception.id)
-              = date_map[exception.id][0].try(:strftime, ApplicationHelper::DATE_FORMAT)
-              \-
-              %br= date_map[exception.id][1].try(:strftime, ApplicationHelper::DATE_FORMAT)
+            - if date_map.has_key?(exception.id) 
+              - if date_map[exception.id][0] == date_map[exception.id][1]
+                = exception.file_date.try(:strftime, ApplicationHelper::DATE_FORMAT)
+              - else
+                = date_map[exception.id][0].try(:strftime, ApplicationHelper::DATE_FORMAT)
+                \-
+                %br= date_map[exception.id][1].try(:strftime, ApplicationHelper::DATE_FORMAT)
             - else
               = exception.file_date.try(:strftime, ApplicationHelper::DATE_FORMAT)
             %br

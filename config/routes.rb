@@ -27,7 +27,12 @@ Rails.application.routes.draw do
   
   resources :instruments, :only => [:index, :show]
   
-  resources :bny_lookups, :only => [:index, :destroy, :create]
+  resources :bny_lookups, :only => [:index, :destroy, :create] do
+    member do 
+      put :update_effective_date
+      put :update_expiration_date
+    end    
+  end
   
   resources :ssc_lookups, :only => [:index, :destroy, :create] do
     member do 
@@ -36,7 +41,12 @@ Rails.application.routes.draw do
     end
   end
   
-  resources :jpm_lookups, :only => [:index, :destroy, :create]
+  resources :jpm_lookups, :only => [:index, :destroy, :create] do
+    member do 
+      put :update_effective_date
+      put :update_expiration_date
+    end        
+  end
   
   get "/workbench" => "static_pages#workbench"
   get "/lookups" => "static_pages#lookups"

@@ -25,11 +25,8 @@
                   %td= t.fund_id
                   %td= t.fund_name
                   %td= t.ticker
-                  %td= text_field_tag "ssc_effective_#{t.id}", t.effective_date, :onchange => "update_ssc_effective(#{t.id})", :class => "jquery-ui-date", :style => 'width:100px'
-                  %td= text_field_tag "ssc_expiration_#{t.id}", t.expiration_date, :onchange => "update_ssc_expiration(#{t.id})", :class => "jquery-ui-date", :style => 'width:100px'
-                  -#
-                    %td= t.effective_date.try(:strftime, ApplicationHelper::DATE_FORMAT)
-                    %td= t.expiration_date.try(:strftime, ApplicationHelper::DATE_FORMAT)
+                  %td= text_field_tag "ssc_effective_#{t.id}", t.effective_date, :onchange => "update_lookup_effective_date(#{t.id},'ssc')", :class => "jquery-ui-date", :style => 'width:100px'
+                  %td= text_field_tag "ssc_expiration_#{t.id}", t.expiration_date, :onchange => "update_lookup_expiration_date(#{t.id},'ssc')", :class => "jquery-ui-date", :style => 'width:100px'
                   %td= t.fund_id_alias
                   %td= link_to 'Delete', t, :method => :delete, :data => { :confirm => 'Are you sure?' }
         = form_for @lookup do |f|

@@ -19,6 +19,30 @@ class JpmLookupsController < ApplicationController
   rescue Exception => ex
       redirect_to jpm_lookups_path, :alert => "Error adding entry! #{ex.message}"     
   end
+
+  def update_effective_date
+    @lookup = JpmLookup.find(params[:id])
+    
+    value = params[:effective_date].blank? ? nil : Date.strptime(params[:effective_date], '%m/%d/%Y')
+
+    if @lookup.update_attributes(:effective_date => value)
+      head :ok
+    else
+      render :text => @lookup.errors.full_messages.to_sentence
+    end
+  end
+  
+  def update_expiration_date
+    @lookup = JpmLookup.find(params[:id])    
+
+    value = params[:expiration_date].blank? ? nil : Date.strptime(params[:expiration_date], '%m/%d/%Y')
+
+    if @lookup.update_attributes(:expiration_date => value)
+      head :ok
+    else
+      render :text => @lookup.errors.full_messages.to_sentence
+    end
+  end
   
   def destroy
     @lookup = JpmLookup.find(params[:id])

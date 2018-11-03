@@ -2,9 +2,11 @@
 #
 # Table name: bny_lookups
 #
-#  fund_id      :string(32)       not null, primary key
-#  account_name :string(128)      not null
-#  ticker       :string(32)       not null
+#  fund_id         :string(32)       not null, primary key
+#  account_name    :string(128)      not null
+#  ticker          :string(32)       not null
+#  effective_date  :date
+#  expiration_date :date
 #
 
 require 'rails_helper'

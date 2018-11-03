@@ -35,6 +35,7 @@
 #  secid                :string(12)
 #  datasource_id        :integer
 #  notes                :text
+#  cusip_validated      :string(16)
 #
 
 class Instrument < ApplicationRecord

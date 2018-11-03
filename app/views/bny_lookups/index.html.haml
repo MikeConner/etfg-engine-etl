@@ -10,6 +10,8 @@
                 %th Fund ID
                 %th Account Name 
                 %th Ticker
+                %th Effective Date
+                %th Expiration Date
                 %th
             %tbody
               - @tickers.each do |t|
@@ -17,6 +19,8 @@
                   %td= t.fund_id
                   %td= t.account_name
                   %td= t.ticker
+                  %td= text_field_tag "bny_effective_#{t.id}", t.effective_date, :onchange => "update_lookup_effective_date(#{t.id},'bny')", :class => "jquery-ui-date", :style => 'width:100px'
+                  %td= text_field_tag "bny_expiration_#{t.id}", t.expiration_date, :onchange => "update_lookup_expiration_date(#{t.id},'bny')", :class => "jquery-ui-date", :style => 'width:100px'
                   %td= link_to 'Delete', t, :method => :delete, :data => { :confirm => 'Are you sure?' }
         = form_for @lookup do |f|
           %table.table
@@ -32,4 +36,10 @@
                 %td
                   = f.label :ticker
                   = f.text_field :ticker
+                %td
+                  = f.label :effective_date
+                  = f.text_field :effective_date
+                %td
+                  = f.label :expiration_date
+                  = f.text_field :expiration_date
                 %td= f.submit 'Add Entry', :class => 'button', :style => 'margin-top:20px'
