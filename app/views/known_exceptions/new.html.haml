@@ -1,0 +1,85 @@
+.container
+  .span12
+    .content-block
+      .bd
+        %br
+        %br
+        %h2 Creating Known exception from Instrument Exception
+        %table.table.zebra-striped
+          %thead
+            %tr
+              %th Datasource
+              %th Instrument ID
+              %th Standard Name
+              %th Composite Ticker
+              %th Unknown Name
+              %th Figi
+              %th Sedol
+              %th Isin 
+              %th Cusip
+              %th Variants
+          %tbody
+            %tr
+              %td= @ie_base.datasource.data_source_name
+              %td= @ie_base.instrument_id
+              %td= @ie_base.standard_name
+              %td= @ie_base.composite_ticker
+              %td= @ie_base.candidate_name
+              %td= @ie_base.figi
+              %td= @ie_base.sedol
+              %td= @ie_base.isin
+              %td= @ie_base.cusip
+              %td= @ie_base.instrument.name_variants
+        %p
+          == Create exception(s) for #{@ie_base.datasource.data_source_name} on '#{@ie_base.candidate_name}',
+          %br
+          one or more of the ids (check box(es) below), and optionally, for a country/currency, if given below
+        = form_for @exception do |f|
+          = f.hidden_field :datasource_id
+          = f.hidden_field :constituent_name
+          = hidden_field_tag :ie_id, @ie_base.id
+          - unless @ie_base.figi.blank?
+            %br
+            = check_box_tag :cb_figi, '1', true
+            == Use Figi (#{@ie_base.figi})
+            = hidden_field_tag :ie_figi, @ie_base.figi
+          - unless @ie_base.sedol.blank?
+            %br
+            = check_box_tag :cb_sedol, '1', true
+            == Use Sedol (#{@ie_base.sedol})
+            = hidden_field_tag :ie_sedol, @ie_base.sedol
+          - unless @ie_base.isin.blank?
+            %br
+            = check_box_tag :cb_isin, '1', true
+            == Use Isin (#{@ie_base.isin})
+            = hidden_field_tag :ie_isin, @ie_base.isin
+          - unless @ie_base.cusip.blank?
+            %br
+            = check_box_tag :cb_cusip, '1', true
+            == Use Cusip (#{@ie_base.cusip})
+            = hidden_field_tag :ie_cusip, @ie_base.cusip
+          %div{:style => 'width:20%'}
+            .field
+              = f.label :country
+              = f.text_field :country, :maxlength => 2
+            .field
+              = f.label :currency
+              = f.text_field :currency, :maxlength => 3
+          %br
+          Replace with the given set of ids
+          %table.table.zebra-striped
+            %tr
+              %td{:style => 'width:150px'}
+                = f.label :figi
+                = f.text_field :figi, :maxlength => 12
+              %td{:style => 'width:100px'}
+                = f.label :sedol
+                = f.text_field :sedol, :maxlength => 7
+              %td{:style => 'width:150px'}
+                = f.label :isin
+                = f.text_field :isin, :maxlength => 12
+              %td{:style => 'width:120px'}
+                = f.label :cusip
+                = f.text_field :cusip, :maxlength => 9
+          .actions
+            = f.submit 'Add Known Exception(s)', :class => 'button btn btn-large'

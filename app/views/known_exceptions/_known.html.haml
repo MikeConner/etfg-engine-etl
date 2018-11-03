@@ -1,30 +1,74 @@
 %h1 Known Exceptions
+- if pending.empty?
+  %h3 No Pending Exceptions
+- else
+  %table.table.zebra-striped
+    %caption Pending Exceptions
+    %thead
+      %tr
+        %th Source
+        %th Composite Ticker
+        %th Standard Name
+        %th Candidate Name
+        %th Date range
+        %th Figi
+        %th Sedol
+        %th Isin
+        %th Cusip
+        %th
+        %th
+    %tbody
+      - pending.each do |e|
+        - source = e.datasource
+        %tr
+          %td= source.data_source_name
+          %td= e.composite_ticker
+          %td= e.standard_name
+          %td= e.candidate_name
+          %td
+            - if e.start_date == e.end_date
+              = e.start_date.try(:strftime, ApplicationHelper::DATE_FORMAT)
+            - else
+              == #{e.start_date.try(:strftime, ApplicationHelper::DATE_FORMAT)} - #{e.end_date.try(:strftime, ApplicationHelper::DATE_FORMAT)}
+          %td= e.figi
+          %td= e.sedol
+          %td= e.isin
+          %td= e.cusip
+          %td= link_to 'Add', new_known_exception_path({:ie_id => e.id})
+          %td{:title => 'Delete means restore the original exception resolution status'}= link_to 'Delete', reset_instrument_exception_path(e, :src_id => src_id), :method => :put
+%hr
 - if exceptions.empty?
   %h3 No Exceptions
 - else
   %table.table.zebra-striped
+    %caption Active Known Exceptions
     %thead
       %tr
         %th Source
         %th Constituent Name
         %th ID Type
         %th ID Value
+        %th Country
+        %th Currency
         %th Figi
+        %th Sedol
+        %th Isin
+        %th Cusip
         %th Effective
         %th Expiration
-        %th
     %tbody
-      - exceptions.each do |exception|
-        - source = exception.datasource
+      - exceptions.each do |e|
+        - source = e.datasource
         %tr
-          %td
-            = source.data_source_name
-            - df = source.is_direct_feed ? ' (DF)' : ''
-            = df
-          %td= exception.constituent_name
-          %td= exception.id_type
-          %td= exception.id_value
-          %td= exception.figi
-          %td= exception.effective_date
-          %td= exception.expiration_date
-          %td
+          %td= source.data_source_name
+          %td= e.constituent_name
+          %td= e.id_type
+          %td= e.id_value
+          %td= e.country
+          %td= e.currency
+          %td= e.figi
+          %td= e.sedol
+          %td= e.isin
+          %td= e.cusip
+          %td= text_field_tag "knex_effective_#{e.id}", e.effective_date, :onchange => "update_knex_effective_date(#{e.id})", :class => "jquery-ui-date", :style => 'width:100px'
+          %td= text_field_tag "knex_expiration_#{e.id}", e.expiration_date, :onchange => "update_knex_expiration_date(#{e.id})", :class => "jquery-ui-date", :style => 'width:100px'

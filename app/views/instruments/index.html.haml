@@ -16,7 +16,6 @@
             %thead
               %tr
                 %th ID
-                %th Pooled ID
                 %th Issuer
                 %th Ticker
                 %th Name
@@ -27,12 +26,12 @@
                 %th Country
                 %th Currency
                 %th Exchange
+                %th Approved
                 %th Default
             %tbody
               - @instruments.each do |i|
                 %tr
-                  %td= i.instrument_id
-                  %td= i.pooled_instrument_id
+                  %td{:title => i.id}= i.instrument_id
                   %td= i.issuer
                   %td= i.ticker
                   %td= i.standard_name
@@ -43,4 +42,6 @@
                   %td= i.exchange_country
                   %td= i.currency
                   %td= i.exchange
-                  %td= check_box_tag :default_instrument, '1', i.default_instrument
+                  %td= check_box_tag "approve_#{i.id}", '1', i.approved, :onchange => "update_approved_instrument(#{i.id})"
+                  %td= check_box_tag "default_#{i.id}", '1', i.default_instrument, :onchange => "update_default_instrument(#{i.id})"
+

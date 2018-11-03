@@ -3,21 +3,30 @@ class InstrumentExceptionsController < ApplicationController
   
   def index
     @skipped = 'true' == params[:skipped]
-    @datasources = Datasource.find(InstrumentException.all.map(&:datasource_id).uniq)
+    @datasources = Datasource.find(InstrumentException.pending.map(&:datasource_id).uniq)
     @selected_source = params[:src_id]
         
     # Select the base list of exceptions, based on whether we're looking at skipped ones, and any datasource filter
     if @skipped
       @exceptions = @selected_source.nil? ? InstrumentException.skipped.order('score DESC, end_date DESC').limit(50) : 
-        InstrumentException.skipped.where(:datasource_id => @selected_source).order('score DESC, end_date DESC').limit(50)                           
+        InstrumentException.skipped.where(:datasource_id => @selected_source).order('score DESC, end_date DESC').limit(50)    
+      @total = @selected_source.nil? ? InstrumentException.skipped.count : 
+                                       InstrumentException.skipped.where(:datasource_id => @selected_source).count               
     else
-      @exceptions = @selected_source.nil? ? InstrumentException.order('score DESC, end_date DESC').limit(50) : 
-        InstrumentException.where(:datasource_id => @selected_source).order('score DESC, end_date DESC').limit(50)                                 
+      @exceptions = @selected_source.nil? ? InstrumentException.pending.order('score DESC, end_date DESC').limit(50) : 
+        InstrumentException.pending.where(:datasource_id => @selected_source).order('score DESC, end_date DESC').limit(50)                                 
+      @total = @selected_source.nil? ? InstrumentException.pending.count : 
+                                       InstrumentException.pending.where(:datasource_id => @selected_source).count               
     end
-     
-    @total = @exceptions.count
-    
+         
     render :layout => 'admin'
+  end
+  
+  def reset
+    @exception = InstrumentException.find(params[:id])
+    @exception.update_attribute(:resolution, nil)
+    
+    redirect_to known_exceptions_path(:src_id => params[:src_id]), :notice => 'Instrument exception cleared'
   end
   
   def bulk_update
@@ -34,18 +43,14 @@ class InstrumentExceptionsController < ApplicationController
               when InstrumentException::ACCEPT
                 i = ie.instrument
                 unless pi.nil?
-                  i.update_attribute(:name_variants, i.name_variants + "^" + ie.name_in_datasource.gsub('^',' '))
+                  i.update_attribute(:name_variants, i.name_variants + "^" + ie.candidate_name.gsub('^',' '))
                 end
-              when InstrumentException::EXCEPTION
-              when InstrumentException::CORP_ACTION
+              when InstrumentException::EXCEPTION, InstrumentException::CORP_ACTION
                 ie.update_attribute(:resolution, v)
             end
             
             if [InstrumentException::ACCEPT,InstrumentException::IGNORE].include?(v)
-              InstrumentException.where(:instrument_id => ie.instrument_id, 
-                                        :name_in_datasource => ie.name_in_datasource,
-                                        :datasource_id => ie.datasource_id,
-                                        :skipped => false).destroy_all
+              ie.destroy
             end
           end
         rescue Exception => ex

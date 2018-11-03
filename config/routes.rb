@@ -5,6 +5,7 @@ Rails.application.routes.draw do
 
   resources :instrument_exceptions, :only => [:index] do
     post :bulk_update, :on => :collection
+    put 'reset', :on => :member
   end
 
   resources :pooled_instrument_exceptions, :only => [:index] do
@@ -15,29 +16,38 @@ Rails.application.routes.draw do
     post :bulk_update, :on => :collection
   end
 
-  resources :known_exceptions, :only => [:index] do
+  resources :known_exceptions, :only => [:index, :new, :create] do
     post :bulk_update, :on => :collection
   end
 
   resources :ambiguous_instruments, :only => [:index] do
     post :bulk_update, :on => :collection
+    member do
+      put 'set_default'
+      put 'set_approved'
+    end
   end
   
   resources :pooled_instruments
   
-  resources :instruments, :only => [:index, :show]
+  resources :instruments, :only => [:index] do
+    member do
+      put 'set_default'
+      put 'set_approved'
+    end
+  end
   
   resources :bny_lookups, :only => [:index, :destroy, :create] do
     member do 
-      put :update_effective_date
-      put :update_expiration_date
+      put 'update_effective_date'
+      put 'update_expiration_date'
     end    
   end
   
   resources :ssc_lookups, :only => [:index, :destroy, :create] do
     member do 
-      put :update_effective_date
-      put :update_expiration_date
+      put 'update_effective_date'
+      put 'update_expiration_date'
     end
   end
   

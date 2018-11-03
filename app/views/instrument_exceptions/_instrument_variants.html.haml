@@ -32,7 +32,7 @@
               %br= exception.end_date.try(:strftime, ApplicationHelper::DATE_FORMAT)
             %br
             %br
-            = instrument.id
+            = link_to instrument.id, instruments_path(:id_set => instrument.id), :target => '_blank', :title => exception.id
           %td= raw instrument.standard_name
           %td
             = exception.composite_ticker
@@ -41,12 +41,19 @@
           %td
             %strong= exception.candidate_name
           %td
-            = instrument.figi
-            - if instrument.is_exchange_figi
-              &nbsp;(Exchange)
-          %td= instrument.sedol
-          %td= instrument.isin
-          %td= instrument.cusip
+            - unless instrument.figi.blank?
+              = link_to instrument.figi, instruments_path(:figi => instrument.figi), :target => '_blank'
+              - if instrument.is_exchange_figi
+                &nbsp;(Exchange)
+          %td
+            - unless instrument.sedol.blank?
+              = link_to instrument.sedol, instruments_path(:sedol => instrument.sedol), :target => '_blank'
+          %td
+            - unless instrument.isin.blank?
+              = link_to instrument.isin, instruments_path(:isin => instrument.isin), :target => '_blank'
+          %td
+            - unless instrument.cusip.blank?
+              = link_to instrument.cusip, instruments_path(:cusip => instrument.cusip), :target => '_blank'
           %td{:style => 'width:370px'}
             = text_area_tag :tat, instrument.name_variants.split('^').join(","), :style => 'height:150px'
           %td{:style => 'width:450px'}
@@ -60,7 +67,7 @@
             Ignore (Delete)
             %br
             = radio_button_tag "disposition_#{exception.id}", InstrumentException::EXCEPTION
-            Add Known Exception
+            Known Exception
             %br
             = radio_button_tag "disposition_#{exception.id}", InstrumentException::CORP_ACTION
             Corporate Action

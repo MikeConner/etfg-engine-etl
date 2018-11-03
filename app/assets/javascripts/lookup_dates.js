@@ -15,4 +15,3 @@ function update_lookup_expiration_date(id, prefix) {
         error: function() { alert('Error updating field!'); }, 
         async: false}); 		
 }
-

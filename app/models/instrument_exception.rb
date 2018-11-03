@@ -32,7 +32,8 @@ class InstrumentException < ApplicationRecord
   CORP_ACTION = 'Action'
   
   scope :skipped, -> { where("skipped=#{ActiveRecord::Base.connection.quoted_true}") }
-
+  scope :pending, -> { where("skipped=#{ActiveRecord::Base.connection.quoted_false} AND resolution IS NULL") }
+  
   def hide?
     [EXCEPTION, CORP_ACTION].include?(self.resolution)
   end
