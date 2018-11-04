@@ -16,9 +16,11 @@
             %thead
               %tr
                 %th ID
-                %th Issuer
+                %th Source
                 %th Ticker
                 %th Name
+                %th Effective
+                %th Expiration
                 %th Figi
                 %th Sedol
                 %th Isin 
@@ -32,9 +34,17 @@
               - @instruments.each do |i|
                 %tr
                   %td{:title => i.id}= i.instrument_id
-                  %td= i.issuer
+                  %td
+                    - unless i.datasource.nil?
+                      = i.datasource.data_source_name
                   %td= i.ticker
                   %td= i.standard_name
+                  %td
+                    - unless i.effective_date.nil?
+                      = i.effective_date.try(:strftime, ApplicationHelper::DATE_FORMAT) 
+                  %td
+                    - unless i.expiration_date.nil?
+                      = i.expiration_date.try(:strftime, ApplicationHelper::DATE_FORMAT) 
                   %td= i.figi
                   %td= i.sedol
                   %td= i.isin

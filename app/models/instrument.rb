@@ -40,6 +40,7 @@
 
 class Instrument < ApplicationRecord
   belongs_to :pooled_instrument, :optional => true
+  belongs_to :datasource, :optional => true
   
   has_many :instrument_exceptions, :dependent => :destroy
 end

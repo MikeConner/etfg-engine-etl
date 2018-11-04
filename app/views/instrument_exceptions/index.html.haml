@@ -6,15 +6,19 @@
         %br
         %div{:style => 'width:20%'}
           = label_tag :data_source
-          = select_tag :data_source, options_from_collection_for_select(@datasources, :id, :data_source_name, @selected_source), {:prompt => 'Select a Datasource', :onchange => "window.location = '/instrument_exceptions?skipped=#{@skipped}&src_id=' + $('#data_source').val();"}
+          = select_tag :data_source, options_from_collection_for_select(@datasources, :id, :data_source_name, @selected_source), {:prompt => 'Select a Datasource', :onchange => "window.location = '/instrument_exceptions?skipped=#{@skipped}&src_id=' + $('#data_source').val() + '&corporate_actions=#{@corp_actions}'"}
           %br
-          = check_box_tag :skipped, 'true', @skipped, :onclick => "window.location='#{instrument_exceptions_url(:skipped => !@skipped,:src_id => @selected_source)}'"
-          Show skipped
-        = form_tag bulk_update_instrument_exceptions_path do
-          = hidden_field_tag 'skipped', @skipped
-          = hidden_field_tag 'source_id', @selected_source
-          = render :partial => 'instrument_variants', :locals => {:exceptions => @exceptions, :total => @total, :skipped => @skipped, :src_id => @selected_source}
-          .actions
-            = submit_tag 'Process Variants', :class => 'button btn btn-large btn-primary'
-            %br
-            %br
+          - unless @corp_actions
+            = check_box_tag :skipped, 'true', @skipped, :onclick => "window.location='#{instrument_exceptions_url(:skipped => !@skipped,:src_id => @selected_source)}'"
+            Show skipped
+        - if @corp_actions
+          = render :partial => 'corporate_actions', :locals => {:exceptions => @exceptions, :total => @total, :skipped => false, :src_id => @selected_source}
+        - else
+          = form_tag bulk_update_instrument_exceptions_path do
+            = hidden_field_tag 'skipped', @skipped
+            = hidden_field_tag 'source_id', @selected_source
+            = render :partial => 'instrument_variants', :locals => {:exceptions => @exceptions, :total => @total, :skipped => @skipped, :src_id => @selected_source}
+            .actions
+              = submit_tag 'Process Variants', :class => 'button btn btn-large btn-primary'
+              %br
+              %br

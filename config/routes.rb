@@ -5,7 +5,10 @@ Rails.application.routes.draw do
 
   resources :instrument_exceptions, :only => [:index] do
     post :bulk_update, :on => :collection
-    put 'reset', :on => :member
+    member do
+      put 'reset'
+      put 'split'
+    end
   end
 
   resources :pooled_instrument_exceptions, :only => [:index] do

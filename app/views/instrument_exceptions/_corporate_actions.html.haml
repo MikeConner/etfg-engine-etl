@@ -1,9 +1,9 @@
-%h1 Instrument Exceptions
+%h1 Corporate Actions
 - if exceptions.empty?
-  %h3 No Exceptions
+  %h3 No Actions
 - else
   .center
-    == #{pluralize(exceptions.count, 'Exception')} of #{number_with_delimiter(total)}
+    == #{pluralize(exceptions.count, 'Action')} of #{number_with_delimiter(total)}
   %table.table.zebra-striped
     %caption Instrument Exceptions
     %thead
@@ -20,13 +20,18 @@
         %th Cusip
         %th Variants
         %th
+        %th 
+          Expiration /
+          %br Effective Date
+        %th
     %tbody
       - exceptions.each do |exception|
         - instrument = exception.instrument
         - composite = instrument.pooled_instrument
+        - datasource = exception.datasource
         %tr
           - unless src_id
-            %td= exception.datasource.data_source_name
+            %td= datasource.data_source_name
           %td{:style => 'width:150px'}
             - if exception.start_date == exception.end_date
               = exception.start_date.try(:strftime, ApplicationHelper::DATE_FORMAT)
@@ -36,14 +41,13 @@
               %br= exception.end_date.try(:strftime, ApplicationHelper::DATE_FORMAT)
             %br
             %br
-            = link_to instrument.instrument_id, instruments_path(:id_set => Instrument.where(:instrument_id => instrument.instrument_id).map(&:id).join(",")), :target => '_blank', :title => exception.id
+            = link_to instrument.id, instruments_path(:id_set => instrument.id), :target => '_blank', :title => exception.id
           %td= raw instrument.standard_name
           %td
             = exception.composite_ticker
             - unless composite.nil?
               == /#{composite.exchange_country}
-          %td
-            %strong= exception.candidate_name
+          %td= text_area_tag "candidate_name_#{exception.id}", exception.candidate_name, :style => 'width:100px;height:100px'
           %td
             - unless instrument.figi.blank?
               = link_to instrument.figi, instruments_path(:figi => instrument.figi), :target => '_blank'
@@ -59,19 +63,7 @@
             - unless instrument.cusip.blank?
               = link_to instrument.cusip, instruments_path(:cusip => instrument.cusip), :target => '_blank'
           %td{:style => 'width:370px'}
-            = text_area_tag :tat, instrument.name_variants.split('^').join(","), :style => 'height:150px'
-          %td{:style => 'width:450px'}
-            = radio_button_tag "disposition_#{exception.id}", InstrumentException::ACCEPT
-            Accept
-            %br
-            = radio_button_tag "disposition_#{exception.id}", InstrumentException::SKIP
-            Skip
-            %br
-            = radio_button_tag "disposition_#{exception.id}", InstrumentException::IGNORE
-            Ignore (Delete)
-            %br
-            = radio_button_tag "disposition_#{exception.id}", InstrumentException::EXCEPTION
-            Known Exception
-            %br
-            = radio_button_tag "disposition_#{exception.id}", InstrumentException::CORP_ACTION
-            Corporate Action
+            = text_area_tag :tat, instrument.name_variants.split('^').join(","), :style => 'width:100px;height:100px', :disabled => true
+          %td{:title => 'Expire this instrument; link to second instance after date'}= link_to 'Split', '#', :onclick => "split_instrument(#{exception.id},#{src_id || 0})"
+          %td= text_field_tag "exp_date_#{exception.id}", nil, :class => "jquery-ui-date", :style => 'width:100px'
+          %td{:title => 'Clear exception resolution'}= link_to 'Delete', reset_instrument_exception_path(exception, :src_id => src_id, :corporate => true), :method => :put

@@ -35,7 +35,7 @@
           %td= e.isin
           %td= e.cusip
           %td= link_to 'Add', new_known_exception_path({:ie_id => e.id})
-          %td{:title => 'Delete means restore the original exception resolution status'}= link_to 'Delete', reset_instrument_exception_path(e, :src_id => src_id), :method => :put
+          %td{:title => 'Clear exception resolution'}= link_to 'Delete', reset_instrument_exception_path(e, :src_id => src_id), :method => :put
 %hr
 - if exceptions.empty?
   %h3 No Exceptions
