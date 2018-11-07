@@ -19,5 +19,5 @@ development:
   <<: *default
 
 production:
-  host: 10.10.10.10
+  host: 10.10.10.60
   <<: *default

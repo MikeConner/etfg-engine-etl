@@ -10,4 +10,10 @@ class StaticPagesController < ApplicationController
   def lookups
     render :layout => 'admin'
   end
+  
+  def templates
+    @instrument_template = InstrumentTemplate.new
+    
+    render :layout => 'admin'
+  end
 end

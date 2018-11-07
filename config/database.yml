@@ -27,7 +27,7 @@ default: &default
 
 development:
   <<: *default
-  host: 10.10.10.60
+  host: 10.10.10.10
   pool: 100
 
 test:

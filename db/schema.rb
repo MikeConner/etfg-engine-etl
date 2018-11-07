@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_03_043348) do
+ActiveRecord::Schema.define(version: 2018_11_07_043251) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -61,7 +61,8 @@ ActiveRecord::Schema.define(version: 2018_11_03_043348) do
     t.boolean "is_direct_feed", default: true, null: false
   end
 
-  create_table "holidays", id: false, force: :cascade do |t|
+  create_table "holidays", force: :cascade do |t|
+    t.string "country", limit: 2, default: "US", null: false
     t.date "market_day", null: false
     t.boolean "is_open", null: false
     t.string "description"

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_10_15_044325) do
+ActiveRecord::Schema.define(version: 2018_11_05_063812) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,6 +22,14 @@ ActiveRecord::Schema.define(version: 2018_10_15_044325) do
     t.string "status", limit: 128, null: false
     t.boolean "completed", default: false, null: false
     t.date "updated_at"
+  end
+
+  create_table "instrument_templates", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "template_file"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_instrument_templates_on_user_id"
   end
 
   create_table "row_counts", id: false, comment: "Keep historical row counts in order to detect anomalies", force: :cascade do |t|

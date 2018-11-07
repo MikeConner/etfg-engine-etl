@@ -2,7 +2,9 @@ class AmbiguousInstrumentsController < ApplicationController
   before_action :authenticate_user!
   
   def index
-    @exceptions = AmbiguousInstrument.order('file_date DESC')
+    @selected_source = params[:src_id]
+    @exceptions = @selected_source.nil? ? AmbiguousInstrument.order('file_date DESC').limit(50) : 
+                    AmbiguousInstrument.where(:datasource_id => @selected_source).order('file_date DESC').limit(50)
      
     render :layout => 'admin'
   end

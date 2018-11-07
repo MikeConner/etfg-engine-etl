@@ -1,0 +1,15 @@
+.container
+  .row
+    .span12
+      .content-block
+        .bd
+          %h2
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            Download Templates
+          %p= link_to 'Download Instrument Template', 'instrument_template.csv'
+          %p
+            = form_for @instrument_template, :html => {:multipart => true} do |f|
+              = f.label :template_file, 'Upload Instrument Template'
+              = f.file_field :template_file
+              = f.hidden_field :user_id, :value => current_user.id
+              = f.submit 'Upload'
