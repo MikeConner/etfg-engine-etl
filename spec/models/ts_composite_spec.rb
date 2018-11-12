@@ -17,7 +17,6 @@
 #  high_price                :decimal(22, 6)
 #  close_price               :decimal(22, 6)
 #  daily_return              :decimal(22, 6)
-#  bid_ask_spread            :decimal(22, 6)
 #  avg_bid_size              :decimal(22, 6)
 #  avg_ask_size              :decimal(22, 6)
 #  avg_midpoint              :decimal(22, 6)

@@ -57,8 +57,7 @@ class VanguardFactorTransformer
         @composite[:fund_id] = row[1].strip
       elsif 'As of date' == row[0]
         fmt = 2 == row[1].split('-').last.length ? '%d-%b-%y' : '%d-%b-%Y'
-        # Subtract one day from etfg_date
-        @composite[:as_of_date] = Date.strptime(row[1], fmt) - 1.day
+        @composite[:as_of_date] = Date.strptime(row[1], fmt)
       end
       
       if is_holdings_header(row)
