@@ -23,7 +23,9 @@
     %tbody
       - exceptions.each do |exception|
         - instrument = exception.instrument
-        - composite = exception.pooled_instrument
+        - next if instrument.nil?
+        
+        - composite = instrument.pooled_instrument
         %tr
           - unless src_id
             %td= exception.datasource.data_source_name
