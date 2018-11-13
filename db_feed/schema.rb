@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_02_213141) do
+ActiveRecord::Schema.define(version: 2018_11_13_042116) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1791,57 +1791,27 @@ ActiveRecord::Schema.define(version: 2018_11_02_213141) do
     t.date "etfg_date"
     t.string "account_number", limit: 32
     t.string "composite_ticker", limit: 32
-    t.string "account_name", limit: 128
-    t.string "security_id", limit: 9
-    t.string "isin", limit: 12
-    t.string "occ_id", limit: 3
-    t.string "cash_account_ccy", limit: 16
-    t.string "security_name", limit: 128
+    t.string "composite_name", limit: 128
+    t.string "asset_id", limit: 9
+    t.string "constituent_name", limit: 128
+    t.decimal "shares_par", precision: 22, scale: 6
+    t.decimal "market_value", precision: 22, scale: 6
     t.decimal "coupon_rate", precision: 22, scale: 6
     t.date "maturity_date"
-    t.string "pool_number", limit: 32
-    t.decimal "settled_units", precision: 22, scale: 6
-    t.decimal "total_units", precision: 22, scale: 6
-    t.decimal "awaiting_receipt", precision: 22, scale: 6
-    t.decimal "awaiting_delivery", precision: 22, scale: 6
-    t.decimal "market_price", precision: 22, scale: 6
-    t.date "price_date"
-    t.decimal "exchange_rate", precision: 22, scale: 6
-    t.string "country_code", limit: 2
-    t.decimal "settled_market_value_local", precision: 22, scale: 6
-    t.decimal "settled_market_value_base", precision: 22, scale: 6
-    t.string "local_currency", limit: 16
-    t.string "base_currency", limit: 16
-    t.decimal "total_market_value_local", precision: 22, scale: 6
-    t.decimal "total_market_value_base", precision: 22, scale: 6
     t.decimal "weight", precision: 18, scale: 10
   end
 
   create_table "jpms_ffcm_template", id: false, force: :cascade do |t|
+    t.text "effective_date"
     t.text "account_number"
     t.text "account_name"
-    t.text "security_id"
-    t.text "isin"
-    t.text "occ_id"
-    t.text "cash_account_ccy"
-    t.text "security_name"
+    t.text "asset_id"
+    t.text "security_description"
+    t.text "shares_par"
+    t.text "market_value"
     t.text "coupon_rate"
     t.text "maturity_date"
-    t.text "pool_number"
-    t.text "settled_units"
-    t.text "total_units"
-    t.text "awaiting_receipt"
-    t.text "awaiting_delivery"
-    t.text "market_price"
-    t.text "price_date"
-    t.text "exchange_rate"
-    t.text "country_code"
-    t.text "settled_market_value_local"
-    t.text "settled_market_value_base"
-    t.text "local_currency"
     t.text "base_currency"
-    t.text "total_market_value_local"
-    t.text "total_market_value_base"
   end
 
   create_table "jpms_nav", id: false, force: :cascade do |t|
@@ -2211,6 +2181,17 @@ ActiveRecord::Schema.define(version: 2018_11_02_213141) do
     t.decimal "percent_of_market_value", precision: 18, scale: 6
     t.decimal "percent_of_net_assets", precision: 18, scale: 6
     t.text "ticker"
+  end
+
+  create_table "short_squeezes", force: :cascade do |t|
+    t.date "etfg_date", null: false
+    t.date "record_date", null: false
+    t.string "symbol", limit: 32, null: false
+    t.string "company", limit: 128
+    t.decimal "total_short_interest", precision: 18, scale: 6
+    t.decimal "days_to_cover", precision: 18, scale: 6
+    t.decimal "short_pct_of_float", precision: 18, scale: 6
+    t.decimal "short_prior_mo", precision: 18, scale: 6
   end
 
   create_table "ssc_lookups", force: :cascade do |t|
@@ -2590,6 +2571,39 @@ ActiveRecord::Schema.define(version: 2018_11_02_213141) do
     t.index ["etfg_date"], name: "index_staging_constituents_on_etfg_date"
     t.index ["figi"], name: "index_staging_constituents_on_figi"
     t.index ["instrument_id"], name: "index_staging_constituents_on_instrument_id"
+  end
+
+  create_table "staging_industries", force: :cascade do |t|
+    t.date "etfg_date", null: false
+    t.date "as_of_date", null: false
+    t.integer "datasource_id", null: false
+    t.string "composite_ticker", limit: 32, null: false
+    t.string "composite_name", limit: 128
+    t.string "country", limit: 64, default: "US", null: false
+    t.decimal "avg_daily_trading_volume", precision: 18, scale: 6
+    t.decimal "call_volume", precision: 18, scale: 6
+    t.decimal "discount_premium", precision: 18, scale: 6
+    t.decimal "num_holdings", precision: 18, scale: 6
+    t.decimal "options_volume", precision: 18, scale: 6
+    t.decimal "put_call_ratio", precision: 18, scale: 6
+    t.decimal "put_volume", precision: 18, scale: 6
+    t.decimal "short_interest", precision: 18, scale: 6
+    t.decimal "bid_ask_spread", precision: 18, scale: 6
+    t.decimal "avg_bid_size", precision: 18, scale: 6
+    t.decimal "avg_ask_size", precision: 18, scale: 6
+    t.decimal "avg_midpoint", precision: 18, scale: 6
+    t.decimal "open_price", precision: 18, scale: 6
+    t.decimal "high_price", precision: 18, scale: 6
+    t.decimal "low_price", precision: 18, scale: 6
+    t.decimal "close_price", precision: 18, scale: 6
+    t.decimal "daily_return", precision: 18, scale: 6
+    t.decimal "basket_estimated_cash", precision: 18, scale: 6
+    t.integer "pooled_instrument_id"
+    t.boolean "match", default: false, null: false
+    t.index ["datasource_id", "etfg_date"], name: "index_staging_industries_on_datasource_id_and_etfg_date"
+    t.index ["datasource_id"], name: "index_staging_industries_on_datasource_id"
+    t.index ["etfg_date"], name: "index_staging_industries_on_etfg_date"
+    t.index ["pooled_instrument_id"], name: "index_staging_industries_on_pooled_instrument_id"
   end
 
   create_table "staging_instrument_exceptions", force: :cascade do |t|
