@@ -11,17 +11,17 @@ class InstrumentsController < ApplicationController
       params[:id_set].split(",").each do |id|
         ids.push(id.to_i)
       end
-      @instruments = Instrument.find(ids)
+      @instruments = Instrument.find(ids).order(:standard_name)
     elsif params[:figi]
-      @instruments = Instrument.where(:figi => params[:figi])
+      @instruments = Instrument.where(:figi => params[:figi]).order(:standard_name)
     elsif params[:sedol]
-      @instruments = Instrument.where(:sedol => params[:sedol])
+      @instruments = Instrument.where(:sedol => params[:sedol]).order(:standard_name)
     elsif params[:isin]
-      @instruments = Instrument.where(:isin => params[:isin])
+      @instruments = Instrument.where(:isin => params[:isin]).order(:standard_name)
     elsif params[:cusip]
-      @instruments = Instrument.where(:cusip => params[:cusip])
+      @instruments = Instrument.where(:cusip => params[:cusip]).order(:standard_name)
     else
-      @instruments = Instrument.where(:approved => false).paginate(:page => params[:page])
+      @instruments = Instrument.where(:approved => false).order(:standard_name).paginate(:page => params[:page])
       @paginated = true
     end
     
