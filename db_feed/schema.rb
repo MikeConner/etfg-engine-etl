@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_13_042116) do
+ActiveRecord::Schema.define(version: 2018_11_18_005550) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -2943,6 +2943,14 @@ ActiveRecord::Schema.define(version: 2018_11_13_042116) do
     t.string "etf_ticker", limit: 32
     t.decimal "etf_value", precision: 18, scale: 6
     t.decimal "etf_shares", precision: 18, scale: 6
+  end
+
+  create_table "xignite_api_calls", id: false, force: :cascade do |t|
+    t.string "cusip", limit: 9, null: false
+    t.string "industry", limit: 64
+    t.string "sector", limit: 128
+    t.text "data"
+    t.index ["cusip"], name: "index_xignite_api_calls_on_cusip", unique: true
   end
 
 end

@@ -43,4 +43,13 @@ class Instrument < ApplicationRecord
   belongs_to :datasource, :optional => true
   
   has_many :instrument_exceptions, :dependent => :destroy
+  
+  def self.date_range(date_param)
+    date = date_param.try(:strftime, "%Y%m%d")
+    clause = "((effective_date IS NULL AND expiration_date IS NULL) OR " +
+              "(effective_date IS NULL AND expiration_date IS NOT NULL AND '#{date}' <= expiration_date) OR " +
+              "(effective_date IS NOT NULL AND expiration_date IS NULL AND '#{date}' > effective_date) OR " +
+              "(effective_date IS NOT NULL AND expiration_date IS NOT NULL AND '#{date}' > effective_date AND '#{date}' <= expiration_date))"
+    Instrument.where(clause)
+  end
 end

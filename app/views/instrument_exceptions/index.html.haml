@@ -4,10 +4,16 @@
       .bd
         %br
         %br
-        %div{:style => 'width:20%'}
-          = label_tag :data_source
-          = select_tag :data_source, options_from_collection_for_select(@datasources, :id, :data_source_name, @selected_source), {:prompt => 'Select a Datasource', :onchange => "window.location = '/instrument_exceptions?skipped=#{@skipped}&src_id=' + $('#data_source').val() + '&corporate_actions=#{@corp_actions}'"}
-          %br
+        %div{:style => 'width:40%'}
+          Filters
+          %table.table
+            %tr
+              %td
+                = label_tag :data_source
+                = select_tag :data_source, options_from_collection_for_select(@datasources, :id, :data_source_name, @selected_source), {:style => 'display:inline-block', :prompt => 'Select a Datasource', :onchange => "window.location = '/instrument_exceptions?skipped=#{@skipped}&ticker=&src_id=' + $('#data_source').val() + '&ticker=' + $('#ticker').val() + '&corporate_actions=#{@corp_actions}'"}
+              %td
+                = label_tag :ticker
+                = text_field_tag :ticker, @ticker, :onchange => "window.location = '/instrument_exceptions?skipped=#{@skipped}&ticker=&src_id=' + $('#data_source').val() + '&ticker=' + $('#ticker').val() + '&corporate_actions=#{@corp_actions}'"
           - unless @corp_actions
             = check_box_tag :skipped, 'true', @skipped, :onclick => "window.location='#{instrument_exceptions_url(:skipped => !@skipped,:src_id => @selected_source)}'"
             Show skipped

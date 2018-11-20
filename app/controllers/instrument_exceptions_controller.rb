@@ -3,32 +3,35 @@ class InstrumentExceptionsController < ApplicationController
   
   def index
     @corp_actions = 'true' == params[:corporate_actions]
+    @ticker = params[:ticker]
     if @corp_actions
       @datasources = Datasource.find(InstrumentException.corporate.map(&:datasource_id).uniq)
       @selected_source = params[:src_id] unless 0 == params[:src_id].to_i
       
-      @exceptions = @selected_source.nil? ? InstrumentException.corporate.order('score DESC, end_date DESC').limit(50) : 
-        InstrumentException.corporate.where(:datasource_id => @selected_source).order('score DESC, end_date DESC').limit(50)
-      @total = @selected_source.nil? ? InstrumentException.corporate.count : 
-                                       InstrumentException.corporate.where(:datasource_id => @selected_source).count               
+      @base = InstrumentException.corporate
+      unless @selected_source.blank?
+        @base = @base.where(:datasource_id => @selected_source)
+      end
+      unless @ticker.blank?
+        @base = @base.where(:composite_ticker => @ticker)
+      end    
     else  
       @skipped = 'true' == params[:skipped]
       @datasources = Datasource.find(InstrumentException.pending.map(&:datasource_id).uniq)
       @selected_source = params[:src_id] unless 0 == params[:src_id].to_i
           
       # Select the base list of exceptions, based on whether we're looking at skipped ones, and any datasource filter
-      if @skipped
-        @exceptions = @selected_source.nil? ? InstrumentException.skipped.order('score DESC, end_date DESC').limit(50) : 
-          InstrumentException.skipped.where(:datasource_id => @selected_source).order('score DESC, end_date DESC').limit(50)    
-        @total = @selected_source.nil? ? InstrumentException.skipped.count : 
-                                         InstrumentException.skipped.where(:datasource_id => @selected_source).count               
-      else
-        @exceptions = @selected_source.nil? ? InstrumentException.pending.order('score DESC, end_date DESC').limit(50) : 
-          InstrumentException.pending.where(:datasource_id => @selected_source).order('score DESC, end_date DESC').limit(50)                                 
-        @total = @selected_source.nil? ? InstrumentException.pending.count : 
-                                         InstrumentException.pending.where(:datasource_id => @selected_source).count               
+      @base = @skipped ? InstrumentException.skipped : InstrumentException.pending
+      unless @selected_source.blank?
+        @base = @base.where(:datasource_id => @selected_source)
       end
+      unless @ticker.blank?
+        @base = @base.where(:composite_ticker => @ticker)
+      end      
     end
+    
+    @total = @base.count
+    @exceptions = @base.order('score DESC, end_date DESC').limit(50)        
          
     render :layout => 'admin'
   end
