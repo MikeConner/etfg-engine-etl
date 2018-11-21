@@ -37,6 +37,7 @@
         = form_for @exception do |f|
           = f.hidden_field :datasource_id
           = f.hidden_field :constituent_name
+          = f.hidden_field :composite_ticker
           = hidden_field_tag :ie_id, @ie_base.id
           - unless @ie_base.figi.blank?
             %br

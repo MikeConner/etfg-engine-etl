@@ -15,6 +15,7 @@
 #  sedol            :string(7)
 #  isin             :string(12)
 #  cusip            :string(9)
+#  composite_ticker :string(32)
 #
 
 class KnownException < ApplicationRecord

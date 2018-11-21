@@ -45,6 +45,7 @@
     %thead
       %tr
         %th Source
+        %th Ticker
         %th Constituent Name
         %th ID Type
         %th ID Value
@@ -61,6 +62,7 @@
         - source = e.datasource
         %tr
           %td= source.data_source_name
+          %td= e.composite_ticker
           %td= e.constituent_name
           %td= e.id_type
           %td= e.id_value
