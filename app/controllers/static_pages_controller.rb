@@ -3,6 +3,14 @@ class StaticPagesController < ApplicationController
 
   def workbench
     @dags = DagStatus.running.order('updated_at DESC')
+    sql = 'SELECT etfg_date,datasource_id,COUNT(*) FROM feed.staging_constituents ' + 
+          "WHERE composite_ticker IS NULL AND etfg_date >= '" + 1.week.ago.try(:strftime, '%m/%d/%Y') +
+          "' GROUP BY etfg_date, datasource_id ORDER BY etfg_date"
+    @null_tickers = ActiveRecord::Base.connection.execute(sql)
+    @source_map = Hash.new
+    Datasource.all.each do |ds|
+      @source_map[ds.id] = ds.data_source_name
+    end
     
     render :layout => 'admin'
   end

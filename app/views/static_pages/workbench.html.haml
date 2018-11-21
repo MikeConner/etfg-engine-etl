@@ -6,6 +6,22 @@
           %h2
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             ETFG ETL
+          - if 0 == @null_tickers.count
+            %h2 No composite tickers null
+          - else
+            %table.table.zebra-striped
+              %thead
+                %tr
+                  %th Date
+                  %th Source
+                  %th Missing tickers
+              %tbody
+                - @null_tickers.each do |t|
+                  %tr
+                    %td= t['etfg_date']
+                    %td= @source_map[t['datasource_id']]
+                    %td= t['count']
+          %br
           - if @dags.empty?
             %h2 Nothing running
           - else
