@@ -5,10 +5,10 @@ class CreateShortSqueezes < FeedMigrationBase[5.2]
       t.date :record_date, :null => false
       t.string :symbol, :null => false, :limit => 32
       t.string :company, :limit => 128
-      t.decimal :total_short_interest, :precision => 18, :scale => 6
-      t.decimal :days_to_cover, :precision => 18, :scale => 6
-      t.decimal :short_pct_of_float, :precision => 18, :scale => 6
-      t.decimal :short_prior_mo, :precision => 18, :scale => 6
+      t.decimal :total_short_interest, :precision => 22, :scale => 6
+      t.decimal :days_to_cover, :precision => 22, :scale => 6
+      t.decimal :short_pct_of_float, :precision => 22, :scale => 6
+      t.decimal :short_prior_mo, :precision => 22, :scale => 6
     end
   end
 end

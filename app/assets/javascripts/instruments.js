@@ -38,3 +38,21 @@ function split_instrument(exception_id, src_id) {
 		alert("Please enter a date!");
 	}
 }
+
+function update_dup_effective_date(id) {
+	var on = document.getElementById("effective_" + id).value;	
+	jQuery.ajax({url:"/instruments/" + id + "/update_effective_date",
+		data: "effective_date=" + on,
+		type: "PUT",
+        error: function() { alert('Error updating field!'); }, 
+        async: false}); 	
+}
+
+function update_dup_expiration_date(id) {
+	var on = document.getElementById("expiration_" + id).value;	
+	jQuery.ajax({url:"instruments/" + id + "/update_expiration_date",
+		data: "expiration_date=" + on,
+		type: "PUT",
+        error: function() { alert('Error updating field!'); }, 
+        async: false}); 		
+}

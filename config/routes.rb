@@ -24,19 +24,27 @@ Rails.application.routes.draw do
   end
 
   resources :ambiguous_instruments, :only => [:index] do
-    post :bulk_update, :on => :collection
+    get :bulk_update, :on => :collection
+
     member do
-      put 'set_default'
-      put 'set_approved'
+      put :set_default
+      put :set_approved
     end
   end
   
   resources :pooled_instruments
   
   resources :instruments, :only => [:index] do
+    collection do
+      get 'duplicate'
+      post 'resolve_ambiguous'
+    end
+    
     member do
       put 'set_default'
       put 'set_approved'
+      put 'update_effective_date'
+      put 'update_expiration_date'
     end
   end
   

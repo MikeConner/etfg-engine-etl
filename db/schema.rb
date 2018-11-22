@@ -272,15 +272,6 @@ ActiveRecord::Schema.define(version: 2018_11_21_031904) do
     t.decimal "shares_outstanding", precision: 22, scale: 6
     t.decimal "share_value", precision: 22, scale: 6
     t.decimal "nav", precision: 22, scale: 6
-    t.decimal "open_price", precision: 22, scale: 6
-    t.decimal "low_price", precision: 22, scale: 6
-    t.decimal "high_price", precision: 22, scale: 6
-    t.decimal "close_price", precision: 22, scale: 6
-    t.decimal "daily_return", precision: 22, scale: 6
-    t.decimal "avg_bid_size", precision: 22, scale: 6
-    t.decimal "avg_ask_size", precision: 22, scale: 6
-    t.decimal "avg_midpoint", precision: 22, scale: 6
-    t.decimal "basket_estimated_cash", precision: 22, scale: 6
     t.boolean "publish", default: false, null: false
     t.date "as_of_date", null: false
     t.decimal "factor", precision: 22, scale: 6, default: "1.0"

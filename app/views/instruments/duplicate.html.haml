@@ -1,0 +1,65 @@
+.container
+  .span12
+    .content-block
+      .bd
+        %br
+        %br
+        %h1 Possibly Duplicate Instruments (first 10)
+        - if 0 == @dup_sets.count
+          %h3 No Suspicious Instruments
+        - else
+          - idx = 0
+          = form_tag resolve_ambiguous_instruments_path do
+            - @dup_sets.each do |dset|
+              - idx += 1
+              %table.table.zebra-striped
+                %caption== Set #{idx}
+                %thead
+                  %tr
+                    %th
+                    %th ID
+                    %th Source
+                    %th Ticker
+                    %th Name
+                    %th Effective
+                    %th Expiration
+                    %th Figi
+                    %th Sedol
+                    %th Isin 
+                    %th Cusip
+                    %th Country
+                    %th Currency
+                    %th Exchange
+                    %th Approved
+                    %th Default
+                %tbody
+                  = hidden_field_tag "instrument_idset_#{idx}", @set_map[idx]
+                  - dset.each do |i|
+                    %tr
+                      %td
+                        = radio_button_tag "instrument_#{idx}", i['instrument_id']
+                      %td{:title => i['id']}
+                        = i['instrument_id']
+                        == (#{StagingConstituent.where(:instrument_id => i['instrument_id']).count})
+                      %td
+                        - unless i['datasource_id'].blank?
+                          = @source_map[i['datasource_id']]
+                      %td= i['ticker']
+                      %td= i['standard_name']
+                      %td
+                        - unless i['effective_date'].blank?
+                          = text_field_tag "effective_#{i['id']}", i['effective_date'], :onchange => "update_dup_effective_date(#{i['id']})", :class => "jquery-ui-date", :style => 'width:100px' 
+                      %td
+                        - unless i['expiration_date'].blank?
+                          = text_field_tag "expiration_#{i['id']}", i['expiration_date'], :onchange => "update_dup_expiration_date(#{i['id']})", :class => "jquery-ui-date", :style => 'width:100px'  
+                      %td= i['figi']
+                      %td= i['sedol']
+                      %td= i['isin']
+                      %td= i['cusip']
+                      %td= i['exchange_country']
+                      %td= i['currency']
+                      %td= i['exchange']
+                      %td= check_box_tag "approve_#{i['id']}", '1', i['approved'], :onchange => "update_approved_instrument(#{i['id']})"
+                      %td= check_box_tag "default_#{i['id']}", '1', i['default_instrument'], :onchange => "update_default_instrument(#{i['id']})"
+            .actions
+              = submit_tag 'Merge Instruments', :class => 'button btn btn-large btn-primary'

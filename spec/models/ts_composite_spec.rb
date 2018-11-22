@@ -12,6 +12,15 @@
 #  shares_outstanding        :decimal(22, 6)
 #  share_value               :decimal(22, 6)
 #  nav                       :decimal(22, 6)
+#  open_price                :decimal(22, 6)
+#  low_price                 :decimal(22, 6)
+#  high_price                :decimal(22, 6)
+#  close_price               :decimal(22, 6)
+#  daily_return              :decimal(22, 6)
+#  avg_bid_size              :decimal(22, 6)
+#  avg_ask_size              :decimal(22, 6)
+#  avg_midpoint              :decimal(22, 6)
+#  basket_estimated_cash     :decimal(22, 6)
 #  publish                   :boolean          default(FALSE), not null
 #  as_of_date                :date             not null
 #  factor                    :decimal(22, 6)   default(1.0)

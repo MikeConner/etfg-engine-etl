@@ -2188,10 +2188,10 @@ ActiveRecord::Schema.define(version: 2018_11_18_005550) do
     t.date "record_date", null: false
     t.string "symbol", limit: 32, null: false
     t.string "company", limit: 128
-    t.decimal "total_short_interest", precision: 18, scale: 6
-    t.decimal "days_to_cover", precision: 18, scale: 6
-    t.decimal "short_pct_of_float", precision: 18, scale: 6
-    t.decimal "short_prior_mo", precision: 18, scale: 6
+    t.decimal "total_short_interest", precision: 22, scale: 6
+    t.decimal "days_to_cover", precision: 22, scale: 6
+    t.decimal "short_pct_of_float", precision: 22, scale: 6
+    t.decimal "short_prior_mo", precision: 22, scale: 6
   end
 
   create_table "ssc_lookups", force: :cascade do |t|
@@ -2580,24 +2580,24 @@ ActiveRecord::Schema.define(version: 2018_11_18_005550) do
     t.string "composite_ticker", limit: 32, null: false
     t.string "composite_name", limit: 128
     t.string "country", limit: 64, default: "US", null: false
-    t.decimal "avg_daily_trading_volume", precision: 18, scale: 6
-    t.decimal "call_volume", precision: 18, scale: 6
-    t.decimal "discount_premium", precision: 18, scale: 6
-    t.decimal "num_holdings", precision: 18, scale: 6
-    t.decimal "options_volume", precision: 18, scale: 6
-    t.decimal "put_call_ratio", precision: 18, scale: 6
-    t.decimal "put_volume", precision: 18, scale: 6
-    t.decimal "short_interest", precision: 18, scale: 6
-    t.decimal "bid_ask_spread", precision: 18, scale: 6
-    t.decimal "avg_bid_size", precision: 18, scale: 6
-    t.decimal "avg_ask_size", precision: 18, scale: 6
-    t.decimal "avg_midpoint", precision: 18, scale: 6
-    t.decimal "open_price", precision: 18, scale: 6
-    t.decimal "high_price", precision: 18, scale: 6
-    t.decimal "low_price", precision: 18, scale: 6
-    t.decimal "close_price", precision: 18, scale: 6
-    t.decimal "daily_return", precision: 18, scale: 6
-    t.decimal "basket_estimated_cash", precision: 18, scale: 6
+    t.decimal "avg_daily_trading_volume", precision: 22, scale: 6
+    t.decimal "call_volume", precision: 22, scale: 6
+    t.decimal "discount_premium", precision: 22, scale: 6
+    t.decimal "num_holdings", precision: 22, scale: 6
+    t.decimal "options_volume", precision: 22, scale: 6
+    t.decimal "put_call_ratio", precision: 22, scale: 6
+    t.decimal "put_volume", precision: 22, scale: 6
+    t.decimal "short_interest", precision: 22, scale: 6
+    t.decimal "bid_ask_spread", precision: 22, scale: 6
+    t.decimal "avg_bid_size", precision: 22, scale: 6
+    t.decimal "avg_ask_size", precision: 22, scale: 6
+    t.decimal "avg_midpoint", precision: 22, scale: 6
+    t.decimal "open_price", precision: 22, scale: 6
+    t.decimal "high_price", precision: 22, scale: 6
+    t.decimal "low_price", precision: 22, scale: 6
+    t.decimal "close_price", precision: 22, scale: 6
+    t.decimal "daily_return", precision: 22, scale: 6
+    t.decimal "basket_estimated_cash", precision: 22, scale: 6
     t.integer "pooled_instrument_id"
     t.boolean "match", default: false, null: false
     t.index ["datasource_id", "etfg_date"], name: "index_staging_industries_on_datasource_id_and_etfg_date"

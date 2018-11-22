@@ -44,4 +44,11 @@ ActiveRecord::Schema.define(version: 2018_11_05_063812) do
     t.string "value", null: false
   end
 
+  create_table "temp_cad", id: :integer, limit: 2, default: -> { "nextval('\"TempCAD_id_seq\"'::regclass)" }, force: :cascade do |t|
+    t.string "isin", limit: 12
+    t.string "cusip", limit: 9
+    t.string "figi", limit: 12
+    t.boolean "is_exchange_figi"
+  end
+
 end

@@ -7,25 +7,25 @@ class CreateStagingIndustries < FeedMigrationBase[5.2]
       t.string :composite_ticker, :null => false, :limit => 32
       t.string :composite_name, :limit => 128
       t.string :country, :limit => 64, :null => false, :default => 'US'
-      t.decimal :avg_daily_trading_volume, :precision => 18, :scale => 6
-      t.decimal :call_volume, :precision => 18, :scale => 6
-      t.decimal :discount_premium, :precision => 18, :scale => 6
-      t.decimal :num_holdings, :precision => 18, :scale => 6
-      t.decimal :options_volume, :precision => 18, :scale => 6
-      t.decimal :put_call_ratio, :precision => 18, :scale => 6
-      t.decimal :put_volume, :precision => 18, :scale => 6
-      t.decimal :short_interest, :precision => 18, :scale => 6
-      t.decimal :bid_ask_spread, :precision => 18, :scale => 6
-      t.decimal :avg_bid_size, :precision => 18, :scale => 6
-      t.decimal :avg_ask_size, :precision => 18, :scale => 6
-      t.decimal :bid_ask_spread, :precision => 18, :scale => 6
-      t.decimal :avg_midpoint, :precision => 18, :scale => 6
-      t.decimal :open_price, :precision => 18, :scale => 6
-      t.decimal :high_price, :precision => 18, :scale => 6
-      t.decimal :low_price, :precision => 18, :scale => 6
-      t.decimal :close_price, :precision => 18, :scale => 6
-      t.decimal :daily_return, :precision => 18, :scale => 6
-      t.decimal :basket_estimated_cash, :precision => 18, :scale => 6
+      t.decimal :avg_daily_trading_volume, :precision => 22, :scale => 6
+      t.decimal :call_volume, :precision => 22, :scale => 6
+      t.decimal :discount_premium, :precision => 22, :scale => 6
+      t.decimal :num_holdings, :precision => 22, :scale => 6
+      t.decimal :options_volume, :precision => 22, :scale => 6
+      t.decimal :put_call_ratio, :precision => 22, :scale => 6
+      t.decimal :put_volume, :precision => 22, :scale => 6
+      t.decimal :short_interest, :precision => 22, :scale => 6
+      t.decimal :bid_ask_spread, :precision => 22, :scale => 6
+      t.decimal :avg_bid_size, :precision => 22, :scale => 6
+      t.decimal :avg_ask_size, :precision => 22, :scale => 6
+      t.decimal :bid_ask_spread, :precision => 22, :scale => 6
+      t.decimal :avg_midpoint, :precision => 22, :scale => 6
+      t.decimal :open_price, :precision => 22, :scale => 6
+      t.decimal :high_price, :precision => 22, :scale => 6
+      t.decimal :low_price, :precision => 22, :scale => 6
+      t.decimal :close_price, :precision => 22, :scale => 6
+      t.decimal :daily_return, :precision => 22, :scale => 6
+      t.decimal :basket_estimated_cash, :precision => 22, :scale => 6
       t.integer :pooled_instrument_id
       t.boolean :match, :null => false, :default => false
     end
