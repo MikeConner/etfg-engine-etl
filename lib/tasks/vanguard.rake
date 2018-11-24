@@ -48,4 +48,17 @@ namespace :vanguard do
 
     Kiba.run(job)      
   end
+
+  desc "transform Vanguard Baskets"
+  task :transform_baskets, [:target_date, :filepath] => :environment do |t, args|
+    job = Kiba.parse do
+      source VanguardBasketSource, args[:filepath]
+      transform VanguardBasketTransformer, :target_date => args[:target_date]
+      destination VanguardBasketDestination
+    end
+    
+    VanguardBasket.where(:etfg_date => Date.parse(args[:target_date])).delete_all
+
+    Kiba.run(job)      
+  end
 end

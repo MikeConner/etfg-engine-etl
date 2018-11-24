@@ -10,27 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_18_005550) do
+ActiveRecord::Schema.define(version: 2018_11_24_003554) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-  create_table "agf_data", id: false, force: :cascade do |t|
-    t.date "etfg_date"
-    t.text "fund_identifier"
-    t.text "fund_name"
-    t.date "portfolio_date"
-    t.text "portfolio_base_currency"
-    t.decimal "total_net_asset", precision: 22, scale: 6
-    t.text "liquidity"
-    t.text "holding_name"
-    t.text "securityid"
-    t.decimal "number_of_shares", precision: 22, scale: 6
-    t.decimal "market_value", precision: 22, scale: 6
-    t.decimal "percent_tna", precision: 22, scale: 6
-    t.text "maturity_date"
-    t.decimal "coupon_rate", precision: 22, scale: 6
-  end
 
   create_table "alps_hold", force: :cascade do |t|
     t.date "etfg_date"
@@ -495,148 +478,6 @@ ActiveRecord::Schema.define(version: 2018_11_18_005550) do
     t.index ["etfg_date"], name: "bbh_pval_date"
   end
 
-  create_table "bbh_pval_old", id: false, force: :cascade do |t|
-    t.date "etfg_date"
-    t.text "accounting_basis"
-    t.text "accounting_date"
-    t.text "asset_currency"
-    t.text "average_days_to_maturity"
-    t.text "average_years_to_maturity"
-    t.text "bbh_security_id"
-    t.text "base_amortized_cost"
-    t.text "base_currency_code"
-    t.text "base_interest_receivable"
-    t.text "base_market_value"
-    t.text "base_market_value_change"
-    t.text "base_notional_amount"
-    t.text "base_original_cost"
-    t.text "base_price"
-    t.text "base_price_change"
-    t.text "base_total_unrealized_gain"
-    t.text "base_total_unrealized_loss"
-    t.text "base_unit_cost"
-    t.text "base_unrealized_currency_gain"
-    t.text "base_unrealized_currency_loss"
-    t.text "base_unrealized_security_gain"
-    t.text "base_unrealized_security_loss"
-    t.text "bloomberg_industry_group"
-    t.text "bloomberg_industry_sector"
-    t.text "bloomberg_industry_subgroup_code"
-    t.text "bloomberg_industry_subgroup_description"
-    t.text "cpi_index_ratio"
-    t.text "cusip"
-    t.text "close_event_id"
-    t.text "cost_method"
-    t.text "country_code"
-    t.text "country_description"
-    t.text "currency_description"
-    t.text "current_face"
-    t.text "custody_head_account_number"
-    t.text "days_to_maturity"
-    t.text "entity_name"
-    t.text "entity_number"
-    t.text "fx_rate"
-    t.text "isin"
-    t.text "industry_type_code"
-    t.text "interest_rate"
-    t.text "investment_type_code"
-    t.text "investment_type_description"
-    t.text "issue_date"
-    t.text "issue_price"
-    t.text "local_amortized_cost"
-    t.text "local_currency_code"
-    t.text "local_market_value"
-    t.text "local_market_value_change"
-    t.text "local_notional_amount"
-    t.text "local_original_cost"
-    t.text "local_price"
-    t.text "local_price_change"
-    t.text "local_price_change_percent"
-    t.text "local_unit_cost"
-    t.text "local_unrealized_security_gain"
-    t.text "local_unrealized_security_loss"
-    t.text "long_short_indicator"
-    t.text "maturity_date"
-    t.text "maturity_tier_code"
-    t.text "maturity_tier_description"
-    t.text "monthly_daily_indicator"
-    t.text "moodys_rating"
-    t.text "moodys_rating_date"
-    t.decimal "nav", precision: 22, scale: 10
-    t.text "net_assets_excluding_securities"
-    t.text "open_event_id"
-    t.text "original_face"
-    t.text "per_share_nav_impact"
-    t.text "percent_change_in_market_value"
-    t.text "percent_mv"
-    t.text "percent_tna"
-    t.text "previous_accounting_date"
-    t.text "previous_base_amortized_cost"
-    t.text "previous_base_market_value"
-    t.text "previous_base_price"
-    t.text "previous_base_unit_cost"
-    t.text "previous_base_unrealized_gl"
-    t.text "previous_capital_gl"
-    t.text "previous_currency_gl"
-    t.text "previous_fx_rate"
-    t.text "previous_local_amortized_cost"
-    t.text "previous_local_market_value"
-    t.text "previous_local_price"
-    t.text "previous_local_unit_cost"
-    t.text "previous_local_unrealized_gl"
-    t.text "previous_nav"
-    t.text "previous_outstanding_settled_shares"
-    t.text "previous_price_date"
-    t.text "previous_quantity"
-    t.text "previous_shares_outstanding"
-    t.text "previous_total_base_market_value"
-    t.text "price_effective_date"
-    t.text "price_factor"
-    t.text "primary_traded_exchange_by_security_by_fund"
-    t.text "private_placement_indicator"
-    t.text "processing_security_type"
-    t.decimal "quantity", precision: 22, scale: 10
-    t.text "quantity_change"
-    t.text "quantity_scale"
-    t.text "report_type"
-    t.text "sedol"
-    t.text "sic_code"
-    t.text "securities_at_market_value"
-    t.text "restricted_flag"
-    t.text "security_alias_id"
-    t.text "security_description"
-    t.text "security_id"
-    t.text "security_id_type"
-    t.text "security_long_description"
-    t.text "security_type_code"
-    t.text "security_type_description"
-    t.text "settlement_date"
-    t.decimal "shares_outstanding", precision: 22, scale: 10
-    t.text "source_c"
-    t.text "state_code"
-    t.text "sub_security_type_code"
-    t.text "sub_security_type_description"
-    t.text "ticker_symbol"
-    t.text "total_base_market_value"
-    t.text "total_current_assets"
-    t.text "total_current_liabilities"
-    t.text "total_dividend_marked_to_market"
-    t.text "total_forward_currency_marked_to_market"
-    t.text "total_interest_marked_to_market"
-    t.decimal "total_net_assets", precision: 22, scale: 10
-    t.text "total_outstanding_settled_shares"
-    t.text "trade_date"
-    t.text "trade_date_fx_rate"
-    t.text "underlying_security_description"
-    t.text "underlying_security_id"
-    t.text "variable_rate_frequency"
-    t.text "income_currency"
-    t.text "sector_entity_id"
-    t.decimal "weight", precision: 18, scale: 10
-    t.string "composite_ticker", limit: 32
-    t.index ["etfg_date"], name: "bbh_pval_etfg_date"
-  end
-
   create_table "bbh_pval_template", id: false, force: :cascade do |t|
     t.text "accounting_basis"
     t.text "accounting_date"
@@ -775,412 +616,6 @@ ActiveRecord::Schema.define(version: 2018_11_18_005550) do
     t.text "sector_entity_id"
   end
 
-  create_table "blackrock_hold_amrs", id: false, force: :cascade do |t|
-    t.text "fund_ticker"
-    t.text "fund_isin"
-    t.text "fund_cusip"
-    t.text "fund_sedol"
-    t.date "as_of_date"
-    t.text "fund_name"
-    t.text "fund_domicile_code"
-    t.text "holding_name"
-    t.text "holding_ticker"
-    t.text "holding_isin"
-    t.text "holding_cusip"
-    t.text "holding_sedol"
-    t.text "currency_code"
-    t.decimal "shares_held", precision: 22, scale: 6
-    t.decimal "market_price", precision: 22, scale: 6
-    t.decimal "market_value", precision: 22, scale: 6
-    t.decimal "holding_percent", precision: 22, scale: 6
-    t.text "sector"
-    t.text "asset_class_code"
-    t.text "asset_class_name"
-    t.text "country_code"
-    t.text "country_name"
-    t.text "exchange_code"
-    t.text "exchange_name"
-    t.decimal "fx_rate", precision: 22, scale: 6
-    t.text "market_currency_code"
-    t.text "coupon"
-    t.text "maturity_date"
-    t.text "barcap_rating"
-    t.text "citi_rating"
-    t.text "moodys_rating"
-    t.text "sp_rating"
-    t.decimal "notional_value", precision: 22, scale: 6
-    t.text "duration"
-    t.text "modified_duration"
-    t.text "real_duration"
-    t.text "real_yield_to_maturity"
-    t.text "yield_to_maturity"
-    t.text "yield_to_worst"
-    t.decimal "local_market_value", precision: 22, scale: 6
-    t.decimal "local_market_price", precision: 22, scale: 6
-  end
-
-  create_table "blackrock_hold_amrs_monthly", id: false, force: :cascade do |t|
-    t.text "fund_ticker"
-    t.text "fund_isin"
-    t.text "fund_cusip"
-    t.text "fund_sedol"
-    t.date "as_of_date"
-    t.text "fund_name"
-    t.text "fund_domicile_code"
-    t.text "holding_name"
-    t.text "holding_ticker"
-    t.text "holding_isin"
-    t.text "holding_cusip"
-    t.text "holding_sedol"
-    t.text "currency_code"
-    t.decimal "shares_held", precision: 22, scale: 6
-    t.decimal "market_price", precision: 22, scale: 6
-    t.decimal "market_value", precision: 22, scale: 6
-    t.decimal "holding_percent", precision: 22, scale: 6
-    t.text "sector"
-    t.text "asset_class_code"
-    t.text "asset_class_name"
-    t.text "country_code"
-    t.text "country_name"
-    t.text "exchange_code"
-    t.text "exchange_name"
-    t.decimal "fx_rate", precision: 22, scale: 6
-    t.text "market_currency_code"
-    t.text "coupon"
-    t.text "maturity_date"
-    t.text "barcap_rating"
-    t.text "citi_rating"
-    t.text "moodys_rating"
-    t.text "sp_rating"
-    t.decimal "notional_value", precision: 22, scale: 6
-    t.text "duration"
-    t.text "modified_duration"
-    t.text "real_duration"
-    t.text "real_yield_to_maturity"
-    t.text "yield_to_maturity"
-    t.text "yield_to_worst"
-    t.decimal "local_market_value", precision: 22, scale: 6
-    t.decimal "local_market_price", precision: 22, scale: 6
-  end
-
-  create_table "blackrock_hold_apac", id: false, force: :cascade do |t|
-    t.text "fund_ticker"
-    t.text "fund_isin"
-    t.text "fund_cusip"
-    t.text "fund_sedol"
-    t.date "as_of_date"
-    t.text "fund_name"
-    t.text "fund_domicile_code"
-    t.text "holding_name"
-    t.text "holding_ticker"
-    t.text "holding_isin"
-    t.text "holding_cusip"
-    t.text "holding_sedol"
-    t.text "currency_code"
-    t.decimal "shares_held", precision: 22, scale: 6
-    t.decimal "market_price", precision: 22, scale: 6
-    t.decimal "market_value", precision: 22, scale: 6
-    t.decimal "holding_percent", precision: 22, scale: 6
-    t.text "sector"
-    t.text "asset_class_code"
-    t.text "asset_class_name"
-    t.text "country_code"
-    t.text "country_name"
-    t.text "exchange_code"
-    t.text "exchange_name"
-    t.decimal "fx_rate", precision: 22, scale: 6
-    t.text "market_currency_code"
-    t.text "coupon"
-    t.text "maturity_date"
-    t.text "barcap_rating"
-    t.text "citi_rating"
-    t.text "moodys_rating"
-    t.text "sp_rating"
-    t.decimal "notional_value", precision: 22, scale: 6
-    t.text "duration"
-    t.text "modified_duration"
-    t.text "real_duration"
-    t.text "real_yield_to_maturity"
-    t.text "yield_to_maturity"
-    t.text "yield_to_worst"
-    t.decimal "local_market_value", precision: 22, scale: 6
-    t.decimal "local_market_price", precision: 22, scale: 6
-  end
-
-  create_table "blackrock_hold_apac_monthly", id: false, force: :cascade do |t|
-    t.text "fund_ticker"
-    t.text "fund_isin"
-    t.text "fund_cusip"
-    t.text "fund_sedol"
-    t.date "as_of_date"
-    t.text "fund_name"
-    t.text "fund_domicile_code"
-    t.text "holding_name"
-    t.text "holding_ticker"
-    t.text "holding_isin"
-    t.text "holding_cusip"
-    t.text "holding_sedol"
-    t.text "currency_code"
-    t.decimal "shares_held", precision: 22, scale: 6
-    t.decimal "market_price", precision: 22, scale: 6
-    t.decimal "market_value", precision: 22, scale: 6
-    t.decimal "holding_percent", precision: 22, scale: 6
-    t.text "sector"
-    t.text "asset_class_code"
-    t.text "asset_class_name"
-    t.text "country_code"
-    t.text "country_name"
-    t.text "exchange_code"
-    t.text "exchange_name"
-    t.decimal "fx_rate", precision: 22, scale: 6
-    t.text "market_currency_code"
-    t.text "coupon"
-    t.text "maturity_date"
-    t.text "barcap_rating"
-    t.text "citi_rating"
-    t.text "moodys_rating"
-    t.text "sp_rating"
-    t.decimal "notional_value", precision: 22, scale: 6
-    t.text "duration"
-    t.text "modified_duration"
-    t.text "real_duration"
-    t.text "real_yield_to_maturity"
-    t.text "yield_to_maturity"
-    t.text "yield_to_worst"
-    t.decimal "local_market_value", precision: 22, scale: 6
-    t.decimal "local_market_price", precision: 22, scale: 6
-  end
-
-  create_table "blackrock_hold_emea", id: false, force: :cascade do |t|
-    t.text "fund_ticker"
-    t.text "fund_isin"
-    t.text "fund_cusip"
-    t.text "fund_sedol"
-    t.date "as_of_date"
-    t.text "fund_name"
-    t.text "fund_domicile_code"
-    t.text "holding_name"
-    t.text "holding_ticker"
-    t.text "holding_isin"
-    t.text "holding_cusip"
-    t.text "holding_sedol"
-    t.text "currency_code"
-    t.decimal "shares_held", precision: 22, scale: 6
-    t.decimal "market_price", precision: 22, scale: 6
-    t.decimal "market_value", precision: 22, scale: 6
-    t.decimal "holding_percent", precision: 22, scale: 6
-    t.text "sector"
-    t.text "asset_class_code"
-    t.text "asset_class_name"
-    t.text "country_code"
-    t.text "country_name"
-    t.text "exchange_code"
-    t.text "exchange_name"
-    t.decimal "fx_rate", precision: 22, scale: 6
-    t.text "market_currency_code"
-    t.text "coupon"
-    t.text "maturity_date"
-    t.text "barcap_rating"
-    t.text "citi_rating"
-    t.text "moodys_rating"
-    t.text "sp_rating"
-    t.decimal "notional_value", precision: 22, scale: 6
-    t.text "duration"
-    t.text "modified_duration"
-    t.text "real_duration"
-    t.text "real_yield_to_maturity"
-    t.text "yield_to_maturity"
-    t.text "yield_to_worst"
-    t.decimal "local_market_value", precision: 22, scale: 6
-    t.decimal "local_market_price", precision: 22, scale: 6
-  end
-
-  create_table "blackrock_hold_emea_monthly", id: false, force: :cascade do |t|
-    t.text "fund_ticker"
-    t.text "fund_isin"
-    t.text "fund_cusip"
-    t.text "fund_sedol"
-    t.date "as_of_date"
-    t.text "fund_name"
-    t.text "fund_domicile_code"
-    t.text "holding_name"
-    t.text "holding_ticker"
-    t.text "holding_isin"
-    t.text "holding_cusip"
-    t.text "holding_sedol"
-    t.text "currency_code"
-    t.decimal "shares_held", precision: 22, scale: 6
-    t.decimal "market_price", precision: 22, scale: 6
-    t.decimal "market_value", precision: 22, scale: 6
-    t.decimal "holding_percent", precision: 22, scale: 6
-    t.text "sector"
-    t.text "asset_class_code"
-    t.text "asset_class_name"
-    t.text "country_code"
-    t.text "country_name"
-    t.text "exchange_code"
-    t.text "exchange_name"
-    t.decimal "fx_rate", precision: 22, scale: 6
-    t.text "market_currency_code"
-    t.text "coupon"
-    t.text "maturity_date"
-    t.text "barcap_rating"
-    t.text "citi_rating"
-    t.text "moodys_rating"
-    t.text "sp_rating"
-    t.decimal "notional_value", precision: 22, scale: 6
-    t.text "duration"
-    t.text "modified_duration"
-    t.text "real_duration"
-    t.text "real_yield_to_maturity"
-    t.text "yield_to_maturity"
-    t.text "yield_to_worst"
-    t.decimal "local_market_value", precision: 22, scale: 6
-    t.decimal "local_market_price", precision: 22, scale: 6
-  end
-
-  create_table "blackrock_list", id: false, force: :cascade do |t|
-    t.date "etfg_date"
-    t.text "region"
-    t.text "primary_listing_ticker"
-    t.text "primary_listing_mic"
-    t.text "domicile_country_code"
-    t.text "fund_name"
-    t.text "share_class_name"
-    t.text "base_currency"
-    t.text "share_class_currency"
-    t.text "isin"
-    t.text "cusip"
-    t.text "primary_listing_sedol"
-    t.text "valor"
-    t.text "wkn"
-    t.text "listing_ticker"
-    t.text "listing_mic"
-    t.text "listing_exchange_country_cd"
-    t.text "listing_name"
-    t.text "listing_currency_code"
-    t.date "listing_date"
-    t.text "listing_sedol"
-    t.text "listing_bloomberg_ticker"
-    t.text "listing_bloomberg_iopv"
-    t.text "listing_bloomberg_nav_ticker"
-    t.text "listing_bloomberg_shares_outstanding_ticker"
-    t.text "listing_bloomberg_total_cash_ticker"
-    t.text "listing_bloomberg_estimated_cash_ticker"
-    t.text "listing_ric"
-    t.text "listing_reuters_inav"
-    t.text "listing_market_maker_1"
-    t.text "listing_market_maker_2"
-    t.text "listing_market_maker_3"
-  end
-
-  create_table "blackrock_perf", id: false, force: :cascade do |t|
-    t.date "etfg_date"
-    t.text "region"
-    t.text "primary_listing_ticker"
-    t.text "isin"
-    t.text "cusip"
-    t.text "primary_listing_sedol"
-    t.text "base_currency"
-    t.text "fund_name"
-    t.text "domicile_country_code"
-    t.text "performance_type"
-    t.text "currency_code"
-    t.date "as_of_date"
-    t.decimal "inception_to_date", precision: 18, scale: 6
-    t.decimal "inception_to_date_annualized", precision: 18, scale: 6
-    t.decimal "ytd", precision: 18, scale: 6
-    t.decimal "_1_month", precision: 18, scale: 6
-    t.decimal "_3_month", precision: 18, scale: 6
-    t.decimal "_6_month", precision: 18, scale: 6
-    t.decimal "_9_month", precision: 18, scale: 6
-    t.decimal "_1_year", precision: 18, scale: 6
-    t.decimal "_1_year_annualized", precision: 18, scale: 6
-    t.decimal "_2_year", precision: 18, scale: 6
-    t.decimal "_2_year_annualized", precision: 18, scale: 6
-    t.decimal "_3_year", precision: 18, scale: 6
-    t.decimal "_3_year_annualized", precision: 18, scale: 6
-    t.decimal "_4_year", precision: 18, scale: 6
-    t.decimal "_4_year_annualized", precision: 18, scale: 6
-    t.decimal "_5_year", precision: 18, scale: 6
-    t.decimal "_5_year_annualized", precision: 18, scale: 6
-    t.decimal "_10_year", precision: 18, scale: 6
-    t.decimal "_10_year_annualized", precision: 18, scale: 6
-    t.decimal "_15_year", precision: 18, scale: 6
-    t.decimal "_15_year_annualized", precision: 18, scale: 6
-    t.decimal "_20_year", precision: 18, scale: 6
-    t.decimal "_20_year_annualized", precision: 18, scale: 6
-  end
-
-  create_table "blackrock_static", id: false, force: :cascade do |t|
-    t.date "etfg_date"
-    t.text "region"
-    t.text "primary_listing_ticker"
-    t.text "primary_listing_mic"
-    t.text "domicile_country_code"
-    t.text "fund_name"
-    t.text "share_class_name"
-    t.text "base_currency"
-    t.text "benchmark_name"
-    t.text "benchmark_ticker"
-    t.text "inception_date"
-    t.text "classification_asset_class_1"
-    t.text "classification_asset_class_2"
-    t.text "classification_product_suite"
-    t.text "classification_region_1"
-    t.text "classification_region_2"
-    t.text "classification_market_type"
-    t.text "classification_product_view"
-    t.text "isin"
-    t.text "cusip"
-    t.text "primary_listing_sedol"
-    t.text "valoren"
-    t.text "wkn"
-    t.text "total_expense_ratio"
-    t.text "management_fee"
-    t.text "acquired_fund_fees"
-    t.text "net_expense_ratio"
-    t.text "lowest_net_expense_ratio"
-    t.text "lowest_net_expense_ratio_excluding_aff_int"
-    t.text "contractual_fee_waiver"
-    t.text "contractual_fee_waiver_expiration_dt"
-    t.text "foreign_taxes_expenses"
-    t.text "total_annual_fee_net_waiver"
-    t.text "qe_total_expense_ratio"
-    t.text "qe_management_fee"
-    t.text "qe_acquired_fund_fees"
-    t.text "qe_foreign_taxes_expenses"
-    t.text "qe_net_expense_ratio"
-    t.text "qe_contractual_fee_waiver"
-    t.text "qe_contractual_fee_waiver_expiration_dt"
-    t.text "qe_voluntary_fee_waiver"
-    t.text "qe_voluntary_fee_waiver_expiration_dt"
-    t.text "qe_net_including_waiver"
-    t.text "ongoing_charge"
-    t.text "ongoing_charge_effective_dt"
-    t.text "ongoing_charge_expiration_dt"
-    t.text "distribution_frequency"
-    t.text "sec_lending_flg"
-    t.text "investor_class"
-    t.text "distribution_policy"
-    t.text "benchmark_currency"
-    t.text "benchmark_level_type"
-    t.text "rebalance_frequency"
-    t.text "listing_date"
-    t.text "listing_currency"
-    t.text "inception_date_price"
-    t.text "listing_exchange_mic"
-    t.text "currency_hedge_flg"
-    t.text "fiscal_year_end_dt"
-    t.text "ucits_compliant_flg"
-    t.text "fund_methodology"
-    t.text "asset_management_company"
-    t.text "management_company"
-    t.text "fund_accountant"
-    t.text "custodian"
-    t.text "transfer_agent"
-  end
-
   create_table "bmo_basket_composites", force: :cascade do |t|
     t.date "etfg_date", null: false
     t.string "composite_ticker", limit: 32, null: false
@@ -1207,27 +642,6 @@ ActiveRecord::Schema.define(version: 2018_11_18_005550) do
     t.decimal "shares_per_basket", precision: 18, scale: 6
     t.decimal "number_shares", precision: 18, scale: 6
     t.string "sedol", limit: 7
-  end
-
-  create_table "bmo_baskets", force: :cascade do |t|
-    t.string "fund_ticker"
-    t.string "fund_account_number"
-    t.string "fund_name"
-    t.decimal "units_outstanding"
-    t.decimal "nav"
-    t.decimal "project_cash_amount"
-    t.decimal "dist_price_adj"
-    t.decimal "fx_rate"
-    t.decimal "mer"
-    t.integer "prescribed_number_of_units"
-    t.decimal "caf"
-    t.string "name"
-    t.string "ticker"
-    t.integer "shares_per_basket"
-    t.decimal "price"
-    t.integer "number_of_shares"
-    t.string "sedol"
-    t.date "etfg_date"
   end
 
   create_table "bmo_holdings", id: false, force: :cascade do |t|
@@ -1619,6 +1033,31 @@ ActiveRecord::Schema.define(version: 2018_11_18_005550) do
     t.text "fund_currency"
   end
 
+  create_table "hod_nav", force: :cascade do |t|
+    t.date "etfg_date", null: false
+    t.date "hod_date", null: false
+    t.string "ticker", limit: 32, null: false
+    t.decimal "call_implied_vol", precision: 22, scale: 6
+    t.decimal "put_implied_vol", precision: 22, scale: 6
+    t.decimal "mean_implied_vol", precision: 22, scale: 6
+    t.decimal "call_volume", precision: 22, scale: 6
+    t.decimal "put_volume", precision: 22, scale: 6
+    t.decimal "call_open_interest", precision: 22, scale: 6
+    t.decimal "put_open_interest", precision: 22, scale: 6
+  end
+
+  create_table "hod_template", id: false, force: :cascade do |t|
+    t.text "ticker"
+    t.text "hod_date"
+    t.text "call_iv"
+    t.text "put_iv"
+    t.text "mean_iv"
+    t.text "call_vol"
+    t.text "put_vol"
+    t.text "call_oi"
+    t.text "put_oi"
+  end
+
   create_table "jpm_flex_nav", id: false, force: :cascade do |t|
     t.date "etfg_date"
     t.string "fund_name", limit: 128
@@ -1862,21 +1301,6 @@ ActiveRecord::Schema.define(version: 2018_11_18_005550) do
     t.decimal "weight", precision: 18, scale: 10
   end
 
-  create_table "jpms_profund_nav", id: false, force: :cascade do |t|
-    t.date "etfg_date"
-    t.text "fund_name"
-    t.text "ticker"
-    t.text "cusip"
-    t.decimal "nav", precision: 22, scale: 6
-    t.decimal "pop", precision: 22, scale: 6
-    t.decimal "nav_change", precision: 22, scale: 6
-    t.decimal "net_assets", precision: 22, scale: 6
-    t.decimal "shares_outstanding", precision: 18, scale: 6
-    t.text "distribution_factor"
-    t.text "st_cap_gains"
-    t.text "lt_cap_gains"
-  end
-
   create_table "jpms_profund_template", id: false, force: :cascade do |t|
     t.text "account_number"
     t.text "account_name"
@@ -1919,122 +1343,6 @@ ActiveRecord::Schema.define(version: 2018_11_18_005550) do
     t.text "original_cost"
     t.text "market_value"
     t.text "unrealized_gain_loss"
-  end
-
-  create_table "purpose_holdings", id: false, force: :cascade do |t|
-    t.text "account_number"
-    t.text "account_description"
-    t.text "internal_security_number"
-    t.text "security_cins"
-    t.text "security_description_short"
-    t.text "security_description_long_1"
-    t.text "security_description_long_2"
-    t.decimal "shares_par", precision: 18, scale: 6
-    t.decimal "price_local", precision: 18, scale: 6
-    t.decimal "price_base", precision: 18, scale: 6
-    t.text "segment_description"
-    t.text "category_description"
-    t.text "sector_description"
-    t.text "industry_description"
-    t.date "position_date"
-    t.text "asset_group"
-    t.decimal "traded_market_value_base", precision: 18, scale: 6
-    t.decimal "traded_market_value_local", precision: 18, scale: 6
-    t.text "account_base_currency"
-    t.decimal "exchange_rate", precision: 18, scale: 6
-    t.text "security_sedol"
-    t.text "security_isin"
-    t.text "user_defined_afield_26"
-    t.decimal "cost_value", precision: 18, scale: 6
-    t.decimal "average_cost_base", precision: 18, scale: 6
-    t.decimal "yield_to_maturity", precision: 18, scale: 6
-    t.text "bond_rating"
-    t.decimal "accrued_income_gross_local", precision: 18, scale: 6
-    t.decimal "coupon_rate", precision: 18, scale: 6
-    t.text "maturity_date"
-    t.text "issue_date"
-    t.decimal "earned_income", precision: 18, scale: 6
-    t.text "trading_currency"
-    t.text "expiration_date"
-    t.text "primary_exchange"
-  end
-
-  create_table "rbc_pos", id: false, force: :cascade do |t|
-    t.text "fund_code"
-    t.text "security_type"
-    t.text "fund_security_id"
-    t.text "formal_name"
-    t.text "alt_name"
-    t.text "tax_country"
-    t.text "security_subtype"
-    t.text "class_sec_type"
-    t.decimal "shares", precision: 22, scale: 6
-    t.decimal "cost", precision: 22, scale: 6
-    t.decimal "market_value", precision: 22, scale: 6
-    t.text "issuer"
-    t.decimal "price", precision: 22, scale: 6
-    t.text "cusip"
-    t.text "security_id"
-    t.text "sedol"
-    t.text "interest_rate"
-    t.text "fut_val1"
-    t.text "fut_val2"
-    t.text "security_currency"
-    t.text "security_market_value"
-    t.text "maturity"
-    t.decimal "native_cost", precision: 22, scale: 6
-    t.date "rbc_date"
-  end
-
-  create_table "rbc_price", id: false, force: :cascade do |t|
-    t.date "etfg_date"
-    t.text "fund_code"
-    t.text "empty_field"
-    t.text "fund_name"
-    t.decimal "current_price", precision: 22, scale: 6
-    t.decimal "current_assets", precision: 22, scale: 6
-    t.decimal "price_change", precision: 22, scale: 6
-    t.decimal "previous_price", precision: 22, scale: 6
-    t.decimal "previous_assets", precision: 22, scale: 6
-    t.decimal "asset_change", precision: 22, scale: 6
-    t.text "fund_currency"
-    t.decimal "current_outstanding_shares", precision: 22, scale: 6
-    t.decimal "previous_outstanding_shares", precision: 22, scale: 6
-    t.date "extract_run_date"
-    t.decimal "capital_distribution_rate", precision: 22, scale: 6
-    t.decimal "income_distribution_rate", precision: 22, scale: 6
-    t.decimal "total_distribution_rate", precision: 22, scale: 6
-    t.text "futval1"
-    t.text "another_empty"
-    t.date "date_current"
-    t.date "previous_date"
-    t.decimal "daily_yield", precision: 22, scale: 6
-    t.decimal "_7_day_yield", precision: 22, scale: 6
-  end
-
-  create_table "rbc_price_template", id: false, force: :cascade do |t|
-    t.text "fund_code"
-    t.text "empty_field"
-    t.text "fund_name"
-    t.text "current_price"
-    t.text "current_assets"
-    t.text "price_change"
-    t.text "previous_price"
-    t.text "previous_assets"
-    t.text "asset_change"
-    t.text "fund_currency"
-    t.text "current_outstanding_shares"
-    t.text "previous_outstanding_shares"
-    t.text "extract_run_date"
-    t.text "capital_distribution_rate"
-    t.text "income_distribution_rate"
-    t.text "total_distribution_rate"
-    t.text "futval1"
-    t.text "another_empty"
-    t.text "date_current"
-    t.text "previous_date"
-    t.text "daily_yield"
-    t.text "_7_day_yield"
   end
 
   create_table "sei_blackbar", id: false, force: :cascade do |t|
@@ -2181,6 +1489,16 @@ ActiveRecord::Schema.define(version: 2018_11_18_005550) do
     t.decimal "percent_of_market_value", precision: 18, scale: 6
     t.decimal "percent_of_net_assets", precision: 18, scale: 6
     t.text "ticker"
+  end
+
+  create_table "short_squeeze_template", id: false, force: :cascade do |t|
+    t.text "symbol"
+    t.text "company"
+    t.text "total_short_interest"
+    t.text "days_to_cover"
+    t.text "short_pct_of_float"
+    t.text "short_prior_mo"
+    t.text "record_date"
   end
 
   create_table "short_squeezes", force: :cascade do |t|
@@ -2525,6 +1843,94 @@ ActiveRecord::Schema.define(version: 2018_11_18_005550) do
     t.index ["pooled_instrument_id"], name: "index_staging_composites_on_pooled_instrument_id"
   end
 
+  create_table "staging_composites_092118", id: false, force: :cascade do |t|
+    t.bigint "id"
+    t.date "etfg_date"
+    t.date "as_of_date"
+    t.integer "datasource_id", limit: 2
+    t.bigint "pooled_instrument_id"
+    t.string "composite_ticker", limit: 32
+    t.string "composite_name", limit: 128
+    t.string "composite_description", limit: 128
+    t.decimal "aum", precision: 22, scale: 6
+    t.decimal "shares_outstanding", precision: 22, scale: 6
+    t.decimal "share_value", precision: 22, scale: 6
+    t.decimal "nav", precision: 22, scale: 6
+    t.decimal "open_price", precision: 22, scale: 6
+    t.decimal "low_price", precision: 22, scale: 6
+    t.decimal "high_price", precision: 22, scale: 6
+    t.decimal "close_price", precision: 22, scale: 6
+    t.decimal "daily_return", precision: 22, scale: 6
+    t.decimal "bid_ask_spread", precision: 22, scale: 6
+    t.decimal "avg_bid_size", precision: 22, scale: 6
+    t.decimal "avg_ask_size", precision: 22, scale: 6
+    t.decimal "avg_midpoint", precision: 22, scale: 6
+    t.decimal "basket_estimated_cash", precision: 22, scale: 6
+    t.integer "issuer_id"
+    t.string "issuer", limit: 32
+    t.string "figi", limit: 12
+    t.boolean "is_exchange_figi"
+    t.string "sedol", limit: 7
+    t.string "isin", limit: 12
+    t.string "cusip", limit: 9
+    t.string "exchange_country", limit: 64
+    t.string "currency", limit: 16
+    t.string "exchange", limit: 64
+    t.string "market_sector", limit: 128
+    t.string "security_type", limit: 128
+    t.string "sector", limit: 64
+    t.string "industry", limit: 64
+    t.string "industry_group", limit: 128
+    t.string "subindustry", limit: 128
+    t.string "rating", limit: 32
+    t.boolean "is_index"
+    t.boolean "is_active"
+    t.boolean "is_etn"
+    t.boolean "is_levered"
+    t.boolean "is_inverse"
+    t.boolean "has_derivatives"
+    t.boolean "options_available"
+    t.date "inception_date"
+    t.string "etp_structure_type", limit: 50
+    t.string "category", limit: 28
+    t.string "related_index", limit: 50
+    t.string "related_index_symbol", limit: 16
+    t.string "related_index_name", limit: 50
+    t.decimal "net_expenses", precision: 22, scale: 6
+    t.decimal "expense_ratio", precision: 22, scale: 6
+    t.decimal "total_expenses", precision: 22, scale: 6
+    t.decimal "other_expenses", precision: 22, scale: 6
+    t.string "listing_exchange", limit: 64
+    t.string "asset_class", limit: 28
+    t.string "development_class", limit: 32
+    t.string "focus", limit: 28
+    t.string "lead_market_maker", limit: 128
+    t.string "region", limit: 28
+    t.decimal "levered_amount", precision: 22, scale: 6
+    t.date "maturity_date"
+    t.string "exposure_country", limit: 64
+    t.string "selection_criteria", limit: 32
+    t.string "weighting_scheme", limit: 32
+    t.string "administrator", limit: 128
+    t.string "advisor", limit: 128
+    t.string "distributor", limit: 128
+    t.decimal "fee_waivers", precision: 22, scale: 6
+    t.string "fiscal_year_end", limit: 16
+    t.string "futures_commission_merchant", limit: 128
+    t.string "subadvisor", limit: 128
+    t.string "tax_classification", limit: 128
+    t.string "transfer_agent", limit: 50
+    t.string "trustee", limit: 128
+    t.decimal "creation_fee", precision: 22, scale: 6
+    t.decimal "creation_unit_size", precision: 22, scale: 6
+    t.string "custodian", limit: 128
+    t.string "distribution_frequency", limit: 32
+    t.decimal "management_fee", precision: 22, scale: 6
+    t.string "portfolio_manager", limit: 128
+    t.string "primary_benchmark"
+    t.boolean "match"
+  end
+
   create_table "staging_constituents", force: :cascade do |t|
     t.date "etfg_date", null: false
     t.date "as_of_date", null: false
@@ -2566,11 +1972,47 @@ ActiveRecord::Schema.define(version: 2018_11_18_005550) do
     t.index ["as_of_date", "datasource_id"], name: "index_staging_constituents_on_as_of_date_and_datasource_id"
     t.index ["composite_ticker", "exchange_country"], name: "ticker_country_constituents"
     t.index ["composite_ticker"], name: "index_staging_constituents_on_composite_ticker"
+    t.index ["etfg_date", "datasource_id", "instrument_id"], name: "index_on_date_source_instrument"
     t.index ["etfg_date", "datasource_id", "instrument_id"], name: "staging_date_source_instrument"
     t.index ["etfg_date", "datasource_id"], name: "index_staging_constituents_on_etfg_date_and_datasource_id"
     t.index ["etfg_date"], name: "index_staging_constituents_on_etfg_date"
     t.index ["figi"], name: "index_staging_constituents_on_figi"
     t.index ["instrument_id"], name: "index_staging_constituents_on_instrument_id"
+  end
+
+  create_table "staging_constituents_092118", id: false, force: :cascade do |t|
+    t.bigint "id"
+    t.date "etfg_date"
+    t.date "as_of_date"
+    t.integer "datasource_id"
+    t.bigint "pooled_instrument_id"
+    t.bigint "instrument_id"
+    t.string "composite_ticker", limit: 32
+    t.string "composite_name", limit: 128
+    t.string "constituent_ticker", limit: 64
+    t.string "constituent_name", limit: 128
+    t.decimal "weight", precision: 18, scale: 10
+    t.decimal "market_value", precision: 22, scale: 6
+    t.decimal "notional_value", precision: 22, scale: 6
+    t.decimal "total_shares_held", precision: 22, scale: 6
+    t.integer "issuer_id"
+    t.string "issuer", limit: 32
+    t.string "figi", limit: 12
+    t.boolean "is_exchange_figi"
+    t.string "sedol", limit: 7
+    t.string "isin", limit: 12
+    t.string "cusip", limit: 9
+    t.string "exchange_country", limit: 64
+    t.string "currency", limit: 16
+    t.string "exchange", limit: 64
+    t.string "market_sector", limit: 128
+    t.string "security_type", limit: 128
+    t.string "sector", limit: 64
+    t.string "industry", limit: 64
+    t.string "industry_group", limit: 128
+    t.string "subindustry", limit: 128
+    t.string "rating", limit: 32
+    t.boolean "match"
   end
 
   create_table "staging_industries", force: :cascade do |t|
@@ -2882,6 +2324,33 @@ ActiveRecord::Schema.define(version: 2018_11_18_005550) do
     t.text "field_10"
   end
 
+  create_table "vanguard_baskets", id: false, force: :cascade do |t|
+    t.date "etfg_date"
+    t.string "fund_name", limit: 128
+    t.string "fund_identifier", limit: 14
+    t.string "fund_identifier_type", limit: 32
+    t.string "domicile", limit: 32
+    t.string "fund_ticker", limit: 32, null: false
+    t.date "trade_date"
+    t.decimal "unit_size", precision: 22, scale: 6
+    t.decimal "shares_outstanding", precision: 22, scale: 6
+    t.decimal "nav", precision: 22, scale: 6
+    t.string "basket_identifier", limit: 14
+    t.string "basket_identifier_type", limit: 32
+    t.string "basket_usage", limit: 32
+    t.decimal "fixed_fee_create", precision: 22, scale: 6
+    t.decimal "fixed_fee_redeem", precision: 22, scale: 6
+    t.decimal "tba_fee", precision: 22, scale: 6
+    t.decimal "cash_in_lieu_fee", precision: 22, scale: 6
+    t.decimal "standard_custom_fee", precision: 22, scale: 6
+    t.decimal "actual_cash", precision: 22, scale: 6
+    t.decimal "estimated_cash", precision: 22, scale: 6
+    t.decimal "expense_ratio", precision: 22, scale: 6
+    t.decimal "daily_create_unit_limit", precision: 22, scale: 6
+    t.decimal "daily_create_redeem_unit", precision: 22, scale: 6
+    t.string "base_currency", limit: 16
+  end
+
   create_table "vanguard_etfs", id: false, force: :cascade do |t|
     t.date "etfg_date", null: false
     t.date "trade_date", null: false
@@ -2941,8 +2410,8 @@ ActiveRecord::Schema.define(version: 2018_11_18_005550) do
   create_table "velocity", id: false, force: :cascade do |t|
     t.date "etf_date"
     t.string "etf_ticker", limit: 32
-    t.decimal "etf_value", precision: 18, scale: 6
-    t.decimal "etf_shares", precision: 18, scale: 6
+    t.decimal "etf_value", precision: 22, scale: 6
+    t.decimal "etf_shares", precision: 22, scale: 6
   end
 
   create_table "xignite_api_calls", id: false, force: :cascade do |t|
