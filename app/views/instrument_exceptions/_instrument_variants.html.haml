@@ -39,7 +39,7 @@
             %br
             %br
             = link_to instrument.instrument_id, instruments_path(:id_set => Instrument.where(:instrument_id => instrument.instrument_id).map(&:id).join(",")), :target => '_blank', :title => exception.id
-          %td= raw instrument.standard_name
+          %td= text_area_tag "standard_name_#{exception.id}", instrument.standard_name, :escape => false, :style => 'width:150px;height:150px'
           %td
             = exception.composite_ticker
             - unless composite.nil?
@@ -61,10 +61,13 @@
             - unless instrument.cusip.blank?
               = link_to instrument.cusip, instruments_path(:cusip => instrument.cusip), :target => '_blank'
           %td{:style => 'width:370px'}
-            = text_area_tag :tat, instrument.name_variants.split('^').join(","), :style => 'height:150px'
+            = text_area_tag :tat, instrument.name_variants.split('^').join(","), :style => 'height:150px', :disabled => true
           %td{:style => 'width:450px'}
             = radio_button_tag "disposition_#{exception.id}", InstrumentException::ACCEPT
             Accept
+            %br
+            = radio_button_tag "disposition_#{exception.id}", InstrumentException::ACCEPT_AS_STANDARD
+            Accept&Set Name
             %br
             = radio_button_tag "disposition_#{exception.id}", InstrumentException::SKIP
             Skip

@@ -132,7 +132,7 @@ class InstrumentsController < ApplicationController
       params[:id_set].split(",").each do |id|
         ids.push(id.to_i)
       end
-      @instruments = Instrument.find(ids).order(:standard_name)
+      @instruments = Instrument.order(:standard_name).find(ids)
     elsif params[:figi]
       @instruments = Instrument.where(:figi => params[:figi]).order(:standard_name)
     elsif params[:sedol]

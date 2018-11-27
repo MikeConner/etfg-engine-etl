@@ -27,6 +27,7 @@ class InstrumentException < ApplicationRecord
  
   SKIP = 'Skip'
   ACCEPT = 'Accept'
+  ACCEPT_AS_STANDARD = 'Accept Std'
   IGNORE = 'Ignore'
   EXCEPTION = 'Exception'
   CORP_ACTION = 'Action'

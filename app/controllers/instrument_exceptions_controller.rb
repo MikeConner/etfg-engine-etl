@@ -80,7 +80,17 @@ class InstrumentExceptionsController < ApplicationController
   
   def bulk_update
     params.each do |k, v|
-      if k =~ /disposition_(\d+)/
+      if k =~ /standard_name_(\d+)/
+        begin
+          ie = InstrumentException.find($1)
+          i = ie.instrument
+          if v != ie.standard_name and !v.blank?
+            i.update_attribute(:standard_name, v)
+          end
+        rescue Exception => ex
+          puts ex.message
+        end
+      elsif k =~ /disposition_(\d+)/
         begin
           ie = InstrumentException.find($1)
           pi = ie.pooled_instrument
@@ -89,16 +99,20 @@ class InstrumentExceptionsController < ApplicationController
             case v
               when InstrumentException::SKIP
                 ie.update_attribute(:skipped, true)
-              when InstrumentException::ACCEPT
+              when InstrumentException::ACCEPT, InstrumentException::ACCEPT_AS_STANDARD
                 i = ie.instrument
                 unless pi.nil?
-                  i.update_attribute(:name_variants, i.name_variants + "^" + ie.candidate_name.gsub('^',' '))
+                  candidate_name = ie.candidate_name.gsub('^',' ')
+                  i.update_attribute(:name_variants, i.name_variants + "^" + candidate_name)
+                  if InstrumentException::ACCEPT_AS_STANDARD == v
+                    i.update_attribute(:standard_name, candidate_name)
+                  end
                 end
               when InstrumentException::EXCEPTION, InstrumentException::CORP_ACTION
                 ie.update_attribute(:resolution, v)
             end
             
-            if [InstrumentException::ACCEPT,InstrumentException::IGNORE].include?(v)
+            if [InstrumentException::ACCEPT,InstrumentException::ACCEPT_AS_STANDARD,InstrumentException::IGNORE].include?(v)
               ie.destroy
             end
           end
