@@ -31,7 +31,7 @@ class InstrumentExceptionsController < ApplicationController
     end
     
     @total = @base.count
-    @exceptions = @base.order('score DESC, end_date DESC').limit(50)        
+    @exceptions = @base.order('score DESC, etfg_date DESC').limit(50)        
          
     render :layout => 'admin'
   end

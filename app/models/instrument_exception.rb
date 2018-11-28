@@ -13,8 +13,7 @@
 #  sedol                :string(7)
 #  isin                 :string(12)
 #  cusip                :string(9)
-#  start_date           :date
-#  end_date             :date
+#  etfg_date            :date
 #  skipped              :boolean          default(FALSE), not null
 #  resolution           :string(16)
 #  score                :integer

@@ -30,12 +30,7 @@
           - unless src_id
             %td= exception.datasource.data_source_name
           %td{:style => 'width:150px'}
-            - if exception.start_date == exception.end_date
-              = exception.start_date.try(:strftime, ApplicationHelper::DATE_FORMAT)
-            - else
-              = exception.start_date .try(:strftime, ApplicationHelper::DATE_FORMAT)
-              \-
-              %br= exception.end_date.try(:strftime, ApplicationHelper::DATE_FORMAT)
+            = exception.etfg_date.try(:strftime, ApplicationHelper::DATE_FORMAT)
             %br
             %br
             = link_to instrument.instrument_id, instruments_path(:id_set => Instrument.where(:instrument_id => instrument.instrument_id).map(&:id).join(",")), :target => '_blank', :title => exception.id
