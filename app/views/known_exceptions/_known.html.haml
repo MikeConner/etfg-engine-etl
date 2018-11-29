@@ -25,11 +25,7 @@
           %td= e.composite_ticker
           %td= e.standard_name
           %td= e.candidate_name
-          %td
-            - if e.start_date == e.end_date
-              = e.start_date.try(:strftime, ApplicationHelper::DATE_FORMAT)
-            - else
-              == #{e.start_date.try(:strftime, ApplicationHelper::DATE_FORMAT)} - #{e.end_date.try(:strftime, ApplicationHelper::DATE_FORMAT)}
+          %td= e.etfg_date.try(:strftime, ApplicationHelper::DATE_FORMAT)
           %td= e.figi
           %td= e.sedol
           %td= e.isin
