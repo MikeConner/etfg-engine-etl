@@ -39,6 +39,8 @@
             = exception.composite_ticker
             - unless composite.nil?
               == /#{composite.exchange_country}
+            - unless instrument.ticker.blank?
+              %br= instrument.ticker
           %td
             %strong= exception.candidate_name
           %td

@@ -5,9 +5,8 @@
 #  id                       :bigint(8)        not null, primary key
 #  etfg_date                :date             not null
 #  as_of_date               :date             not null
-#  datasource_id            :integer          not null
+#  datasource_id            :integer
 #  composite_ticker         :string(32)       not null
-#  composite_name           :string(128)
 #  country                  :string(64)       default("US"), not null
 #  avg_daily_trading_volume :decimal(22, 6)
 #  call_volume              :decimal(22, 6)
@@ -18,17 +17,14 @@
 #  put_volume               :decimal(22, 6)
 #  short_interest           :decimal(22, 6)
 #  bid_ask_spread           :decimal(22, 6)
-#  avg_bid_size             :decimal(22, 6)
-#  avg_ask_size             :decimal(22, 6)
-#  avg_midpoint             :decimal(22, 6)
 #  open_price               :decimal(22, 6)
 #  high_price               :decimal(22, 6)
 #  low_price                :decimal(22, 6)
 #  close_price              :decimal(22, 6)
-#  daily_return             :decimal(22, 6)
-#  basket_estimated_cash    :decimal(22, 6)
 #  pooled_instrument_id     :integer
 #  match                    :boolean          default(FALSE), not null
+#  nav                      :decimal(22, 6)
+#  aum                      :decimal(22, 6)
 #
 
 require 'rails_helper'

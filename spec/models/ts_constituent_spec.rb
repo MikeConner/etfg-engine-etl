@@ -20,6 +20,9 @@
 #  currency             :string(16)
 #  coupon               :decimal(22, 6)
 #  maturity_date        :date
+#  coupon_range         :string(8)
+#  years_to_maturity    :integer
+#  maturity_range       :string(8)
 #
 
 RSpec.describe 'TsConstituent', type: :model do
