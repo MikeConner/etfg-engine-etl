@@ -5,13 +5,13 @@ namespace :xignite do
   API_TOKEN = '43B9650522614ABDBD4C9B5948287A93'
   
   desc "Update instruments"
-  task :sector_industry => :environment do 
+  task :sector_industry, [:today] => :environment do |t, args| 
     uri = URI(XIGNITE_BASE_URL)
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
 
-    today = Date.today
-    
+    today = Date.strptime(args[:today], '%Y%m%d')
+
     params = { 'IdentifierType' => "CUSIP", 
                'FundamentalTypes' => 'Industry,Sector',
                'AsOfDate' => today.try(:strftime, '%m/%d/%Y'),
