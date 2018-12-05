@@ -29,7 +29,7 @@ class DateAdjustFundFlowsController < ApplicationController
   end
 
   def update_effective_date
-    @adjust = DateAdjustFundFlow.find(params[:id])
+    @adjust = DateAdjustFundFlow.friendly.find(params[:id])
     
     value = params[:effective_date].blank? ? nil : Date.strptime(params[:effective_date], '%m/%d/%Y')
 
@@ -41,7 +41,7 @@ class DateAdjustFundFlowsController < ApplicationController
   end
   
   def update_expiration_date
-    @adjust = DateAdjustFundFlow.find(params[:id])    
+    @adjust = DateAdjustFundFlow.friendly.find(params[:id])    
 
     value = params[:expiration_date].blank? ? nil : Date.strptime(params[:expiration_date], '%m/%d/%Y')
 
@@ -53,7 +53,7 @@ class DateAdjustFundFlowsController < ApplicationController
   end
   
   def destroy
-    @adjust = DateAdjustFundFlow.find(params[:id])
+    @adjust = DateAdjustFundFlow.friendly.find(params[:id])
     @adjust.destroy
     
     redirect_to date_adjust_fund_flows_path, :notice => 'Fund Flow entry deleted'
