@@ -48,6 +48,10 @@ class InstrumentTemplatesController < ApplicationController
             changes[:subindustry] = row[8]
             updates += 1
           end
+          if i.geography.blank? and not row[9].blank?
+            changes[:geography] = row[9]
+            updates += 1
+          end
           
           i.update_attributes(changes)
         end
