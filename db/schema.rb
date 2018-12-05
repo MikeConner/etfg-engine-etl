@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_21_031904) do
+ActiveRecord::Schema.define(version: 2018_12_05_032339) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,44 +23,6 @@ ActiveRecord::Schema.define(version: 2018_11_21_031904) do
     t.bigint "resolved_id"
     t.index ["datasource_id", "file_date", "datasource_line"], name: "no_dups_ambigs", unique: true
     t.index ["datasource_id", "file_date"], name: "speed_up_ambigs"
-  end
-
-  create_table "analytics", force: :cascade do |t|
-    t.date "run_date", null: false
-    t.string "composite_ticker", limit: 8, null: false
-    t.decimal "risk_total_score", precision: 16, scale: 4
-    t.decimal "risk_volatility", precision: 16, scale: 4
-    t.decimal "risk_deviation", precision: 16, scale: 4
-    t.decimal "risk_country", precision: 16, scale: 4
-    t.decimal "risk_structure", precision: 16, scale: 4
-    t.decimal "risk_liquidity", precision: 16, scale: 4
-    t.decimal "risk_efficiency", precision: 16, scale: 4
-    t.decimal "reward_score", precision: 16, scale: 4
-    t.decimal "quant_tota_score", precision: 16, scale: 4
-    t.decimal "quant_technical_st", precision: 16, scale: 4
-    t.decimal "quant_technical_it", precision: 16, scale: 4
-    t.decimal "quant_technical_lt", precision: 16, scale: 4
-    t.decimal "quant_composite_technical", precision: 16, scale: 4
-    t.decimal "quant_sentiment_pc", precision: 16, scale: 4
-    t.decimal "quant_sentiment_si", precision: 16, scale: 4
-    t.decimal "quant_sentiment_iv", precision: 16, scale: 4
-    t.decimal "quant_composite_sentiment", precision: 16, scale: 4
-    t.decimal "quant_composite_behavioral", precision: 16, scale: 4
-    t.decimal "quant_fundamental_pe", precision: 16, scale: 4
-    t.decimal "quant_fundamental_pcf", precision: 16, scale: 4
-    t.decimal "quant_fundamental_pb", precision: 16, scale: 4
-    t.decimal "quant_fundamental_div", precision: 16, scale: 4
-    t.decimal "quant_composite_fundamental", precision: 16, scale: 4
-    t.decimal "quant_global_sector", precision: 16, scale: 4
-    t.decimal "quant_global_country", precision: 16, scale: 4
-    t.decimal "quant_composite_global", precision: 16, scale: 4
-    t.decimal "quant_quality_liquidity", precision: 16, scale: 4
-    t.decimal "quant_quality_diversification", precision: 16, scale: 4
-    t.decimal "quant_quality_firm", precision: 16, scale: 4
-    t.decimal "quant_composite_quality", precision: 16, scale: 4
-    t.string "quant_grade", limit: 1
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "cached_figis", force: :cascade do |t|
@@ -86,26 +48,6 @@ ActiveRecord::Schema.define(version: 2018_11_21_031904) do
     t.index ["figi"], name: "index_composite_figis_on_figi"
   end
 
-  create_table "constituents", force: :cascade do |t|
-    t.date "run_date", null: false
-    t.string "composite_ticker", limit: 8, null: false
-    t.string "identifier", limit: 32
-    t.string "constituent_name", null: false
-    t.decimal "weight", precision: 10, scale: 6
-    t.decimal "market_value", precision: 20, scale: 6
-    t.string "cusip", limit: 24
-    t.string "isin", limit: 16
-    t.string "figi", limit: 16
-    t.string "sedol", limit: 16
-    t.string "country", limit: 32
-    t.string "exchange", limit: 16
-    t.decimal "total_shares_held", precision: 18, scale: 4
-    t.string "market_sector", limit: 128
-    t.string "security_type", limit: 128
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "datasource_ranks", primary_key: ["datasource_id", "composite_ticker", "ranking"], force: :cascade do |t|
     t.bigint "datasource_id", null: false
     t.string "composite_ticker", limit: 16, null: false
@@ -119,14 +61,31 @@ ActiveRecord::Schema.define(version: 2018_11_21_031904) do
     t.boolean "is_direct_feed", default: true, null: false
   end
 
-  create_table "fund_flows", force: :cascade do |t|
-    t.date "run_date", null: false
-    t.string "composite_ticker", limit: 8, null: false
-    t.decimal "shares", precision: 14, scale: 2
-    t.decimal "nav", precision: 14, scale: 6
-    t.decimal "value", precision: 20, scale: 6
+  create_table "date_adjust_fund_flows", id: false, force: :cascade do |t|
+    t.string "composite_ticker", limit: 32, null: false
+    t.date "effective_date"
+    t.date "expiration_date"
+    t.string "slug"
+    t.index ["composite_ticker"], name: "index_date_adjust_fund_flows_on_composite_ticker", unique: true
+    t.index ["slug"], name: "index_date_adjust_fund_flows_on_slug", unique: true
+  end
+
+  create_table "etpr_templates", force: :cascade do |t|
+    t.string "template_file"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "friendly_id_slugs", id: :serial, force: :cascade do |t|
+    t.string "slug", null: false
+    t.integer "sluggable_id", null: false
+    t.string "sluggable_type", limit: 50
+    t.string "scope"
+    t.datetime "created_at"
+    t.index ["slug", "sluggable_type", "scope"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", unique: true
+    t.index ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type"
+    t.index ["sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_id"
+    t.index ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type"
   end
 
   create_table "holidays", force: :cascade do |t|
@@ -134,66 +93,6 @@ ActiveRecord::Schema.define(version: 2018_11_21_031904) do
     t.date "market_day", null: false
     t.boolean "is_open", null: false
     t.string "description"
-  end
-
-  create_table "industries", force: :cascade do |t|
-    t.date "run_date", null: false
-    t.string "composite_ticker", null: false
-    t.string "issuer", limit: 32
-    t.string "name", limit: 128
-    t.date "inception_date"
-    t.string "related_index", limit: 128
-    t.string "tax_classification", limit: 32
-    t.boolean "is_etn"
-    t.decimal "fund_aum", precision: 24, scale: 6
-    t.string "avg_volume", limit: 10
-    t.string "asset_class", limit: 32
-    t.string "category", limit: 32
-    t.string "focus", limit: 32
-    t.string "development_level", limit: 32
-    t.string "region", limit: 32
-    t.boolean "is_leveraged"
-    t.string "leverage_factor", limit: 16
-    t.boolean "active"
-    t.string "administrator", limit: 64
-    t.string "advisor", limit: 64
-    t.string "custodian", limit: 128
-    t.string "distributor", limit: 128
-    t.string "portfolio_manager"
-    t.string "subadvisor", limit: 128
-    t.string "transfer_agent", limit: 64
-    t.string "trustee", limit: 64
-    t.string "futures_commission_merchant", limit: 128
-    t.string "fiscal_year_end", limit: 16
-    t.string "distribution_frequency", limit: 1
-    t.string "listing_exchange", limit: 64
-    t.decimal "creation_unit_size", precision: 12
-    t.decimal "creation_fee", precision: 8
-    t.text "geographic_exposure"
-    t.text "currency_exposure"
-    t.text "sector_exposure"
-    t.text "industry_group_exposure"
-    t.text "industry_exposure"
-    t.text "subindustry_exposure"
-    t.text "coupon_exposure"
-    t.text "maturity_exposure"
-    t.boolean "option_available"
-    t.string "option_volume", limit: 16
-    t.decimal "short_interest", precision: 12
-    t.string "put_call_ratio", limit: 32
-    t.decimal "num_constituents", precision: 6
-    t.decimal "discount_premium", precision: 8, scale: 2
-    t.decimal "bid_ask_spread", precision: 16, scale: 12
-    t.string "put_vol", limit: 14
-    t.string "call_vol", limit: 14
-    t.decimal "management_fee", precision: 12, scale: 4
-    t.decimal "other_expenses", precision: 12, scale: 4
-    t.decimal "total_expenses", precision: 12, scale: 4
-    t.decimal "fee_waivers", precision: 12, scale: 4
-    t.decimal "net_expenses", precision: 12, scale: 4
-    t.string "lead_market_maker", limit: 64
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "instrument_exceptions", force: :cascade do |t|
@@ -207,8 +106,7 @@ ActiveRecord::Schema.define(version: 2018_11_21_031904) do
     t.string "sedol", limit: 7
     t.string "isin", limit: 12
     t.string "cusip", limit: 9
-    t.date "start_date"
-    t.date "end_date"
+    t.date "etfg_date"
     t.boolean "skipped", default: false, null: false
     t.string "resolution", limit: 16
     t.integer "score"
@@ -216,7 +114,6 @@ ActiveRecord::Schema.define(version: 2018_11_21_031904) do
     t.index ["datasource_id", "instrument_id", "composite_ticker", "candidate_name"], name: "ie_row", unique: true
     t.index ["datasource_id"], name: "index_instrument_exceptions_on_datasource_id"
     t.index ["instrument_id"], name: "index_instrument_exceptions_on_instrument_id"
-    t.index ["score", "end_date"], name: "index_instrument_exceptions_on_score_and_end_date"
     t.index ["score"], name: "index_instrument_exceptions_on_score"
   end
 
@@ -254,10 +151,13 @@ ActiveRecord::Schema.define(version: 2018_11_21_031904) do
     t.integer "datasource_id"
     t.text "notes"
     t.string "cusip_validated", limit: 16
+    t.string "geography", limit: 2
     t.index ["currency"], name: "index_instruments_on_currency"
     t.index ["cusip"], name: "index_instruments_on_cusip"
+    t.index ["cusip"], name: "index_instruments_on_cusip_wtf"
     t.index ["figi", "sedol", "isin", "cusip"], name: "all_indexes_instruments"
     t.index ["figi"], name: "index_instruments_on_figi"
+    t.index ["instrument_id"], name: "index_instruments_on_id"
     t.index ["isin"], name: "index_instruments_on_isin"
     t.index ["issuer_id"], name: "index_instruments_on_issuer_id"
     t.index ["sedol"], name: "index_instruments_on_sedol"
@@ -320,7 +220,6 @@ ActiveRecord::Schema.define(version: 2018_11_21_031904) do
 
   create_table "pooled_instruments", force: :cascade do |t|
     t.integer "issuer_id"
-    t.integer "instrument_id"
     t.string "issuer", limit: 64
     t.string "composite_ticker", limit: 32, null: false
     t.text "composite_name_variants", null: false
@@ -378,6 +277,7 @@ ActiveRecord::Schema.define(version: 2018_11_21_031904) do
     t.bigint "pooled_instrument_id"
     t.datetime "created_at", default: -> { "now()" }, null: false
     t.string "secid", limit: 12
+    t.bigint "instrument_id"
     t.string "figi", limit: 12
     t.boolean "is_exchange_figi", default: false, null: false
     t.string "sedol", limit: 7
@@ -386,7 +286,6 @@ ActiveRecord::Schema.define(version: 2018_11_21_031904) do
     t.integer "datasource_id"
     t.boolean "exclude_from_ts", default: false, null: false
     t.index ["composite_ticker"], name: "index_pooled_instruments_on_composite_ticker"
-    t.index ["instrument_id"], name: "index_pooled_instruments_on_instrument_id"
     t.index ["issuer_id"], name: "index_pooled_instruments_on_issuer_id"
   end
 
@@ -400,15 +299,6 @@ ActiveRecord::Schema.define(version: 2018_11_21_031904) do
     t.decimal "shares_outstanding", precision: 22, scale: 6
     t.decimal "share_value", precision: 22, scale: 6
     t.decimal "nav", precision: 22, scale: 6
-    t.decimal "open_price", precision: 22, scale: 6
-    t.decimal "low_price", precision: 22, scale: 6
-    t.decimal "high_price", precision: 22, scale: 6
-    t.decimal "close_price", precision: 22, scale: 6
-    t.decimal "daily_return", precision: 22, scale: 6
-    t.decimal "avg_bid_size", precision: 22, scale: 6
-    t.decimal "avg_ask_size", precision: 22, scale: 6
-    t.decimal "avg_midpoint", precision: 22, scale: 6
-    t.decimal "basket_estimated_cash", precision: 22, scale: 6
     t.boolean "publish", default: false, null: false
     t.date "as_of_date", null: false
     t.decimal "factor", precision: 22, scale: 6, default: "1.0"
@@ -417,56 +307,6 @@ ActiveRecord::Schema.define(version: 2018_11_21_031904) do
     t.index ["etfg_date", "datasource_id"], name: "index_ts_composites_on_etfg_date_and_datasource_id"
     t.index ["etfg_date"], name: "index_ts_composites_on_etfg_date"
     t.index ["pooled_instrument_id"], name: "index_ts_composites_on_pooled_instrument_id"
-  end
-
-  create_table "ts_composites_0918", id: false, force: :cascade do |t|
-    t.bigint "id"
-    t.date "etfg_date"
-    t.integer "datasource_id", limit: 2
-    t.bigint "pooled_instrument_id"
-    t.string "composite_ticker", limit: 32
-    t.string "composite_name", limit: 128
-    t.decimal "aum", precision: 22, scale: 6
-    t.decimal "shares_outstanding", precision: 22, scale: 6
-    t.decimal "share_value", precision: 22, scale: 6
-    t.decimal "nav", precision: 22, scale: 6
-    t.decimal "open_price", precision: 22, scale: 6
-    t.decimal "low_price", precision: 22, scale: 6
-    t.decimal "high_price", precision: 22, scale: 6
-    t.decimal "close_price", precision: 22, scale: 6
-    t.decimal "daily_return", precision: 22, scale: 6
-    t.decimal "bid_ask_spread", precision: 22, scale: 6
-    t.decimal "avg_bid_size", precision: 22, scale: 6
-    t.decimal "avg_ask_size", precision: 22, scale: 6
-    t.decimal "avg_midpoint", precision: 22, scale: 6
-    t.decimal "basket_estimated_cash", precision: 22, scale: 6
-    t.boolean "publish"
-    t.date "as_of_date"
-  end
-
-  create_table "ts_composites_092118", id: false, force: :cascade do |t|
-    t.bigint "id"
-    t.date "etfg_date"
-    t.integer "datasource_id", limit: 2
-    t.bigint "pooled_instrument_id"
-    t.string "composite_ticker", limit: 32
-    t.string "composite_name", limit: 128
-    t.decimal "aum", precision: 22, scale: 6
-    t.decimal "shares_outstanding", precision: 22, scale: 6
-    t.decimal "share_value", precision: 22, scale: 6
-    t.decimal "nav", precision: 22, scale: 6
-    t.decimal "open_price", precision: 22, scale: 6
-    t.decimal "low_price", precision: 22, scale: 6
-    t.decimal "high_price", precision: 22, scale: 6
-    t.decimal "close_price", precision: 22, scale: 6
-    t.decimal "daily_return", precision: 22, scale: 6
-    t.decimal "bid_ask_spread", precision: 22, scale: 6
-    t.decimal "avg_bid_size", precision: 22, scale: 6
-    t.decimal "avg_ask_size", precision: 22, scale: 6
-    t.decimal "avg_midpoint", precision: 22, scale: 6
-    t.decimal "basket_estimated_cash", precision: 22, scale: 6
-    t.boolean "publish"
-    t.date "as_of_date"
   end
 
   create_table "ts_constituents", force: :cascade do |t|
@@ -487,6 +327,9 @@ ActiveRecord::Schema.define(version: 2018_11_21_031904) do
     t.string "currency", limit: 16
     t.decimal "coupon", precision: 22, scale: 6
     t.date "maturity_date"
+    t.string "coupon_range", limit: 8
+    t.integer "years_to_maturity", limit: 2
+    t.string "maturity_range", limit: 8
     t.index ["datasource_id"], name: "index_ts_constituents_on_datasource_id"
     t.index ["etfg_date", "datasource_id"], name: "index_ts_constituents_on_etfg_date_and_datasource_id"
     t.index ["etfg_date"], name: "index_ts_constituents_on_etfg_date"
@@ -494,45 +337,8 @@ ActiveRecord::Schema.define(version: 2018_11_21_031904) do
     t.index ["pooled_instrument_id"], name: "index_ts_constituents_on_pooled_instrument_id"
   end
 
-  create_table "ts_constituents_0918", id: false, force: :cascade do |t|
-    t.bigint "id"
-    t.date "etfg_date"
-    t.integer "datasource_id", limit: 2
-    t.bigint "pooled_instrument_id"
-    t.bigint "instrument_id"
-    t.string "composite_ticker", limit: 32
-    t.string "composite_name", limit: 128
-    t.string "constituent_ticker", limit: 64
-    t.string "constituent_name", limit: 128
-    t.decimal "weight", precision: 22, scale: 6
-    t.decimal "market_value", precision: 22, scale: 6
-    t.decimal "notional_value", precision: 22, scale: 6
-    t.decimal "total_shares_held", precision: 22, scale: 6
-    t.boolean "publish"
-    t.date "as_of_date"
-  end
-
-  create_table "ts_constituents_092118", id: false, force: :cascade do |t|
-    t.bigint "id"
-    t.date "etfg_date"
-    t.integer "datasource_id", limit: 2
-    t.bigint "pooled_instrument_id"
-    t.bigint "instrument_id"
-    t.string "composite_ticker", limit: 32
-    t.string "composite_name", limit: 128
-    t.string "constituent_ticker", limit: 64
-    t.string "constituent_name", limit: 128
-    t.decimal "weight", precision: 22, scale: 6
-    t.decimal "market_value", precision: 22, scale: 6
-    t.decimal "notional_value", precision: 22, scale: 6
-    t.decimal "total_shares_held", precision: 22, scale: 6
-    t.boolean "publish"
-    t.date "as_of_date"
-  end
-
   create_table "ts_exposures", force: :cascade do |t|
     t.date "etfg_date", null: false
-    t.date "as_of_date", null: false
     t.bigint "pooled_instrument_id", null: false
     t.string "exposure_type", limit: 64, null: false
     t.string "category", limit: 64, null: false
@@ -544,31 +350,63 @@ ActiveRecord::Schema.define(version: 2018_11_21_031904) do
 
   create_table "ts_industries", force: :cascade do |t|
     t.date "etfg_date", null: false
-    t.date "as_of_date", null: false
-    t.integer "datasource_id", limit: 2, null: false
-    t.decimal "avg_daily_trading_volume", precision: 18, scale: 6
-    t.decimal "call_volume", precision: 18, scale: 6
-    t.decimal "discount_premium", precision: 18, scale: 6
-    t.decimal "num_holdings", precision: 18, scale: 6
-    t.decimal "options_volume", precision: 18, scale: 6
+    t.string "composite_ticker", limit: 32
+    t.string "issuer", limit: 64
+    t.string "description", limit: 128
+    t.date "inception_date"
+    t.string "primary_benchmark"
+    t.string "tax_classification", limit: 128
+    t.boolean "is_etn"
+    t.decimal "aum", precision: 22, scale: 6
+    t.decimal "avg_daily_trading_volume", precision: 22, scale: 6
+    t.string "asset_class", limit: 28
+    t.string "category", limit: 28
+    t.string "focus", limit: 28
+    t.string "development_class", limit: 32
+    t.string "region", limit: 28
+    t.boolean "is_levered"
+    t.decimal "levered_amount", precision: 22, scale: 6
+    t.boolean "is_active"
+    t.string "administrator", limit: 128
+    t.string "advisor", limit: 128
+    t.string "custodian", limit: 128
+    t.string "distributor", limit: 128
+    t.string "portfolio_manager"
+    t.string "subadvisor", limit: 128
+    t.string "transfer_agent", limit: 50
+    t.string "trustee", limit: 128
+    t.string "futures_commission_merchant", limit: 128
+    t.string "fiscal_year_end", limit: 16
+    t.string "distribution_frequency", limit: 32
+    t.string "listing_exchange", limit: 64
+    t.decimal "creation_unit_size", precision: 22, scale: 6
+    t.decimal "creation_fee", precision: 22, scale: 6
+    t.text "geographic_exposure"
+    t.text "currency_exposure"
+    t.text "sector_exposure"
+    t.text "industry_group_exposure"
+    t.text "industry_exposure"
+    t.text "subindustry_exposure"
+    t.text "coupon_exposure"
+    t.text "maturity_exposure"
+    t.boolean "options_available"
+    t.decimal "options_volume", precision: 22, scale: 6
+    t.decimal "short_interest", precision: 22, scale: 6
     t.decimal "put_call_ratio", precision: 18, scale: 6
-    t.decimal "put_volume", precision: 18, scale: 6
-    t.decimal "short_interest", precision: 18, scale: 6
-    t.decimal "avg_bid_size", precision: 18, scale: 6
-    t.decimal "avg_ask_size", precision: 18, scale: 6
+    t.decimal "num_holdings", precision: 18, scale: 6
+    t.decimal "discount_premium", precision: 18, scale: 6
     t.decimal "bid_ask_spread", precision: 18, scale: 6
-    t.decimal "avg_midpoint", precision: 18, scale: 6
-    t.decimal "open_price", precision: 18, scale: 6
-    t.decimal "high_price", precision: 18, scale: 6
-    t.decimal "low_price", precision: 18, scale: 6
-    t.decimal "close_price", precision: 18, scale: 6
-    t.decimal "daily_return", precision: 18, scale: 6
-    t.decimal "basket_estimated_cash", precision: 18, scale: 6
-    t.bigint "pooled_instrument_id"
-    t.index ["datasource_id", "etfg_date"], name: "index_ts_industries_on_datasource_id_and_etfg_date"
-    t.index ["datasource_id"], name: "index_ts_industries_on_datasource_id"
+    t.decimal "put_volume", precision: 18, scale: 6
+    t.decimal "call_volume", precision: 18, scale: 6
+    t.decimal "management_fee", precision: 18, scale: 6
+    t.decimal "other_expenses", precision: 18, scale: 6
+    t.decimal "total_expenses", precision: 18, scale: 6
+    t.decimal "fee_waivers", precision: 18, scale: 6
+    t.decimal "net_expenses", precision: 18, scale: 6
+    t.string "lead_market_maker", limit: 128
+    t.bigint "pooled_instrument_id", null: false
+    t.index ["composite_ticker"], name: "index_ts_industries_on_composite_ticker"
     t.index ["etfg_date"], name: "index_ts_industries_on_etfg_date"
-    t.index ["pooled_instrument_id"], name: "index_ts_industries_on_pooled_instrument_id"
   end
 
   create_table "users", force: :cascade do |t|

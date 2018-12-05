@@ -1,0 +1,23 @@
+# PostgreSQL. Versions 9.1 and up are supported.
+#
+# Install the pg driver:
+#   gem install pg
+# On OS X with Homebrew:
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  # For details on connection pooling, see Rails configuration guide
+  # http://guides.rubyonrails.org/configuring.html#database-pooling
+  database: etfg_api
+  username: etfg
+  password: ShortEverything!
+  pool: 100
+  schema_search_path: "public"
+
+development:
+  host: 10.10.10.10 #167.99.237.105
+  <<: *default
+
+production:
+  host: 10.10.10.10 #167.99.237.105
+  <<: *default

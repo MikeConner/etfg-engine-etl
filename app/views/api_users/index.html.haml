@@ -1,0 +1,31 @@
+.container
+  .span12
+    .content-block
+      .bd
+        %br
+        %br
+          %table.table.zebra-striped
+            %thead
+              %tr
+                %th Username
+                %th Analytics 
+                %th Constituents
+                %th Fund Flows
+                %th Industry
+                %th Historical
+                %th Manage
+                %th Change Perms
+                %th
+            %tbody
+              - @users.each do |u|
+                %tr
+                  %td= u.username
+                  %td= check_box_tag :cb_analytics, '1', u.has_permission(:read_analytics), :disabled => true
+                  %td= check_box_tag :cb_constituents, '1', u.has_permission(:read_constituents), :disabled => true
+                  %td= check_box_tag :cb_fundflows, '1', u.has_permission(:read_fund_flow), :disabled => true
+                  %td= check_box_tag :cb_industry, '1', u.has_permission(:read_industry), :disabled => true
+                  %td= check_box_tag :cb_historical, '1', u.has_permission(:full_historical), :disabled => true
+                  %td= check_box_tag :manage, '1', u.has_permission(:manage_users), :disabled => true
+                  %td= check_box_tag :change_perms, '1', u.has_permission(:change_permissions), :disabled => true
+                  %td= link_to 'Delete', u, :method => :delete, :data => { :confirm => 'Are you sure?' }, :disabled => true
+ 
