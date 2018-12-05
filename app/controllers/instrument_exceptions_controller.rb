@@ -53,16 +53,29 @@ class InstrumentExceptionsController < ApplicationController
     split_date = Date.strptime(params[:date], "%m/%d/%Y")
     first_instrument = @exception.instrument
     second_instrument = first_instrument.dup
+    candidate_is_new = 'Candidate' == params[:selection]
     new_name = params[:name] || @exception.candidate_name.strip
-    
-    # Set fields on first
-    first_instrument.expiration_date = split_date
-    second_instrument.assign_attributes(:effective_date => split_date,
-                                        :standard_name => new_name,
-                                        :name_variants => new_name,
-                                        :notes => "Split from #{first_instrument.id}",
-                                        :default_instrument => false,
-                                        :datasource_id => @exception.datasource_id)    
+     
+    # Set fields on the right one
+    if candidate_is_new
+      first_instrument.expiration_date = split_date
+      second_instrument.assign_attributes(:effective_date => split_date,
+                                          :standard_name => new_name,
+                                          :name_variants => new_name,
+                                          :notes => "Split from #{first_instrument.id}",
+                                          :default_instrument => false,
+                                          :datasource_id => @exception.datasource_id)  
+    else
+      # Expire candidate name; standard is the new one
+      first_instrument.effective_date = split_date
+      second_instrument.assign_attributes(:expiration_date => split_date,
+                                          :standard_name => new_name,
+                                          :name_variants => new_name,
+                                          :notes => "Split from #{first_instrument.id}",
+                                          :default_instrument => false,
+                                          :datasource_id => @exception.datasource_id)  
+    end
+      
     # Throw exception on failure
     ensure_valid_instruments(first_instrument, second_instrument)
     ActiveRecord::Base.transaction do
@@ -160,7 +173,7 @@ private
     end
     
     unless valid
-      raise 'Date range overlap! #{error_msg}'
+      raise "Date range overlap! (#{records.map(&:instrument_id)}) #{error_msg}"
     end
   end
 end

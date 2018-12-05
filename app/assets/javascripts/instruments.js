@@ -19,8 +19,10 @@ function update_approved_instrument(id) {
 function split_instrument(exception_id, src_id) {
 	var split_date = $('#exp_date_' + exception_id).val();
 	var name = $('#candidate_name_' + exception_id).val();
+	var selection = $('input[name=exception_' + exception_id + ']:checked').val();
     var data = { 'date': split_date,
-                 'name': name };
+                 'name': name,
+                 'selection': selection };
 	
 	if (split_date) {
 		var src_arg = "";

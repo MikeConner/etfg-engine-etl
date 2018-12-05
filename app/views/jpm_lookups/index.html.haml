@@ -46,8 +46,8 @@
                   = f.text_field :ticker
                 %td
                   = f.label :effective_date
-                  = f.text_field :effective_date
+                  = f.text_field :effective_date, :class => "jquery-ui-date"
                 %td
                   = f.label :expiration_date
-                  = f.text_field :expiration_date
+                  = f.text_field :expiration_date, :class => "jquery-ui-date"
                 %td= f.submit 'Add Entry', :class => 'button', :style => 'margin-top:20px'

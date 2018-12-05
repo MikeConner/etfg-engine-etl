@@ -69,6 +69,13 @@ Rails.application.routes.draw do
     end        
   end
   
+  resources :date_adjust_fund_flows, :only => [:index, :destroy, :create] do
+    member do 
+      put :update_effective_date
+      put :update_expiration_date
+    end            
+  end
+  
   resources :instrument_templates, :only => [:create]
   
   get "/workbench" => "static_pages#workbench"

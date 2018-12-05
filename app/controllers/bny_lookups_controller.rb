@@ -10,6 +10,14 @@ class BnyLookupsController < ApplicationController
   
   def create
     @ticker = BnyLookup.new(bny_params)
+
+    unless params[:bny_lookup][:effective_date].blank?
+      @ticker.effective_date = Date.strptime(params[:bny_lookup][:effective_date], '%m/%d/%Y')
+    end
+    unless params[:bny_lookup][:expiration_date].blank?
+       @ticker.expiration_date = Date.strptime(params[:bny_lookup][:expiration_date], '%m/%d/%Y')
+    end
+
     if @ticker.save
       redirect_to bny_lookups_path, :notice => 'Lookup table entry added'
     else
@@ -53,6 +61,6 @@ class BnyLookupsController < ApplicationController
   
 private
   def bny_params
-    params.require(:bny_lookup).permit(:fund_id, :account_name, :ticker)
+    params.require(:bny_lookup).permit(:fund_id, :account_name, :ticker, :effective_date, :expiration_date)
   end
 end

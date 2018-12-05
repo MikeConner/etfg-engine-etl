@@ -10,6 +10,14 @@ class JpmLookupsController < ApplicationController
   
   def create
     @ticker = JpmLookup.new(jpm_params)
+
+    unless params[:jpm_lookup][:effective_date].blank?
+      @ticker.effective_date = Date.strptime(params[:jpm_lookup][:effective_date], '%m/%d/%Y')
+    end
+    unless params[:jpm_lookup][:expiration_date].blank?
+       @ticker.expiration_date = Date.strptime(params[:jpm_lookup][:expiration_date], '%m/%d/%Y')
+    end
+
     if @ticker.save
       redirect_to jpm_lookups_path(:source => @ticker.source), :notice => 'Lookup table entry added'
     else

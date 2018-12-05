@@ -11,9 +11,10 @@
         - unless src_id
           %th Source
         %th Instrument ID
+        %th Date Range
         %th Standard Name
         %th Composite Ticker
-        %th Unknown Name
+        %th Candidate Name
         %th Figi
         %th Sedol
         %th Isin 
@@ -37,12 +38,30 @@
             %br
             %br
             = link_to instrument.id, instruments_path(:id_set => instrument.id), :target => '_blank', :title => exception.id
-          %td= raw instrument.standard_name
+          %td
+            - if instrument.effective_date.nil?
+              *
+            - else
+              = instrument.effective_date.try(:strftime, ApplicationHelper::DATE_FORMAT)
+            \-
+            - if instrument.expiration_date.nil?
+              *
+            - else
+              = instrument.expiration_date.try(:strftime, ApplicationHelper::DATE_FORMAT)            
+          %td
+            = radio_button_tag "exception_#{exception.id}", 'Standard', false, :style => 'display:inline', :title => 'Expire candidate name; standard name Effective'
+            New
+            %br
+            = raw instrument.standard_name
           %td
             = exception.composite_ticker
             - unless composite.nil?
               == /#{composite.exchange_country}
-          %td= text_area_tag "candidate_name_#{exception.id}", exception.candidate_name, :style => 'width:100px;height:100px'
+          %td
+            = radio_button_tag "exception_#{exception.id}", 'Candidate', true, :style => 'display:inline-block', :title => 'Expire standard name; candidate name Effective'
+            New
+            %br
+            = text_area_tag "candidate_name_#{exception.id}", exception.candidate_name, :style => 'width:100px;height:100px'
           %td
             - unless instrument.figi.blank?
               = link_to instrument.figi, instruments_path(:figi => instrument.figi), :target => '_blank'

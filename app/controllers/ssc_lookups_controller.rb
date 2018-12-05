@@ -10,6 +10,14 @@ class SscLookupsController < ApplicationController
   
   def create
     @ticker = SscLookup.new(ssc_add_params)
+    
+    unless params[:ssc_lookup][:effective_date].blank?
+      @ticker.effective_date = Date.strptime(params[:ssc_lookup][:effective_date], '%m/%d/%Y')
+    end
+    unless params[:ssc_lookup][:expiration_date].blank?
+       @ticker.expiration_date = Date.strptime(params[:ssc_lookup][:expiration_date], '%m/%d/%Y')
+    end
+    
     if @ticker.save
       redirect_to ssc_lookups_path, :notice => 'Lookup table entry added'
     else
