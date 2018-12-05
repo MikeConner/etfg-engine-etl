@@ -12,4 +12,11 @@
               = f.label :template_file, 'Upload Instrument Template'
               = f.file_field :template_file
               = f.hidden_field :user_id, :value => current_user.id
-              = f.submit 'Upload'
+              = f.submit 'Upload Instrument Data'
+          %p= link_to 'Download ETPR Template', 'etpr_template.csv'
+          %p
+            = form_for @etpr_template, :html => {:multipart => true} do |f|
+              = f.label :template_file, 'Upload ETPR Template'
+              = f.file_field :template_file
+              = f.hidden_field :user_id, :value => current_user.id
+              = f.submit 'Upload ETPR Data'

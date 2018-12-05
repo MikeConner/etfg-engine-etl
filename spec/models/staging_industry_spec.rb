@@ -25,6 +25,7 @@
 #  match                    :boolean          default(FALSE), not null
 #  nav                      :decimal(22, 6)
 #  aum                      :decimal(22, 6)
+#  exclude_from_ts          :boolean          default(FALSE), not null
 #
 
 require 'rails_helper'

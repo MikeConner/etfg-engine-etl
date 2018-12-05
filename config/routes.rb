@@ -77,6 +77,7 @@ Rails.application.routes.draw do
   end
   
   resources :instrument_templates, :only => [:create]
+  resources :etpr_templates, :only => [:create]
   
   get "/workbench" => "static_pages#workbench"
   get "/lookups" => "static_pages#lookups"
