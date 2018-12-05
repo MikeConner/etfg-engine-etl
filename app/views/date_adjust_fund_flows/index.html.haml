@@ -4,23 +4,26 @@
       .bd
         %br
         %br
-        .div{:style => 'width:10%'}
-          = label_tag :ticker
-          = text_field_tag :ticker, nil, :onchange => "window.location = '/date_adjust_fund_flows?ticker=' + $('#ticker').val();"
-        %table.table.zebra-striped
-          %thead
-            %tr
-              %th Ticker
-              %th Effective Date
-              %th Expiration Date
-              %th
-          %tbody
-            - @tickers.each do |t|
+        - if @tickers.empty?
+          %h2 No tickers
+        - else
+          .div{:style => 'width:10%'}
+            = label_tag :ticker
+            = text_field_tag :ticker, nil, :onchange => "window.location = '/date_adjust_fund_flows?ticker=' + $('#ticker').val();"
+          %table.table.zebra-striped
+            %thead
               %tr
-                %td= t.composite_ticker
-                %td= text_field_tag "ff_effective_#{t.id}", t.effective_date, :onchange => "update_ff_effective_date('#{t.id}')", :class => "jquery-ui-date", :style => 'width:100px'
-                %td= text_field_tag "ff_expiration_#{t.id}", t.expiration_date, :onchange => "update_ff_expiration_date('#{t.id}')", :class => "jquery-ui-date", :style => 'width:100px'
-                %td= link_to 'Delete', t, :method => :delete, :data => { :confirm => 'Are you sure?' }
+                %th Ticker
+                %th Effective Date
+                %th Expiration Date
+                %th
+            %tbody
+              - @tickers.each do |t|
+                %tr
+                  %td= t.composite_ticker
+                  %td= text_field_tag "ff_effective_#{t.id}", t.effective_date, :onchange => "update_ff_effective_date('#{t.id}')", :class => "jquery-ui-date", :style => 'width:100px'
+                  %td= text_field_tag "ff_expiration_#{t.id}", t.expiration_date, :onchange => "update_ff_expiration_date('#{t.id}')", :class => "jquery-ui-date", :style => 'width:100px'
+                  %td= link_to 'Delete', t, :method => :delete, :data => { :confirm => 'Are you sure?' }
         = form_for @adjust do |f|
           %table.table
             %caption New fund flow table entry
