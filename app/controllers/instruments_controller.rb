@@ -1,6 +1,8 @@
 class InstrumentsController < ApplicationController
   respond_to :js, :html
-  
+
+  NUM_DUPLICATES = 30
+    
   before_action :authenticate_user!
 
   def duplicate
@@ -12,7 +14,7 @@ class InstrumentsController < ApplicationController
     @dup_sets = []
     @set_map = {}
     create_field_set('exchange_country', @dup_sets, @set_map)
-    if @dup_sets.count < 10
+    if @dup_sets.count < NUM_DUPLICATES
       create_field_set('currency', @dup_sets, @set_map)
     end
     
@@ -20,8 +22,6 @@ class InstrumentsController < ApplicationController
   end
 
   def resolve_ambiguous
-    puts params
-    
     to_delete = []
     remap = Hash.new
     

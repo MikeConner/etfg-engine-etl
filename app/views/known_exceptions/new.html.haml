@@ -37,8 +37,9 @@
         = form_for @exception do |f|
           = f.hidden_field :datasource_id
           = f.hidden_field :constituent_name
-          = f.hidden_field :composite_ticker
           = hidden_field_tag :ie_id, @ie_base.id
+          = f.label :composite_ticker, 'Composite Ticker (clear ticker to apply to all)'
+          = f.text_field :composite_ticker, :style => 'width:75px'
           - unless @ie_base.figi.blank?
             %br
             = check_box_tag :cb_figi, '1', true

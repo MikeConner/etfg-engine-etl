@@ -29,6 +29,8 @@ class KnownExceptionsController < ApplicationController
     @exceptions = []
     @ie_base = InstrumentException.find(params[:ie_id])
     ticker = params[:known_exception][:composite_ticker]
+    # User can clear the ticker to make it apply to all
+    ticker = nil if ticker.blank?
     
     if '1' == params[:cb_figi]
       @exceptions.push(create_exception('figi', params[:ie_figi], ticker))
