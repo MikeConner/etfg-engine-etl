@@ -4,10 +4,10 @@
       .bd
         %br
         %br
-        %h1 Possibly Duplicate Instruments (first 10)
         - if 0 == @dup_sets.count
           %h3 No Suspicious Instruments
         - else
+          %h1 Possibly Duplicate Instruments (first #{@dup_sets.count})
           - idx = 0
           = form_tag resolve_ambiguous_instruments_path do
             - @dup_sets.each do |dset|
