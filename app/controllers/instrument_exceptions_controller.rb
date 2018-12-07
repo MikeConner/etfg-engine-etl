@@ -53,20 +53,12 @@ class InstrumentExceptionsController < ApplicationController
     split_date = Date.strptime(params[:date], "%m/%d/%Y")
     first_instrument = @exception.instrument
     second_instrument = first_instrument.dup
-    candidate_is_new = 'Candidate' == params[:selection]
+    candidate_is_old = 'Standard' == params[:selection]
     new_name = params[:name] || @exception.candidate_name.strip
      
     # Set fields on the right one
-    if candidate_is_new
-      first_instrument.expiration_date = split_date
-      second_instrument.assign_attributes(:effective_date => split_date,
-                                          :standard_name => new_name,
-                                          :name_variants => new_name,
-                                          :notes => "Split from #{first_instrument.id}",
-                                          :default_instrument => false,
-                                          :datasource_id => @exception.datasource_id)  
-    else
-      # Expire candidate name; standard is the new one
+    if candidate_is_old
+       # Expire candidate name; standard is the new one
       first_instrument.effective_date = split_date
       second_instrument.assign_attributes(:expiration_date => split_date,
                                           :standard_name => new_name,
@@ -74,7 +66,15 @@ class InstrumentExceptionsController < ApplicationController
                                           :notes => "Split from #{first_instrument.id}",
                                           :default_instrument => false,
                                           :datasource_id => @exception.datasource_id)  
-    end
+    else
+      first_instrument.expiration_date = split_date
+      second_instrument.assign_attributes(:effective_date => split_date,
+                                          :standard_name => new_name,
+                                          :name_variants => new_name,
+                                          :notes => "Split from #{first_instrument.id}",
+                                          :default_instrument => false,
+                                          :datasource_id => @exception.datasource_id)  
+   end
       
     # Throw exception on failure
     ensure_valid_instruments(first_instrument, second_instrument)
