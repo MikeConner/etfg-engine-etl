@@ -14,9 +14,10 @@ class InstrumentsController < ApplicationController
     @dup_sets = []
     @set_map = {}
     create_field_set('exchange_country', @dup_sets, @set_map)
-    if @dup_sets.count <= NUM_DUPLICATES
-      create_field_set('currency', @dup_sets, @set_map)
-    end
+    # Currency ones don't seem to be valid, per Joey - try just ignoring them
+    #if @dup_sets.count <= NUM_DUPLICATES
+    #  create_field_set('currency', @dup_sets, @set_map)
+    #end
     
     render :layout => 'admin'
   end
