@@ -64,10 +64,12 @@ Rails.application.routes.draw do
   
   resources :jpm_lookups, :only => [:index, :destroy, :create] do
     member do 
-      put :update_effective_date
-      put :update_expiration_date
+      put 'update_effective_date'
+      put 'update_expiration_date'
     end        
   end
+
+  resources :agf_lookups, :only => [:index, :destroy, :create]
   
   resources :date_adjust_fund_flows, :only => [:index, :destroy, :create] do
     member do 

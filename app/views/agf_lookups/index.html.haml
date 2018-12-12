@@ -1,0 +1,35 @@
+.container
+  .span12
+    .content-block
+      .bd
+        %br
+        %br
+          %table.table.zebra-striped
+            %thead
+              %tr
+                %th Ticker
+                %th Holdings Name
+                %th Nav Name
+                %th
+            %tbody
+              - @tickers.each do |t|
+                %tr
+                  %td= t.ticker
+                  %td= t.holdings_name
+                  %td= t.nav_name
+                  %td= link_to 'Delete', t, :method => :delete, :data => { :confirm => 'Are you sure?' }
+        = form_for @lookup do |f|
+          %table.table
+            %caption New lookup table entry
+            %tbody
+              %tr{:style => 'width:50%'}
+                %td
+                  = f.label :ticker
+                  = f.text_field :ticker
+                %td
+                  = f.label :holdings_name
+                  = f.text_field :holdings_name
+                %td
+                  = f.label :nav_name
+                  = f.text_field :nav_name
+                %td= f.submit 'Add Entry', :class => 'button', :style => 'margin-top:20px'

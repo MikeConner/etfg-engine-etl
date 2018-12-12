@@ -36,7 +36,7 @@
 #  datasource_id        :integer
 #  notes                :text
 #  cusip_validated      :string(16)
-#  geography            :string(2)
+#  geography            :string(3)
 #
 
 class Instrument < ApplicationRecord
