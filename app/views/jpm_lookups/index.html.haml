@@ -4,29 +4,11 @@
       .bd
         %br
         %br
+        %br
+        %h1 JPM Lookups
         .div{:style => 'width:10%'}
           = label_tag :data_source
           = select_tag :data_source, options_for_select(JpmLookup::VALID_SOURCES, @selected_source), {:prompt => 'Select a Source', :onchange => "window.location = '/jpm_lookups?source=' + $('#data_source').val();"}
-        %table.table.zebra-striped
-          %thead
-            %tr
-              %th Source
-              %th Account Number
-              %th Account Name 
-              %th Ticker
-              %th Effective Date
-              %th Expiration Date
-              %th
-          %tbody
-            - @tickers.each do |t|
-              %tr
-                %td= t.source
-                %td= t.account_number
-                %td= t.account_name
-                %td= t.ticker
-                %td= text_field_tag "jpm_effective_#{t.id}", t.effective_date, :onchange => "update_lookup_effective_date(#{t.id},'jpm')", :class => "jquery-ui-date", :style => 'width:100px'
-                %td= text_field_tag "jpm_expiration_#{t.id}", t.expiration_date, :onchange => "update_lookup_expiration_date(#{t.id},'jpm')", :class => "jquery-ui-date", :style => 'width:100px'
-                %td= link_to 'Delete', t, :method => :delete, :data => { :confirm => 'Are you sure?' }
         = form_for @lookup do |f|
           %table.table
             %caption New lookup table entry
@@ -50,4 +32,25 @@
                 %td
                   = f.label :expiration_date
                   = f.text_field :expiration_date, :class => "jquery-ui-date"
-                %td= f.submit 'Add Entry', :class => 'button', :style => 'margin-top:20px'
+                %td= f.submit 'Add Entry', :class => 'button', :style => 'margin-top:20px'        
+        - unless @tickers.empty?
+          %table.table.zebra-striped
+            %thead
+              %tr
+                %th Source
+                %th Account Number
+                %th Account Name 
+                %th Ticker
+                %th Effective Date
+                %th Expiration Date
+                %th
+            %tbody
+              - @tickers.each do |t|
+                %tr
+                  %td= t.source
+                  %td= t.account_number
+                  %td= t.account_name
+                  %td= t.ticker
+                  %td= text_field_tag "jpm_effective_#{t.id}", t.effective_date, :onchange => "update_lookup_effective_date(#{t.id},'jpm')", :class => "jquery-ui-date", :style => 'width:100px'
+                  %td= text_field_tag "jpm_expiration_#{t.id}", t.expiration_date, :onchange => "update_lookup_expiration_date(#{t.id},'jpm')", :class => "jquery-ui-date", :style => 'width:100px'
+                  %td= link_to 'Delete', t, :method => :delete, :data => { :confirm => 'Are you sure?' }

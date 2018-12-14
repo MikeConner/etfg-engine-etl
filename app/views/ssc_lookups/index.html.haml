@@ -4,6 +4,33 @@
       .bd
         %br
         %br
+        %br
+        %h1 SSC Lookups
+        = form_for @lookup do |f|
+          %table.table
+            %caption New lookup table entry
+            %tbody
+              %tr{:style => 'width:75%'}
+                %td
+                  = f.label :fund_id, 'Fund Id'
+                  = f.text_field :fund_id
+                %td
+                  = f.label :fund_name
+                  = f.text_field :fund_name
+                %td
+                  = f.label :ticker
+                  = f.text_field :ticker
+                %td
+                  = f.label :effective_date
+                  = f.text_field :effective_date, :class => "jquery-ui-date"
+                %td
+                  = f.label :expiration_date
+                  = f.text_field :expiration_date, :class => "jquery-ui-date"
+                %td
+                  = f.label :fund_id_alias
+                  = f.text_field :fund_id_alias
+                %td= f.submit 'Add Entry', :class => 'button', :style => 'margin-top:20px'
+        - unless @tickers.empty?
           .center
             = will_paginate @tickers
             = page_entries_info @tickers
@@ -29,28 +56,4 @@
                   %td= text_field_tag "ssc_expiration_#{t.id}", t.expiration_date, :onchange => "update_lookup_expiration_date(#{t.id},'ssc')", :class => "jquery-ui-date", :style => 'width:100px'
                   %td= t.fund_id_alias
                   %td= link_to 'Delete', t, :method => :delete, :data => { :confirm => 'Are you sure?' }
-        = form_for @lookup do |f|
-          %table.table
-            %caption New lookup table entry
-            %tbody
-              %tr{:style => 'width:75%'}
-                %td
-                  = f.label :fund_id, 'Fund Id'
-                  = f.text_field :fund_id
-                %td
-                  = f.label :fund_name
-                  = f.text_field :fund_name
-                %td
-                  = f.label :ticker
-                  = f.text_field :ticker
-                %td
-                  = f.label :effective_date
-                  = f.text_field :effective_date, :class => "jquery-ui-date"
-                %td
-                  = f.label :expiration_date
-                  = f.text_field :expiration_date, :class => "jquery-ui-date"
-                %td
-                  = f.label :fund_id_alias
-                  = f.text_field :fund_id_alias
-                %td= f.submit 'Add Entry', :class => 'button', :style => 'margin-top:20px'
 = javascript_include_tag 'date_processing.js'

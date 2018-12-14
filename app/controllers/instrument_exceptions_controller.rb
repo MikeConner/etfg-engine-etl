@@ -38,7 +38,7 @@ class InstrumentExceptionsController < ApplicationController
   
   def reset
     @exception = InstrumentException.find(params[:id])
-    @exception.update_attribute(:resolution, nil)
+    InstrumentException.where(:instrument_id => @exception.instrument_id).update_all(:resolution => nil)
     
     if params[:corporate]
       redirect_to instrument_exceptions_path(:src_id => params[:src_id], :corporate_actions => true), :notice => 'Instrument exception cleared'
@@ -81,7 +81,7 @@ class InstrumentExceptionsController < ApplicationController
     ActiveRecord::Base.transaction do
       first_instrument.save!
       second_instrument.save!
-      @exception.destroy
+      InstrumentException.where(:instrument_id => @exception.instrument_id).destroy_all
     end
       
     # Show all instrument with this id

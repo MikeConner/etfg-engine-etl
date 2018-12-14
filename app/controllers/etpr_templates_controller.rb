@@ -66,6 +66,16 @@ class EtprTemplatesController < ApplicationController
                                          :total_expenses => row[22].blank? ? nil : row[22].to_f,
                                          :fee_waivers => row[23].blank? ? nil : row[23].to_f,
                                          :net_expenses => row[24].blank? ? nil : row[24].to_f,
+                                         :is_active => ActiveModel::Type::Boolean.new.cast(row[25]),
+                                         :is_etn => ActiveModel::Type::Boolean.new.cast(row[26]),
+                                         :is_levered => ActiveModel::Type::Boolean.new.cast(row[27]),
+                                         :levered_amount => row[28].blank? ? nil : row[28].to_f,
+                                         :is_inverse => ActiveModel::Type::Boolean.new.cast(row[29]),
+                                         :has_derivatives => ActiveModel::Type::Boolean.new.cast(row[30]),
+                                         :asset_class => row[31].blank? ? nil : row[31].strip,
+                                         :development_class => row[32].blank? ? nil : row[32].strip,
+                                         :focus => row[33].blank? ? nil : row[33].strip,
+                                         :region => row[34].blank? ? nil : row[34].strip,
                                          :approved => true)
             pi.update_attribute(:pooled_instrument_id, pi.id)
             created += 1
@@ -204,6 +214,56 @@ class EtprTemplatesController < ApplicationController
               # 24 net_expenses  
               unless row[24].blank?
                 changes[:net_expenses] = row[24].to_f
+                updates += 1
+              end
+              # 25 is_active
+              unless row[25].blank?
+                changes[:is_active] = ActiveModel::Type::Boolean.new.cast(row[25])
+                updates += 1
+              end
+              # 26 is_etn
+              unless row[26].blank?
+                changes[:is_etn] = ActiveModel::Type::Boolean.new.cast(row[26])
+                updates += 1
+              end
+              # 27 is_levered
+              unless row[27].blank?
+                changes[:is_levered] = ActiveModel::Type::Boolean.new.cast(row[27])
+                updates += 1
+              end
+              # 28 levered_amount  
+              unless row[28].blank?
+                changes[:levered_amount] = row[28].to_f
+                updates += 1
+              end
+              # 29 is_inverse
+              unless row[29].blank?
+                changes[:is_inverse] = ActiveModel::Type::Boolean.new.cast(row[29])
+                updates += 1
+              end
+              # 30 has_derivatives
+              unless row[30].blank?
+                changes[:has_derivatives] = ActiveModel::Type::Boolean.new.cast(row[30])
+                updates += 1
+              end
+              # 31 asset_class
+              unless row[31].blank?
+                changes[:asset_class] = row[31].strip
+                updates += 1
+              end
+              # 32 development_class
+              unless row[32].blank?
+                changes[:development_class] = row[32].strip
+                updates += 1
+              end
+              # 33 focus
+              unless row[33].blank?
+                changes[:focus] = row[33].strip
+                updates += 1
+              end
+              # 34 region
+              unless row[34].blank?
+                changes[:region] = row[34].strip
                 updates += 1
               end
   

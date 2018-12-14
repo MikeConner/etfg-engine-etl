@@ -4,20 +4,8 @@
       .bd
         %br
         %br
-          %table.table.zebra-striped
-            %thead
-              %tr
-                %th Ticker
-                %th Holdings Name
-                %th Nav Name
-                %th
-            %tbody
-              - @tickers.each do |t|
-                %tr
-                  %td= t.ticker
-                  %td= t.holdings_name
-                  %td= t.nav_name
-                  %td= link_to 'Delete', t, :method => :delete, :data => { :confirm => 'Are you sure?' }
+        %br
+        %h1 AGFiQ Lookups
         = form_for @lookup do |f|
           %table.table
             %caption New lookup table entry
@@ -33,3 +21,18 @@
                   = f.label :nav_name
                   = f.text_field :nav_name
                 %td= f.submit 'Add Entry', :class => 'button', :style => 'margin-top:20px'
+          - unless @tickers.empty?
+            %table.table.zebra-striped
+              %thead
+                %tr
+                  %th Ticker
+                  %th Holdings Name
+                  %th Nav Name
+                  %th
+              %tbody
+                - @tickers.each do |t|
+                  %tr
+                    %td= t.ticker
+                    %td= t.holdings_name
+                    %td= t.nav_name
+                    %td= link_to 'Delete', t, :method => :delete, :data => { :confirm => 'Are you sure?' }
