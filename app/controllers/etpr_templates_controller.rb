@@ -76,6 +76,7 @@ class EtprTemplatesController < ApplicationController
                                          :development_class => row[32].blank? ? nil : row[32].strip,
                                          :focus => row[33].blank? ? nil : row[33].strip,
                                          :region => row[34].blank? ? nil : row[34].strip,
+                                         :category => row[35].blank? ? nil : row[35].strip,
                                          :approved => true)
             pi.update_attribute(:pooled_instrument_id, pi.id)
             created += 1
@@ -264,6 +265,11 @@ class EtprTemplatesController < ApplicationController
               # 34 region
               unless row[34].blank?
                 changes[:region] = row[34].strip
+                updates += 1
+              end
+              # 35 category
+              unless row[35].blank?
+                changes[:category] = row[35].strip
                 updates += 1
               end
   

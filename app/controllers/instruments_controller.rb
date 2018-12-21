@@ -85,6 +85,9 @@ class InstrumentsController < ApplicationController
     dup_sql = []
     recs = ActiveRecord::Base.connection.execute(sql)
     recs.each do |rec|
+      # Need at least one id!
+      next if rec['figi'].blank? and rec['sedol'].blank? and rec['isin'].blank? and rec['cusip'].blank?
+      
       clauses = []
       clauses.push("figi='#{rec['figi']}'") unless rec['figi'].blank?
       clauses.push("sedol='#{rec['sedol']}'") unless rec['sedol'].blank?
@@ -92,7 +95,7 @@ class InstrumentsController < ApplicationController
       clauses.push("cusip='#{rec['cusip']}'") unless rec['cusip'].blank?
       clauses.push("#{field}='#{rec[field]}'") unless rec[field].blank?
       
-      dup_sql.push("SELECT #{fields} FROM instruments WHERE " + clauses.join(" AND "))
+      dup_sql.push("SELECT #{fields} FROM instruments WHERE " + clauses.join(" AND ") + " ORDER BY instrument_id")
     end
     
     dup_sql.each do |s|

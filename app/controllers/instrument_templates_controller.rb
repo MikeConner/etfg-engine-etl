@@ -52,6 +52,18 @@ class InstrumentTemplatesController < ApplicationController
             changes[:geography] = row[9]
             updates += 1
           end
+          if i.sedol.blank? and not row[10].blank?
+            changes[:sedol] = row[10]
+            updates += 1
+          end
+          if i.isin.blank? and not row[11].blank?
+            changes[:isin] = row[11]
+            updates += 1
+          end
+          if i.cusip.blank? and not row[12].blank?
+            changes[:cusip] = row[12]
+            updates += 1
+          end
           
           i.update_attributes(changes)
         end
