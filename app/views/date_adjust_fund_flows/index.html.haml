@@ -4,6 +4,24 @@
       .bd
         %br
         %br
+        = form_for @adjust do |f|
+          %table.table
+            %caption New fund flow table entry
+            %tbody
+              %tr{:style => 'width:50%'}
+                %td
+                  = f.label :datasource_id, 'Data Source'
+                  = f.select :datasource_id, options_from_collection_for_select(Datasource.order(:data_source_name), 'id', 'data_source_name', f.object.datasource_id), :prompt => 'Select a Datasource'
+                %td
+                  = f.label :composite_ticker
+                  = f.text_field :composite_ticker
+                %td
+                  = f.label :effective_date
+                  = f.text_field :effective_date, :class => 'jquery-ui-date'
+                %td
+                  = f.label :expiration_date
+                  = f.text_field :expiration_date, :class => 'jquery-ui-date'
+                %td= f.submit 'Add Entry', :class => 'button', :style => 'margin-top:20px'
         - if @tickers.empty?
           %h2 No tickers
         - else
@@ -28,21 +46,3 @@
                   %td= text_field_tag "ff_effective_#{t.id}", t.effective_date, :onchange => "update_ff_effective_date('#{t.id}')", :class => "jquery-ui-date", :style => 'width:100px'
                   %td= text_field_tag "ff_expiration_#{t.id}", t.expiration_date, :onchange => "update_ff_expiration_date('#{t.id}')", :class => "jquery-ui-date", :style => 'width:100px'
                   %td= link_to 'Delete', t, :method => :delete, :data => { :confirm => 'Are you sure?' }
-        = form_for @adjust do |f|
-          %table.table
-            %caption New fund flow table entry
-            %tbody
-              %tr{:style => 'width:50%'}
-                %td
-                  = f.label :datasource_id, 'Data Source'
-                  = f.select :datasource_id, options_from_collection_for_select(Datasource.order(:data_source_name), 'id', 'data_source_name', f.object.datasource_id), :prompt => 'Select a Datasource'
-                %td
-                  = f.label :composite_ticker
-                  = f.text_field :composite_ticker
-                %td
-                  = f.label :effective_date
-                  = f.text_field :effective_date, :class => 'jquery-ui-date'
-                %td
-                  = f.label :expiration_date
-                  = f.text_field :expiration_date, :class => 'jquery-ui-date'
-                %td= f.submit 'Add Entry', :class => 'button', :style => 'margin-top:20px'
