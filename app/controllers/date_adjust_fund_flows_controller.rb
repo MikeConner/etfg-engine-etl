@@ -5,6 +5,10 @@ class DateAdjustFundFlowsController < ApplicationController
     @tickers = params.has_key?(:ticker) ? 
       DateAdjustFundFlow.where(:composite_ticker => params[:ticker]) : DateAdjustFundFlow.order(:composite_ticker)
     @adjust = DateAdjustFundFlow.new
+    @source_names = Hash.new
+    Datasource.order(:data_source_name).each do |ds|
+      @source_names[ds.id] = ds.data_source_name
+    end
         
     render :layout => 'admin'
   end
@@ -61,6 +65,6 @@ class DateAdjustFundFlowsController < ApplicationController
   
 private
   def ff_params
-    params.require(:date_adjust_fund_flow).permit(:composite_ticker, :effective_date, :expiration_date)
+    params.require(:date_adjust_fund_flow).permit(:composite_ticker, :effective_date, :expiration_date, :datasource_id)
   end
 end

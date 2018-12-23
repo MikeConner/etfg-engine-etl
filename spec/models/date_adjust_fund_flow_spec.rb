@@ -6,6 +6,7 @@
 #  effective_date   :date
 #  expiration_date  :date
 #  slug             :string
+#  datasource_id    :integer
 #
 
 require 'rails_helper'

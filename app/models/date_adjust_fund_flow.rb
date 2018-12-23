@@ -6,6 +6,7 @@
 #  effective_date   :date
 #  expiration_date  :date
 #  slug             :string
+#  datasource_id    :integer
 #
 
 class DateAdjustFundFlow < ApplicationRecord
@@ -16,4 +17,5 @@ class DateAdjustFundFlow < ApplicationRecord
   DateAdjustFundFlow.primary_key = :composite_ticker
   
   validates_length_of :composite_ticker, :presence => true, :maximum => 32
+  validates_numericality_of :datasource_id, :only_integer => true, :greater_than => 0, :allow_nil => true
 end

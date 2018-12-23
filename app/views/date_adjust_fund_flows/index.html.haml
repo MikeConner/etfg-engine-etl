@@ -13,6 +13,7 @@
           %table.table.zebra-striped
             %thead
               %tr
+                %th Source
                 %th Ticker
                 %th Effective Date
                 %th Expiration Date
@@ -20,6 +21,9 @@
             %tbody
               - @tickers.each do |t|
                 %tr
+                  %td
+                    - unless t.datasource_id.nil?
+                      = @source_names[t.datasource_id]
                   %td= t.composite_ticker
                   %td= text_field_tag "ff_effective_#{t.id}", t.effective_date, :onchange => "update_ff_effective_date('#{t.id}')", :class => "jquery-ui-date", :style => 'width:100px'
                   %td= text_field_tag "ff_expiration_#{t.id}", t.expiration_date, :onchange => "update_ff_expiration_date('#{t.id}')", :class => "jquery-ui-date", :style => 'width:100px'
@@ -29,6 +33,9 @@
             %caption New fund flow table entry
             %tbody
               %tr{:style => 'width:50%'}
+                %td
+                  = f.label :datasource_id, 'Data Source'
+                  = f.select :datasource_id, options_from_collection_for_select(Datasource.order(:data_source_name), 'id', 'data_source_name', f.object.datasource_id), :prompt => 'Select a Datasource'
                 %td
                   = f.label :composite_ticker
                   = f.text_field :composite_ticker

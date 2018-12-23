@@ -128,6 +128,11 @@ class InstrumentExceptionsController < ApplicationController
             if [InstrumentException::ACCEPT,InstrumentException::ACCEPT_AS_STANDARD,InstrumentException::IGNORE].include?(v)
               ie.destroy
             end
+            # Also destroy other ones with same id and candidate_name (on resolved name exception)
+            if [InstrumentException::ACCEPT,InstrumentException::ACCEPT_AS_STANDARD].include?(v)
+              # Now delete all the other ones with the same name and instrument_id
+              InstrumentException.where(:instrument_id => ie.instrument_id, :candidate_name => candidate_name).destroy_all
+            end
           end
         rescue Exception => ex
           puts ex.message

@@ -51,9 +51,7 @@
 #  inception_date              :date
 #  etp_structure_type          :string(50)
 #  category                    :string(28)
-#  related_index               :string(50)
 #  related_index_symbol        :string(16)
-#  related_index_name          :string(50)
 #  net_expenses                :decimal(22, 6)
 #  expense_ratio               :decimal(22, 6)
 #  total_expenses              :decimal(22, 6)
