@@ -34,7 +34,7 @@
             %br
             %br
             = link_to instrument.instrument_id, instruments_path(:id_set => Instrument.where(:instrument_id => instrument.instrument_id).map(&:id).join(",")), :target => '_blank', :title => exception.id
-          %td= text_area_tag "standard_name_#{exception.id}", instrument.standard_name, :escape => false, :style => 'width:150px;height:150px'
+          %td= text_area_tag "standard_name_#{exception.id}", exception.standard_name, :escape => false, :style => 'width:150px;height:150px'
           %td
             = exception.composite_ticker
             - unless composite.nil?
