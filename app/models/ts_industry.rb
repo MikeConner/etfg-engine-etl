@@ -2,7 +2,7 @@
 #
 # Table name: ts_industries
 #
-#  id                          :bigint(8)        not null, primary key
+#  id                          :bigint(8)        not null
 #  etfg_date                   :date             not null
 #  composite_ticker            :string(32)
 #  issuer                      :string(64)

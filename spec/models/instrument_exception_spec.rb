@@ -2,7 +2,7 @@
 #
 # Table name: instrument_exceptions
 #
-#  id                   :bigint(8)        not null, primary key
+#  id                   :bigint(8)        not null
 #  datasource_id        :integer          not null
 #  instrument_id        :bigint(8)        not null
 #  candidate_name       :string(128)      not null

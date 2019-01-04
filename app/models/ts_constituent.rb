@@ -2,7 +2,7 @@
 #
 # Table name: ts_constituents
 #
-#  id                   :bigint(8)        not null, primary key
+#  id                   :bigint(8)        not null
 #  etfg_date            :date             not null
 #  datasource_id        :integer          not null
 #  pooled_instrument_id :bigint(8)

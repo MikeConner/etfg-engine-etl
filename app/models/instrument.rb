@@ -2,7 +2,7 @@
 #
 # Table name: instruments
 #
-#  id                   :bigint(8)        not null, primary key
+#  id                   :bigint(8)        not null
 #  issuer_id            :integer
 #  issuer               :string(32)
 #  ticker               :string(64)

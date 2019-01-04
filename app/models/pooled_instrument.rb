@@ -2,8 +2,9 @@
 #
 # Table name: pooled_instruments
 #
-#  id                          :bigint(8)        not null, primary key
+#  id                          :bigint(8)        not null
 #  issuer_id                   :integer
+#  instrument_id               :integer
 #  issuer                      :string(64)
 #  composite_ticker            :string(32)       not null
 #  composite_name_variants     :text             not null
@@ -59,7 +60,6 @@
 #  pooled_instrument_id        :bigint(8)
 #  created_at                  :datetime         not null
 #  secid                       :string(12)
-#  instrument_id               :bigint(8)
 #  figi                        :string(12)
 #  is_exchange_figi            :boolean          default(FALSE), not null
 #  sedol                       :string(7)
