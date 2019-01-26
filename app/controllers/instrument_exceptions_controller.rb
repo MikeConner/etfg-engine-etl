@@ -58,22 +58,26 @@ class InstrumentExceptionsController < ApplicationController
     second_instrument = first_instrument.dup
     candidate_is_old = 'Standard' == params[:selection]
     new_name = params[:name] || @exception.candidate_name.strip
-     
+    
+    variants = (first_instrument.name_variants.split('^') | [new_name] | second_instrument.name_variants.split('^')).sort.join('^') 
+    
     # Set fields on the right one
     if candidate_is_old
        # Expire candidate name; standard is the new one
       first_instrument.effective_date = split_date
+      first_instrument.name_variants = variants
       second_instrument.assign_attributes(:expiration_date => split_date,
                                           :standard_name => new_name,
-                                          :name_variants => new_name,
+                                          :name_variants => variants,
                                           :notes => "Split from #{first_instrument.id}",
                                           :default_instrument => false,
                                           :datasource_id => @exception.datasource_id)  
     else
       first_instrument.expiration_date = split_date
+      first_instrument.name_variants = variants
       second_instrument.assign_attributes(:effective_date => split_date,
                                           :standard_name => new_name,
-                                          :name_variants => new_name,
+                                          :name_variants => variants,
                                           :notes => "Split from #{first_instrument.id}",
                                           :default_instrument => false,
                                           :datasource_id => @exception.datasource_id)  

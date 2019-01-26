@@ -31,7 +31,7 @@ class InstrumentException < ApplicationRecord
   EXCEPTION = 'Exception'
   CORP_ACTION = 'Action'
   
-  scope :skipped, -> { where("skipped=#{ActiveRecord::Base.connection.quoted_true}") }
+  scope :skipped, -> { where(:skipped => true) }
   scope :pending, -> { where(:resolution => nil) }
   scope :corporate, -> { where(:resolution => CORP_ACTION) }
   

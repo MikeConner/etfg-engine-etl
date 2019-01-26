@@ -15,5 +15,5 @@ class PooledInstrumentException < ApplicationRecord
   belongs_to :pooled_instrument
   belongs_to :datasource
   
-  scope :skipped, -> { where("skipped=#{ActiveRecord::Base.connection.quoted_true}") }
+  scope :skipped, -> { where(:skipped => true) }
 end
