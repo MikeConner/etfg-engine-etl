@@ -41,7 +41,10 @@ class InstrumentExceptionsController < ApplicationController
     InstrumentException.where(:instrument_id => @exception.instrument_id).update_all(:resolution => nil)
     
     if params[:corporate]
-      redirect_to instrument_exceptions_path(:src_id => params[:src_id], :corporate_actions => true), :notice => 'Instrument exception cleared'
+      redirect_to instrument_exceptions_path(:src_id => params[:src_id], 
+                                             :ticker => params[:ticker],
+                                             :skipped => params[:skipped],
+                                             :corporate_actions => true), :notice => 'Instrument exception cleared'
     else
       redirect_to known_exceptions_path(:src_id => params[:src_id]), :notice => 'Instrument exception cleared'
     end
@@ -88,7 +91,10 @@ class InstrumentExceptionsController < ApplicationController
     id_set = Instrument.where(:instrument_id => first_instrument.instrument_id).map(&:id).join(",")
     redirect_to instruments_path(:id_set => id_set), :notice => 'Instrument split successfully'  
   rescue Exception => ex    
-    redirect_to instrument_exceptions_path(:src_id => params[:src_id], :corporate_actions => true), :alert => "Error splitting instrument: #{ex.message}"
+    redirect_to instrument_exceptions_path(:src_id => params[:src_id], 
+                                           :ticker => params[:ticker],
+                                           :skipped => params[:skipped],
+                                           :corporate_actions => true), :alert => "Error splitting instrument: #{ex.message}"
   end
   
   def bulk_update
@@ -140,7 +146,10 @@ class InstrumentExceptionsController < ApplicationController
       end
     end
     
-    redirect_to instrument_exceptions_path(:skipped => params[:skipped], :src_id => params[:source_id]), :notice => 'Exceptions updated'
+    redirect_to instrument_exceptions_path(:skipped => params[:skipped], 
+                                           :ticker => params[:ticker],
+                                           :corporate_actions => params[:corporate_actions],
+                                           :src_id => params[:src_id]), :notice => 'Exceptions updated'
   end
   
 private
