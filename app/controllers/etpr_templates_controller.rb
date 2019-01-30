@@ -272,6 +272,12 @@ class EtprTemplatesController < ApplicationController
                 changes[:category] = row[35].strip
                 updates += 1
               end
+              # 36 expiration_date
+              expiration_date = Date.strptime(row[36], "%m/%d/%y") rescue nil
+              # Don't update if there's another one
+              if not expiration_date.nil? and c.effective_date.nil? and c.expiration_date.nil?
+                changes[:expiration_date] = expiration_date
+              end
   
               c.update_attributes(changes)
             end
