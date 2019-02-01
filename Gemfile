@@ -28,7 +28,7 @@ gem 'roo', '2.8.1'
 gem 'roo-xls', '1.2.0'
 gem 'carrierwave', '1.2.3'
 gem 'friendly_id', '~> 5.2.4'
-gem 'nokogiri', '1.6.3.1'
+gem 'nokogiri', '1.8.1'
 
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'mini_racer', platforms: :ruby
