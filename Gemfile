@@ -4,7 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '2.5.1'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.0'
+gem 'rails', '5.2.2'
 # Use postgresql as the database for Active Record
 gem 'pg', '>= 0.18', '< 2.0'
 # Use Puma as the app server
@@ -28,6 +28,7 @@ gem 'roo', '2.8.1'
 gem 'roo-xls', '1.2.0'
 gem 'carrierwave', '1.2.3'
 gem 'friendly_id', '~> 5.2.4'
+gem 'nokogiri', '1.6.1'
 
 # See https://github.com/rails/execjs#readme for more supported runtimes
 # gem 'mini_racer', platforms: :ruby
@@ -74,7 +75,7 @@ gem 'better_errors', '2.4.0'
 gem 'binding_of_caller', '0.8.0'
 
 group :test do
-  gem 'capybara', '3.4.2'
+  #gem 'capybara', '3.4.2'
   gem 'database_cleaner', '1.7.0'
   gem 'factory_bot_rails', '4.10.0'
   gem 'rspec-tag_matchers', '0.1.2'
