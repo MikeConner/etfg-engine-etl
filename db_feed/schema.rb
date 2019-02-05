@@ -10,10 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_28_040721) do
+ActiveRecord::Schema.define(version: 2019_01_31_204704) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "agf_lookups", id: false, force: :cascade do |t|
+    t.string "ticker", limit: 32, null: false
+    t.string "holdings_name", limit: 128, null: false
+    t.string "nav_name", limit: 128, null: false
+  end
 
   create_table "alps_hold", force: :cascade do |t|
     t.date "etfg_date"
@@ -138,6 +144,11 @@ ActiveRecord::Schema.define(version: 2018_11_28_040721) do
     t.text "shares_outstanding"
     t.text "daily_dividend_days"
     t.text "daily_pay_date"
+  end
+
+  create_table "asset_class_lookups", force: :cascade do |t|
+    t.string "security_type"
+    t.string "asset_class", limit: 128
   end
 
   create_table "bbh_nav", id: false, force: :cascade do |t|
@@ -877,6 +888,47 @@ ActiveRecord::Schema.define(version: 2018_11_28_040721) do
     t.index ["etfg_date"], name: "etfmg_nav_etfg_date"
   end
 
+  create_table "firsttrust_etn", id: false, force: :cascade do |t|
+    t.date "etfg_date"
+    t.string "cusip", limit: 9
+    t.decimal "tas", precision: 22, scale: 6
+    t.string "ticker", limit: 32
+    t.string "fund_name", limit: 128
+    t.date "as_of_date"
+    t.decimal "projected_nav", precision: 22, scale: 6
+    t.decimal "income_distribution_rate", precision: 22, scale: 6
+    t.date "reinvest_date"
+    t.decimal "accrued_dividend", precision: 22, scale: 6
+    t.decimal "long_term_capital_gain", precision: 22, scale: 6
+    t.decimal "mid_term_capital_gain", precision: 22, scale: 6
+    t.decimal "short_term_capital_gain", precision: 22, scale: 6
+    t.decimal "daily_dividend", precision: 22, scale: 6
+    t.decimal "sec_yield", precision: 22, scale: 6
+    t.decimal "total_net_assets", precision: 22, scale: 6
+    t.decimal "total_shares_outstanding", precision: 22, scale: 6
+    t.decimal "nav", precision: 22, scale: 6
+  end
+
+  create_table "firsttrust_etn_template", id: false, force: :cascade do |t|
+    t.text "cusip"
+    t.text "tas"
+    t.text "ticker"
+    t.text "fund_name"
+    t.text "as_of_date"
+    t.text "projected_nav"
+    t.text "income_distribution_rate"
+    t.text "reinvest_date"
+    t.text "accrued_dividend"
+    t.text "long_term_capital_gain"
+    t.text "mid_term_capital_gain"
+    t.text "short_term_capital_gain"
+    t.text "daily_dividend"
+    t.text "sec_yield"
+    t.text "total_net_assets"
+    t.text "total_shares_outstanding"
+    t.text "nav"
+  end
+
   create_table "gemini_ms", id: false, force: :cascade do |t|
     t.date "etfg_date"
     t.text "unique_id"
@@ -1345,6 +1397,24 @@ ActiveRecord::Schema.define(version: 2018_11_28_040721) do
     t.text "unrealized_gain_loss"
   end
 
+  create_table "missing_nav", id: false, force: :cascade do |t|
+    t.date "etfg_date", null: false
+    t.date "as_of_date", null: false
+    t.string "ticker", limit: 32, null: false
+    t.string "country", limit: 3, null: false
+    t.decimal "nav", precision: 22, scale: 6
+    t.decimal "shares", precision: 22, scale: 6
+    t.index ["etfg_date", "ticker", "country"], name: "compound_key", unique: true
+  end
+
+  create_table "missing_nav_template", id: false, force: :cascade do |t|
+    t.text "as_of_date"
+    t.text "ticker"
+    t.text "country"
+    t.text "nav"
+    t.text "shares"
+  end
+
   create_table "sei_blackbar", id: false, force: :cascade do |t|
     t.date "etfg_date"
     t.text "parent_id"
@@ -1749,6 +1819,72 @@ ActiveRecord::Schema.define(version: 2018_11_28_040721) do
     t.text "fvm_code"
   end
 
+  create_table "ssc_tradeday", id: false, force: :cascade do |t|
+    t.date "etfg_date"
+    t.string "basket_code", limit: 32
+    t.string "basket_name", limit: 128
+    t.string "cusip", limit: 9
+    t.string "ticker", limit: 32
+    t.decimal "nav_per_shr", precision: 22, scale: 6
+    t.decimal "nav_per_cu", precision: 22, scale: 6
+    t.decimal "income_per_shr", precision: 22, scale: 6
+    t.decimal "income_per_cu", precision: 22, scale: 6
+    t.decimal "balancing_cash", precision: 22, scale: 6
+    t.decimal "actual_total_cash", precision: 22, scale: 6
+    t.decimal "shrs_outstanding", precision: 22, scale: 6
+    t.decimal "total_net_assets", precision: 22, scale: 6
+    t.decimal "income_dist", precision: 22, scale: 6
+    t.decimal "st_cap_dist", precision: 22, scale: 6
+    t.decimal "lt_cap_dist", precision: 22, scale: 6
+    t.decimal "estimated_total_cash", precision: 22, scale: 6
+    t.decimal "estimated_cil", precision: 22, scale: 6
+    t.decimal "estimated_interest", precision: 22, scale: 6
+    t.decimal "actual_cil", precision: 22, scale: 6
+    t.decimal "actual_interest", precision: 22, scale: 6
+    t.decimal "estimated_cash_div", precision: 22, scale: 6
+    t.decimal "estimated_expense", precision: 22, scale: 6
+    t.decimal "estimated_bkt_mkt", precision: 22, scale: 6
+    t.decimal "actual_bkt_mkt", precision: 22, scale: 6
+    t.decimal "actual_cash", precision: 22, scale: 6
+    t.decimal "estimated_cash", precision: 22, scale: 6
+    t.decimal "td_shrs_outstanding", precision: 22, scale: 6
+    t.decimal "td_total_net_assets", precision: 22, scale: 6
+    t.date "as_of_date"
+    t.string "source_name", limit: 32
+  end
+
+  create_table "ssc_tradeday_template", id: false, force: :cascade do |t|
+    t.text "basket_code"
+    t.text "basket_name"
+    t.text "cusip"
+    t.text "ticker"
+    t.text "nav_per_shr"
+    t.text "nav_per_cu"
+    t.text "income_per_shr"
+    t.text "income_per_cu"
+    t.text "balancing_cash"
+    t.text "actual_total_cash"
+    t.text "shrs_outstanding"
+    t.text "total_net_assets"
+    t.text "income_dist"
+    t.text "st_cap_dist"
+    t.text "lt_cap_dist"
+    t.text "estimated_total_cash"
+    t.text "estimated_cil"
+    t.text "estimated_interest"
+    t.text "actual_cil"
+    t.text "actual_interest"
+    t.text "estimated_cash_div"
+    t.text "estimated_expense"
+    t.text "estimated_bkt_mkt"
+    t.text "actual_bkt_mkt"
+    t.text "actual_cash"
+    t.text "estimated_cash"
+    t.text "td_shrs_outstanding"
+    t.text "td_total_net_assets"
+    t.date "as_of_date"
+  end
+
   create_table "staging_composites", force: :cascade do |t|
     t.date "etfg_date", null: false
     t.date "as_of_date", null: false
@@ -1798,9 +1934,7 @@ ActiveRecord::Schema.define(version: 2018_11_28_040721) do
     t.date "inception_date"
     t.string "etp_structure_type", limit: 50
     t.string "category", limit: 28
-    t.string "related_index", limit: 50
     t.string "related_index_symbol", limit: 16
-    t.string "related_index_name", limit: 50
     t.decimal "net_expenses", precision: 22, scale: 6
     t.decimal "expense_ratio", precision: 22, scale: 6
     t.decimal "total_expenses", precision: 22, scale: 6
@@ -2018,9 +2152,8 @@ ActiveRecord::Schema.define(version: 2018_11_28_040721) do
   create_table "staging_industries", force: :cascade do |t|
     t.date "etfg_date", null: false
     t.date "as_of_date", null: false
-    t.integer "datasource_id", null: false
+    t.integer "datasource_id"
     t.string "composite_ticker", limit: 32, null: false
-    t.string "composite_name", limit: 128
     t.string "country", limit: 64, default: "US", null: false
     t.decimal "avg_daily_trading_volume", precision: 22, scale: 6
     t.decimal "call_volume", precision: 22, scale: 6
@@ -2031,17 +2164,15 @@ ActiveRecord::Schema.define(version: 2018_11_28_040721) do
     t.decimal "put_volume", precision: 22, scale: 6
     t.decimal "short_interest", precision: 22, scale: 6
     t.decimal "bid_ask_spread", precision: 22, scale: 6
-    t.decimal "avg_bid_size", precision: 22, scale: 6
-    t.decimal "avg_ask_size", precision: 22, scale: 6
-    t.decimal "avg_midpoint", precision: 22, scale: 6
     t.decimal "open_price", precision: 22, scale: 6
     t.decimal "high_price", precision: 22, scale: 6
     t.decimal "low_price", precision: 22, scale: 6
     t.decimal "close_price", precision: 22, scale: 6
-    t.decimal "daily_return", precision: 22, scale: 6
-    t.decimal "basket_estimated_cash", precision: 22, scale: 6
     t.integer "pooled_instrument_id"
     t.boolean "match", default: false, null: false
+    t.decimal "nav", precision: 22, scale: 6
+    t.decimal "aum", precision: 22, scale: 6
+    t.boolean "exclude_from_ts", default: false, null: false
     t.index ["datasource_id", "etfg_date"], name: "index_staging_industries_on_datasource_id_and_etfg_date"
     t.index ["datasource_id"], name: "index_staging_industries_on_datasource_id"
     t.index ["etfg_date"], name: "index_staging_industries_on_etfg_date"
@@ -2110,15 +2241,15 @@ ActiveRecord::Schema.define(version: 2018_11_28_040721) do
     t.text "fund_name"
     t.text "fund_ticker"
     t.text "cusip"
-    t.decimal "shares_outstanding", precision: 18, scale: 6
-    t.decimal "nav", precision: 18, scale: 6
-    t.decimal "nav_change_dollars", precision: 18, scale: 6
-    t.decimal "nav_change_percentage", precision: 18, scale: 6
-    t.decimal "market_price", precision: 18, scale: 6
-    t.decimal "market_price_change_dollars", precision: 18, scale: 6
-    t.decimal "market_price_change_percentage", precision: 18, scale: 6
-    t.decimal "premium_discount", precision: 18, scale: 6
-    t.date "rate_date"
+    t.text "shares_outstanding"
+    t.text "nav"
+    t.text "nav_change_dollars"
+    t.text "nav_change_percentage"
+    t.text "market_price"
+    t.text "market_price_change_dollars"
+    t.text "market_price_change_percentage"
+    t.text "premium_discount"
+    t.text "rate_date"
   end
 
   create_table "usbank_pcf", id: false, force: :cascade do |t|
@@ -2249,7 +2380,7 @@ ActiveRecord::Schema.define(version: 2018_11_28_040721) do
   end
 
   create_table "usbank_total_template", id: false, force: :cascade do |t|
-    t.date "as_of_date"
+    t.text "as_of_date"
     t.text "fund_id"
     t.text "fund_name"
     t.text "fund_ticker"
@@ -2259,13 +2390,13 @@ ActiveRecord::Schema.define(version: 2018_11_28_040721) do
     t.text "sec_description"
     t.text "currency"
     t.text "long_short_ind"
-    t.decimal "units", precision: 18, scale: 6
-    t.decimal "price", precision: 18, scale: 6
-    t.decimal "market_value_base", precision: 18, scale: 6
-    t.decimal "total_cost", precision: 18, scale: 6
+    t.text "units"
+    t.text "price"
+    t.text "market_value_base"
+    t.text "total_cost"
     t.text "ticker_symbol"
-    t.decimal "interest_rate", precision: 18, scale: 6
-    t.date "mat_date"
+    t.text "interest_rate"
+    t.text "mat_date"
     t.text "country"
     t.text "state"
     t.text "income_prod_ind"
@@ -2299,19 +2430,19 @@ ActiveRecord::Schema.define(version: 2018_11_28_040721) do
     t.text "pricing_symbol"
     t.text "prior_day_ex_rate"
     t.text "ex_rate_perc_change"
-    t.decimal "prior_day_shares", precision: 18, scale: 6
-    t.decimal "prior_day_price", precision: 18, scale: 6
-    t.decimal "price_perc_change", precision: 18, scale: 6
+    t.text "prior_day_shares"
+    t.text "prior_day_price"
+    t.text "price_perc_change"
     t.text "first_coupon"
     t.text "mbs_factor"
     t.text "underlying_cusip"
-    t.decimal "total_assets", precision: 18, scale: 6
-    t.decimal "total_net_assets", precision: 18, scale: 6
+    t.text "total_assets"
+    t.text "total_net_assets"
     t.text "sec_type_desc"
-    t.decimal "amort_cost_base", precision: 18, scale: 6
-    t.decimal "amort_cost_local", precision: 18, scale: 6
-    t.decimal "accrued_inc_base", precision: 18, scale: 6
-    t.decimal "accrued_inc_local", precision: 18, scale: 6
+    t.text "amort_cost_base"
+    t.text "amort_cost_local"
+    t.text "accrued_inc_base"
+    t.text "accrued_inc_local"
     t.text "field_01"
     t.text "field_02"
     t.text "field_03"

@@ -2,7 +2,7 @@
 #
 # Table name: pooled_instruments
 #
-#  id                          :bigint(8)        not null
+#  id                          :bigint(8)        not null, primary key
 #  issuer_id                   :integer
 #  instrument_id               :integer
 #  issuer                      :string(64)

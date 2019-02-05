@@ -70,6 +70,7 @@ Rails.application.routes.draw do
   end
 
   resources :agf_lookups, :only => [:index, :destroy, :create]
+  resources :asset_class_lookups, :only => [:index, :destroy, :create]
   
   resources :date_adjust_fund_flows, :only => [:index, :destroy, :create] do
     member do 

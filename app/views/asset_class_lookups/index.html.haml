@@ -1,0 +1,33 @@
+.container
+  .span12
+    .content-block
+      .bd
+        %br
+        %br
+        %br
+        %h1 Asset Class Lookups
+        = form_for @lookup do |f|
+          %table.table
+            %caption New lookup table entry
+            %tbody
+              %tr{:style => 'width:50%'}
+                %td
+                  = f.label :security_type
+                  = f.text_field :security_type
+                %td
+                  = f.label :asset_class
+                  = f.text_field :asset_class
+                %td= f.submit 'Add Entry', :class => 'button', :style => 'margin-top:20px'
+          - unless @mappings.empty?
+            %table.table.zebra-striped
+              %thead
+                %tr
+                  %th Security Type
+                  %th Asset Class
+                  %th
+              %tbody
+                - @mappings.each do |m|
+                  %tr
+                    %td= m.security_type
+                    %td= m.asset_class
+                    %td= link_to 'Delete', m, :method => :delete, :data => { :confirm => 'Are you sure?' }

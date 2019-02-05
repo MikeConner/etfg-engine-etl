@@ -2,7 +2,7 @@
 #
 # Table name: instruments
 #
-#  id                   :bigint(8)        not null
+#  id                   :bigint(8)        not null, primary key
 #  issuer_id            :integer
 #  issuer               :string(32)
 #  ticker               :string(64)
@@ -37,6 +37,7 @@
 #  notes                :text
 #  cusip_validated      :string(16)
 #  geography            :string(3)
+#  asset_class          :string(128)
 #
 
 class Instrument < ApplicationRecord

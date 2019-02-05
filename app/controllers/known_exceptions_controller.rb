@@ -86,8 +86,15 @@ private
   def create_exception(id_type, id_value, composite_ticker)
     @exception = KnownException.new(exception_params)
     @exception.id_type = id_type
-    @exception.id_value = id_value
-    @exception.composite_ticker = composite_ticker
+    @exception.id_value = id_value.strip
+    @exception.composite_ticker = nil if @exception.composite_ticker.blank? 
+    @exception.country = nil if @exception.country.blank? 
+    @exception.currency = nil if @exception.currency.blank? 
+    @exception.figi = nil if @exception.figi.blank? 
+    @exception.sedol = nil if @exception.sedol.blank? 
+    @exception.isin = nil if @exception.isin.blank? 
+    @exception.cusip = nil if @exception.cusip.blank? 
+    
     @exception  
   end
   
