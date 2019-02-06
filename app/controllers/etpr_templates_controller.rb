@@ -34,9 +34,9 @@ class EtprTemplatesController < ApplicationController
               updates += 1
             end
             name = row[1].strip
-            inception_date =  Date.strptime(row[3], "%m/%d/%y") rescue nil
-            fiscal_year_end = Date.strptime(row[4], "%m/%d/%y") rescue nil
-            maturity_date = Date.strptime(row[5], "%m/%d/%y") rescue nil
+            inception_date =  Date.strptime(row[3], "%m/%d/%Y") rescue nil
+            fiscal_year_end = Date.strptime(row[4], "%m/%d/%Y") rescue nil
+            maturity_date = Date.strptime(row[5], "%m/%d/%Y") rescue nil
             
             pi = PooledInstrument.create(:issuer => issuer_name,
                                          :issuer_id => issuer_id,
@@ -100,7 +100,7 @@ class EtprTemplatesController < ApplicationController
               end
               # 3 inception_date
               unless row[3].blank?
-                inception_date = Date.strptime(row[3], "%m/%d/%y") rescue nil
+                inception_date = Date.strptime(row[3], "%m/%d/%Y") rescue nil
                 unless inception_date.nil?
                   changes[:inception_date] = inception_date
                   updates += 1
@@ -108,7 +108,7 @@ class EtprTemplatesController < ApplicationController
               end
               # 4 fiscal_year_end
               unless row[4].blank?
-                fiscal_year = Date.strptime(row[4], "%m/%d/%y") rescue nil
+                fiscal_year = Date.strptime(row[4], "%m/%d/%Y") rescue nil
                 unless fiscal_year.nil?
                   changes[:fiscal_year_end] = fiscal_year
                   updates += 1
@@ -116,7 +116,7 @@ class EtprTemplatesController < ApplicationController
               end
               # 5 maturity_date
               unless row[5].blank?
-                maturity_date = Date.strptime(row[5], "%m/%d/%y") rescue nil
+                maturity_date = Date.strptime(row[5], "%m/%d/%Y") rescue nil
                 unless maturity_date.nil?
                   changes[:maturity_date] = maturity_date
                   updates += 1
@@ -273,7 +273,7 @@ class EtprTemplatesController < ApplicationController
                 updates += 1
               end
               # 36 expiration_date
-              expiration_date = Date.strptime(row[36], "%m/%d/%y") rescue nil
+              expiration_date = Date.strptime(row[36], "%m/%d/%Y") rescue nil
               # Don't update if there's another one
               if not expiration_date.nil? and c.effective_date.nil? and c.expiration_date.nil?
                 changes[:expiration_date] = expiration_date
