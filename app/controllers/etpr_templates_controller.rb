@@ -35,7 +35,6 @@ class EtprTemplatesController < ApplicationController
             end
             name = row[1].strip
             inception_date =  Date.strptime(row[3], "%m/%d/%Y") rescue nil
-            fiscal_year_end = Date.strptime(row[4], "%m/%d/%Y") rescue nil
             maturity_date = Date.strptime(row[5], "%m/%d/%Y") rescue nil
             
             pi = PooledInstrument.create(:issuer => issuer_name,
@@ -45,7 +44,7 @@ class EtprTemplatesController < ApplicationController
                                          :standard_composite_name => name,
                                          :exchange_country => 'US',
                                          :inception_date => inception_date,
-                                         :fiscal_year_end => fiscal_year_end,
+                                         :fiscal_year_end => row[4].blank? ? nil : row[4].strip,
                                          :maturity_date => maturity_date,
                                          :listing_exchange => row[6].blank? ? nil : row[6].strip,
                                          :distribution_frequency => row[7].blank? ? nil : row[7].strip,
@@ -108,12 +107,9 @@ class EtprTemplatesController < ApplicationController
               end
               # 4 fiscal_year_end
               unless row[4].blank?
-                fiscal_year = Date.strptime(row[4], "%m/%d/%Y") rescue nil
-                unless fiscal_year.nil?
-                  changes[:fiscal_year_end] = fiscal_year
-                  updates += 1
-                end
-              end
+                changes[:fiscal_year_end] = row[4].strip
+                updates += 1
+               end
               # 5 maturity_date
               unless row[5].blank?
                 maturity_date = Date.strptime(row[5], "%m/%d/%Y") rescue nil
