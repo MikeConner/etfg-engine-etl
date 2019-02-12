@@ -2,7 +2,7 @@ require 'fileutils'
 
 namespace :jpms do
   desc "Date JPM Securities files"
-  task :make_filenames_atomic, [:filepath] => :environment do |t, args|    
+  task :make_filenames_atomic, [:filepath, :convert_xml] => :environment do |t, args|    
     process_file(args[:filepath], "CW_PROFUND_*_AllPositionsTemplate", "CW_PROFUND")
     # Turning off FFCM
     #process_file(args[:filepath], "CW_FFCM_*_FQFTrustPricedPositionsforETFGlobal", "CW_FFCM")
@@ -21,9 +21,12 @@ namespace :jpms do
     # QuantShares_ALLNAV_02082018.xlsx
     # Convert to CSV first
     convert_to_csv(args[:filepath], "QuantShares_ALLNAV_*.xls*", "QuantShares_ALLNAV_(\\d+).(xlsx?)", "QuantShares_ALLNAV")
-    convert_ffcm(args[:filepath], "FFCM_Positions_for_Morningstar_*", "FFCM_Positions")
+    if args.has_key?(:convert_xml) and ('convert_xml' == args[:convert_xml])
+      convert_ffcm(args[:filepath], "FFCM_Positions_for_Morningstar_*", "FFCM_Positions")      
+    end
   end
 
+  # This doesn't work on Digital Ocean - do in Python instead
   def convert_ffcm(path, pattern, replacement)
     errors = 0
     successes = 0
