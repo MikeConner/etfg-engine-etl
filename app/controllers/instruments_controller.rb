@@ -122,6 +122,8 @@ class InstrumentsController < ApplicationController
           if current_instrument_ids.length > 1
             dup_sql.push("SELECT #{fields} FROM instruments WHERE id IN (#{current_ids.to_s.gsub(/(\[|\])/,'')})")
           end
+          
+          current = Hash.new
         end
       end
         
