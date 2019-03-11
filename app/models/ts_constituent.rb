@@ -23,6 +23,7 @@
 #  coupon_range         :string(8)
 #  years_to_maturity    :integer
 #  maturity_range       :string(8)
+#  base_currency        :string(16)
 #
 
 class TsConstituent < ApplicationRecord

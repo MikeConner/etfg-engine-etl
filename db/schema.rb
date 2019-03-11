@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_10_015622) do
+ActiveRecord::Schema.define(version: 2019_03_11_171418) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -313,6 +313,7 @@ ActiveRecord::Schema.define(version: 2019_03_10_015622) do
     t.string "coupon_range", limit: 8
     t.integer "years_to_maturity", limit: 2
     t.string "maturity_range", limit: 8
+    t.string "base_currency", limit: 16
     t.index ["datasource_id"], name: "index_ts_constituents_on_datasource_id"
   end
 

@@ -40,6 +40,7 @@
 #  coupon               :decimal(22, 6)
 #  maturity_date        :date
 #  segment              :integer
+#  base_currency        :string(16)
 #
 
 require 'rails_helper'

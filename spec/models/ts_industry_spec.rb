@@ -59,6 +59,7 @@
 #  net_expenses                :decimal(18, 6)
 #  lead_market_maker           :string(128)
 #  pooled_instrument_id        :bigint(8)        not null
+#  output_region               :string(2)
 #
 
 require 'rails_helper'
