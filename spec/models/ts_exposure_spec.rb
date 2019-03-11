@@ -8,6 +8,7 @@
 #  exposure_type        :string(64)       not null
 #  category             :string(64)       not null
 #  exposure_value       :decimal(22, 6)   not null
+#  region               :string(2)
 #
 
 require 'rails_helper'

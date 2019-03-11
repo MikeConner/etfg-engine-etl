@@ -20,7 +20,9 @@ class EtprTemplatesController < ApplicationController
       CSV.foreach(@template.template_file.file.path, :headers => true) do |row|
         found = false
         begin
-          pi = PooledInstrument.find_by_composite_ticker_and_exchange_country(row[0], 'US')
+          country = row[37].blank? ? 'US' : row[37].strip
+          
+          pi = PooledInstrument.find_by_composite_ticker_and_exchange_country(row[0], country)
           if pi.nil?
             # create instrument
             issuer_name = nil
@@ -42,7 +44,7 @@ class EtprTemplatesController < ApplicationController
                                          :composite_ticker => row[0],
                                          :composite_name_variants => name,
                                          :standard_composite_name => name,
-                                         :exchange_country => 'US',
+                                         :exchange_country => country,
                                          :inception_date => inception_date,
                                          :fiscal_year_end => row[4].blank? ? nil : row[4].strip,
                                          :maturity_date => maturity_date,
@@ -273,6 +275,11 @@ class EtprTemplatesController < ApplicationController
               # Don't update if there's another one
               if not expiration_date.nil? and c.effective_date.nil? and c.expiration_date.nil?
                 changes[:expiration_date] = expiration_date
+              end
+              # 37 country
+              unless row[37].blank?
+                changes[:exchange_country] = row[37].strip
+                updates += 1
               end
   
               c.update_attributes(changes)

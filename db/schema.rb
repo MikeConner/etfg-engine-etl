@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_25_164422) do
+ActiveRecord::Schema.define(version: 2019_03_10_015622) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -58,13 +58,13 @@ ActiveRecord::Schema.define(version: 2019_01_25_164422) do
     t.integer "ranking", limit: 2
     t.boolean "composite"
     t.date "etfg_date"
+    t.string "country", limit: 64
   end
 
-  create_table "datasources", id: false, force: :cascade do |t|
-    t.bigserial "id", null: false
+  create_table "datasources", force: :cascade do |t|
     t.string "data_source_name", limit: 50, null: false
     t.boolean "is_direct_feed", default: true, null: false
-    t.string "country", limit: 2, default: "US", null: false
+    t.string "region", limit: 2, default: "US", null: false
     t.integer "composite_rank", limit: 2, default: 5, null: false
     t.integer "constituent_rank", limit: 2, default: 5
   end
@@ -92,8 +92,7 @@ ActiveRecord::Schema.define(version: 2019_01_25_164422) do
     t.string "description"
   end
 
-  create_table "instrument_exceptions", id: false, force: :cascade do |t|
-    t.bigserial "id", null: false
+  create_table "instrument_exceptions", force: :cascade do |t|
     t.integer "datasource_id", limit: 2, null: false
     t.bigint "instrument_id", null: false
     t.string "candidate_name", limit: 128, null: false
@@ -110,8 +109,7 @@ ActiveRecord::Schema.define(version: 2019_01_25_164422) do
     t.integer "score"
   end
 
-  create_table "instruments", id: false, force: :cascade do |t|
-    t.bigserial "id", null: false
+  create_table "instruments", force: :cascade do |t|
     t.integer "issuer_id"
     t.string "issuer", limit: 32
     t.string "ticker", limit: 64
@@ -200,8 +198,7 @@ ActiveRecord::Schema.define(version: 2019_01_25_164422) do
     t.boolean "skipped", default: false, null: false
   end
 
-  create_table "pooled_instruments", id: false, force: :cascade do |t|
-    t.bigserial "id", null: false
+  create_table "pooled_instruments", force: :cascade do |t|
     t.integer "issuer_id"
     t.integer "instrument_id"
     t.string "issuer", limit: 64
@@ -316,6 +313,7 @@ ActiveRecord::Schema.define(version: 2019_01_25_164422) do
     t.string "coupon_range", limit: 8
     t.integer "years_to_maturity", limit: 2
     t.string "maturity_range", limit: 8
+    t.index ["datasource_id"], name: "index_ts_constituents_on_datasource_id"
   end
 
   create_table "ts_exposures", id: false, force: :cascade do |t|
@@ -325,6 +323,8 @@ ActiveRecord::Schema.define(version: 2019_01_25_164422) do
     t.string "exposure_type", limit: 64, null: false
     t.string "category", limit: 64, null: false
     t.decimal "exposure_value", precision: 22, scale: 6, null: false
+    t.string "region", limit: 2
+    t.index ["region"], name: "index_ts_exposures_on_region"
   end
 
   create_table "ts_industries", id: false, force: :cascade do |t|
@@ -385,10 +385,18 @@ ActiveRecord::Schema.define(version: 2019_01_25_164422) do
     t.decimal "net_expenses", precision: 18, scale: 6
     t.string "lead_market_maker", limit: 128
     t.bigint "pooled_instrument_id", null: false
+    t.string "output_region", limit: 2
+    t.index ["output_region"], name: "index_ts_industries_on_output_region"
   end
 
-  create_table "users", id: false, force: :cascade do |t|
-    t.bigserial "id", null: false
+  create_table "unmatched_sources", id: false, force: :cascade do |t|
+    t.date "etfg_date"
+    t.integer "datasource_id"
+    t.boolean "composite"
+    t.index ["etfg_date", "datasource_id", "composite"], name: "uid_unmatched_sources", unique: true
+  end
+
+  create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"

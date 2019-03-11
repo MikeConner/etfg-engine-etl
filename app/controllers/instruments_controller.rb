@@ -84,14 +84,7 @@ class InstrumentsController < ApplicationController
   def create_isin_cusip_set(dup_sets, set_map, max_num = 10)
     fields = 'id,instrument_id,datasource_id,ticker,standard_name,effective_date,expiration_date,figi,sedol,isin,cusip,exchange_country,currency,exchange,approved,default_instrument'
     # i/s form a pair - group ones where this is equal; each set with the same glob value is a duplicate set
-    sql = "SELECT CONCAT(i,s) AS glob,instrument_id,id FROM instruments " + 
-          "JOIN (SELECT isin AS i,sedol AS s FROM " + 
-          "(SELECT isin,sedol,COUNT(*) c FROM instruments GROUP BY isin,sedol) AS Sub " +
-          "WHERE c > 1 order by isin,sedol) As Sub " +
-          "ON isin=i AND sedol=s ORDER BY glob"    
     dup_sql = []
-    recs = ActiveRecord::Base.connection.execute(sql)
-    last_glob = nil
    
     # We will get lines like this - lines that share the same "glob" are a potential duplicate set
     # We want to eliminate any with duplicate instrument_ids (those are corporate actions), so
@@ -102,44 +95,26 @@ class InstrumentsController < ApplicationController
     # <isin1><cusip1> 63432 3234
     # <isin1><cusip2> ...
     # instrument_id => id
-    current = Hash.new
-    recs.each do |rec|      
-      # Detect glob boundaries
-      if rec['glob'] != last_glob
-        unless last_glob.nil?
-          current_instrument_ids = Hash.new
-          current_ids = []
-          
-          # Process a set
-          # Remove any that have duplicates (same instrument_id - those would be effective/expiration dates)
-          current.each do |inst_id, ids|
-            if 1 == ids.length
-              current_instrument_ids[inst_id] = 1
-              current_ids.push(ids[0])
-            end
-          end
-          
-          if current_instrument_ids.length > 1
-            dup_sql.push("SELECT #{fields} FROM instruments WHERE id IN (#{current_ids.to_s.gsub(/(\[|\])/,'')})")
-          end
-          
-          current = Hash.new
-        end
-      end
-        
-      # instrument id 1 => [1,2]
-      # instrument id 2 => [3]
-      # 
-      unless current.has_key?(rec['instrument_id'])
-        current[rec['instrument_id']] = []
-      end
-      current[rec['instrument_id']].push(rec['id'])
-      
-      last_glob = rec['glob']
-    end
-    
+    sql = "SELECT CONCAT(i,s) AS glob,instrument_id,id FROM instruments " + 
+          "JOIN (SELECT isin AS i,sedol AS s FROM " + 
+          "(SELECT isin,sedol,COUNT(*) c FROM instruments " + 
+          "WHERE figi IS NULL AND isin IS NOT NULL AND sedol IS NOT NULL " +
+          "GROUP BY isin,sedol) AS Sub " +
+          "WHERE c > 1 order by isin,sedol) As Sub " +
+          "ON isin=i AND sedol=s ORDER BY glob"    
+    process_globs(sql, dup_sql)
+
+    sql = "SELECT CONCAT(f,i,s) AS glob,instrument_id,id FROM instruments " + 
+          "JOIN (SELECT figi AS f,isin AS i,sedol AS s FROM " + 
+          "(SELECT figi,isin,sedol,COUNT(*) c FROM instruments " + 
+          "WHERE figi IS NOT NULL AND isin IS NOT NULL AND sedol IS NOT NULL " +
+          "GROUP BY figi,isin,sedol) AS Sub " +
+          "WHERE c > 1 order by figi,isin,sedol) As Sub " +
+          "ON figi=f AND isin=i AND sedol=s ORDER BY glob"    
+    process_globs(sql, dup_sql)
+
     # We're already eliminated duplicate ids, so don't need to check again here
-    dup_sql.each do |s|
+    dup_sql.shuffle.each do |s|
       recs = ActiveRecord::Base.connection.execute(s)
       current = []
       instrument_id = nil
@@ -158,7 +133,6 @@ class InstrumentsController < ApplicationController
   end
          
   def create_field_set(field, dup_sets, set_map, max_num = 10)
-    fields = 'id,instrument_id,datasource_id,ticker,standard_name,effective_date,expiration_date,figi,sedol,isin,cusip,exchange_country,currency,exchange,approved,default_instrument'
     sql = "SELECT figi,sedol,isin,cusip,#{field} FROM (SELECT figi,sedol,isin,cusip,#{field},COUNT(*) c FROM instruments GROUP BY figi,sedol,isin,cusip,#{field}) AS sub WHERE c > 1"
     dup_sql = []
     recs = ActiveRecord::Base.connection.execute(sql)
@@ -263,5 +237,47 @@ class InstrumentsController < ApplicationController
     @instruments.update_all(:approved => approved_set)
     
     head :ok   
+  end
+  
+private
+  def process_globs(sql, dup_sql)    
+    fields = 'id,instrument_id,datasource_id,ticker,standard_name,effective_date,expiration_date,figi,sedol,isin,cusip,exchange_country,currency,exchange,approved,default_instrument'
+    current = Hash.new
+    last_glob = nil
+    recs = ActiveRecord::Base.connection.execute(sql)
+    recs.each do |rec|      
+      # Detect glob boundaries
+      if rec['glob'] != last_glob
+        unless last_glob.nil?
+          current_instrument_ids = Hash.new
+          current_ids = []
+          
+          # Process a set
+          # Remove any that have duplicates (same instrument_id - those would be effective/expiration dates)
+          current.each do |inst_id, ids|
+            if 1 == ids.length
+              current_instrument_ids[inst_id] = 1
+              current_ids.push(ids[0])
+            end
+          end
+          
+          if current_instrument_ids.length > 1
+            dup_sql.push("SELECT #{fields} FROM instruments WHERE id IN (#{current_ids.to_s.gsub(/(\[|\])/,'')})")
+          end
+                    
+          current = Hash.new
+        end
+      end
+        
+      # instrument id 1 => [1,2]
+      # instrument id 2 => [3]
+      # 
+      unless current.has_key?(rec['instrument_id'])
+        current[rec['instrument_id']] = []
+      end
+      current[rec['instrument_id']].push(rec['id'])
+      
+      last_glob = rec['glob']
+    end
   end
 end

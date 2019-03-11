@@ -70,6 +70,9 @@ Rails.application.routes.draw do
   end
 
   resources :agf_lookups, :only => [:index, :destroy, :create]
+  resources :horizon_lookups, :only => [:index, :destroy, :create]
+  resources :ssc_ca_lookups, :only => [:index, :destroy, :create]
+  resources :ssc_ire_lookups, :only => [:index, :destroy, :create]
   resources :asset_class_lookups, :only => [:index, :destroy, :create]
   
   resources :date_adjust_fund_flows, :only => [:index, :destroy, :create] do

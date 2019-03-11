@@ -3,15 +3,14 @@
 # Table name: bmo_holdings
 #
 #  etfg_date           :date             not null
-#  composite_ticker    :string(32)       not null
-#  constituent_ticker  :string(64)       not null
-#  constituent_name    :string(128)
-#  constituent_country :string(64)
-#  instrument_type     :string(128)
-#  security_id         :string(64)
-#  total_shares_held   :decimal(18, 6)
+#  ticker              :string(32)       not null
+#  instrument_type     :string(64)       not null
+#  name                :string(128)
 #  sedol               :string(7)
 #  cusip               :string(9)
+#  security_id         :string(64)
+#  quantity_par_amount :decimal(22, 6)
+#  as_of_date          :date
 #
 
 require 'rails_helper'

@@ -10,15 +10,101 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_31_204704) do
+ActiveRecord::Schema.define(version: 2019_03_09_030752) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "agf_holdings", id: false, force: :cascade do |t|
+    t.date "etfg_date"
+    t.string "fund_identifier", limit: 32
+    t.string "fund_name", limit: 128
+    t.date "portfolio_date"
+    t.string "portfolio_base_currency", limit: 16
+    t.decimal "total_net_asset", precision: 22, scale: 6
+    t.decimal "liquidity", precision: 22, scale: 6
+    t.string "holding_name", limit: 128
+    t.string "securityid", limit: 9
+    t.decimal "number_of_shares", precision: 22, scale: 6
+    t.decimal "market_value", precision: 22, scale: 6
+    t.decimal "percent_tna", precision: 22, scale: 6
+    t.date "maturity_date"
+    t.decimal "coupon_rate", precision: 22, scale: 6
+    t.decimal "weight", precision: 18, scale: 10
+  end
+
+  create_table "agf_holdings_template", id: false, force: :cascade do |t|
+    t.text "fund_identifier"
+    t.text "fund_name"
+    t.text "portfolio_date"
+    t.text "portfolio_base_currency"
+    t.text "total_net_asset"
+    t.text "liquidity"
+    t.text "holding_name"
+    t.text "securityid"
+    t.text "number_of_shares"
+    t.text "market_value"
+    t.text "percent_tna"
+    t.text "maturity_date"
+    t.text "coupon_rate"
+  end
 
   create_table "agf_lookups", id: false, force: :cascade do |t|
     t.string "ticker", limit: 32, null: false
     t.string "holdings_name", limit: 128, null: false
     t.string "nav_name", limit: 128, null: false
+  end
+
+  create_table "agf_nav", id: false, force: :cascade do |t|
+    t.date "etfg_date"
+    t.string "fund_name", limit: 128
+    t.string "class", limit: 32
+    t.decimal "fund_number", precision: 22
+    t.string "security_code", limit: 64
+    t.decimal "nav", precision: 22, scale: 6
+    t.decimal "navpu", precision: 22, scale: 6
+    t.decimal "prev_navpu", precision: 22, scale: 6
+    t.string "change", limit: 22
+    t.decimal "shares_outstanding", precision: 22
+    t.decimal "num_classes", precision: 22
+    t.string "units_flag", limit: 1
+    t.decimal "navpu_full", precision: 22
+    t.decimal "units_os", precision: 22
+    t.decimal "sec_at_val", precision: 22, scale: 1
+    t.decimal "assets_at_cost", precision: 22, scale: 1
+    t.decimal "dist_income", precision: 22
+    t.decimal "income_dist_p_u", precision: 22
+    t.decimal "dist_cg", precision: 22
+    t.decimal "cg_dist_u", precision: 22
+    t.string "fund_class_key", limit: 64
+    t.decimal "prev_nav", precision: 22, scale: 6
+    t.date "as_of_date"
+    t.string "ticker", limit: 32
+  end
+
+  create_table "agf_nav_template", id: false, force: :cascade do |t|
+    t.text "fund_name"
+    t.text "class"
+    t.text "fund_number"
+    t.text "security_code"
+    t.text "nav"
+    t.text "navpu"
+    t.text "prev_navpu"
+    t.text "change"
+    t.text "shares_outstanding"
+    t.text "num_classes"
+    t.text "units_flag"
+    t.text "navpu_full"
+    t.text "units_os"
+    t.text "sec_at_val"
+    t.text "assets_at_cost"
+    t.text "dist_income"
+    t.text "income_dist_p_u"
+    t.text "dist_cg"
+    t.text "cg_dist_u"
+    t.text "fund_class_key"
+    t.text "prev_nav"
+    t.text "as_of_date"
   end
 
   create_table "alps_hold", force: :cascade do |t|
@@ -657,15 +743,90 @@ ActiveRecord::Schema.define(version: 2019_01_31_204704) do
 
   create_table "bmo_holdings", id: false, force: :cascade do |t|
     t.date "etfg_date", null: false
-    t.string "composite_ticker", limit: 32, null: false
-    t.string "constituent_ticker", limit: 64, null: false
-    t.string "constituent_name", limit: 128
-    t.string "constituent_country", limit: 64
-    t.string "instrument_type", limit: 128
-    t.string "security_id", limit: 64
-    t.decimal "total_shares_held", precision: 18, scale: 6
+    t.string "ticker", limit: 32, null: false
+    t.string "instrument_type", limit: 64, null: false
+    t.string "name", limit: 128
     t.string "sedol", limit: 7
     t.string "cusip", limit: 9
+    t.string "security_id", limit: 64
+    t.decimal "quantity_par_amount", precision: 22, scale: 6
+    t.date "as_of_date"
+  end
+
+  create_table "bmo_holdings_template", id: false, force: :cascade do |t|
+    t.text "ticker"
+    t.text "instrument_type"
+    t.text "name"
+    t.text "sedol"
+    t.text "cusip"
+    t.text "security_id"
+    t.text "quantity_par_amount"
+    t.text "as_of_date"
+  end
+
+  create_table "bmo_nav", id: false, force: :cascade do |t|
+    t.date "etfg_date"
+    t.string "basket_code", limit: 12
+    t.string "basket_name", limit: 128
+    t.string "cusip", limit: 9
+    t.string "ticker", limit: 12
+    t.decimal "nav_per_shr", precision: 22, scale: 6
+    t.decimal "nav_per_cu", precision: 22, scale: 6
+    t.decimal "income_per_shr", precision: 22, scale: 6
+    t.decimal "income_per_cu", precision: 22, scale: 6
+    t.decimal "balancing_cash", precision: 22, scale: 6
+    t.decimal "actual_total_cash", precision: 22, scale: 6
+    t.decimal "shares_outstanding", precision: 22, scale: 6
+    t.decimal "total_net_assets", precision: 22, scale: 6
+    t.decimal "income_dist", precision: 22, scale: 6
+    t.decimal "st_cap_dist", precision: 22, scale: 6
+    t.decimal "lt_cap_dist", precision: 22, scale: 6
+    t.decimal "est_total_cash", precision: 22, scale: 6
+    t.decimal "est_cil", precision: 22, scale: 6
+    t.decimal "est_interest", precision: 22, scale: 6
+    t.decimal "actual_cil", precision: 22, scale: 6
+    t.decimal "actual_interest", precision: 22, scale: 6
+    t.decimal "est_cash_div", precision: 22, scale: 6
+    t.decimal "est_expense", precision: 22, scale: 6
+    t.decimal "est_bkt_mkt", precision: 22, scale: 6
+    t.decimal "actual_bkt_mkt", precision: 22, scale: 6
+    t.decimal "actual_cash", precision: 22, scale: 6
+    t.decimal "est_cash", precision: 22, scale: 6
+    t.decimal "td_shares_outstanding", precision: 22, scale: 6
+    t.decimal "td_total_net_assets", precision: 22, scale: 6
+    t.date "as_of_date"
+  end
+
+  create_table "bmo_nav_template", id: false, force: :cascade do |t|
+    t.text "basket_code"
+    t.text "basket_name"
+    t.text "cusip"
+    t.text "ticker"
+    t.text "nav_per_shr"
+    t.text "nav_per_cu"
+    t.text "income_per_shr"
+    t.text "income_per_cu"
+    t.text "balancing_cash"
+    t.text "actual_total_cash"
+    t.text "shares_outstanding"
+    t.text "total_net_assets"
+    t.text "income_dist"
+    t.text "st_cap_dist"
+    t.text "lt_cap_dist"
+    t.text "est_total_cash"
+    t.text "est_cil"
+    t.text "est_interest"
+    t.text "actual_cil"
+    t.text "actual_interest"
+    t.text "est_cash_div"
+    t.text "est_expense"
+    t.text "est_bkt_mkt"
+    t.text "actual_bkt_mkt"
+    t.text "actual_cash"
+    t.text "est_cash"
+    t.text "td_shares_outstanding"
+    t.text "td_total_net_assets"
+    t.text "as_of_date"
   end
 
   create_table "bny_hold", id: false, force: :cascade do |t|
@@ -754,6 +915,175 @@ ActiveRecord::Schema.define(version: 2019_01_31_204704) do
     t.text "cash"
     t.text "fund_cusip"
     t.text "fund_ticker"
+  end
+
+  create_table "br_tday_holdings", id: false, force: :cascade do |t|
+    t.date "etfg_date"
+    t.string "fund_ticker", limit: 32
+    t.string "fund_isin", limit: 12
+    t.string "fund_cusip", limit: 9
+    t.string "fund_sedol", limit: 7
+    t.date "as_of_date"
+    t.string "fund_name", limit: 128
+    t.string "fund_domicile_code", limit: 12
+    t.string "holding_name", limit: 128
+    t.string "holding_ticker", limit: 32
+    t.string "holding_isin", limit: 12
+    t.string "holding_cusip", limit: 9
+    t.string "holding_sedol", limit: 7
+    t.string "currency_code", limit: 16
+    t.decimal "shares_held", precision: 22, scale: 6
+    t.decimal "market_price", precision: 22, scale: 6
+    t.decimal "market_value", precision: 22, scale: 6
+    t.decimal "holding_percent", precision: 22, scale: 6
+    t.string "sector", limit: 64
+    t.string "asset_class_code", limit: 12
+    t.string "asset_class_name", limit: 64
+    t.string "country_code", limit: 12
+    t.string "country_name", limit: 64
+    t.string "exchange_code", limit: 12
+    t.string "exchange_name", limit: 64
+    t.decimal "fx_rate", precision: 22, scale: 6
+    t.string "market_currency_code", limit: 12
+    t.decimal "coupon", precision: 22, scale: 6
+    t.date "maturity_date"
+    t.string "barcap_rating", limit: 12
+    t.string "citi_rating", limit: 12
+    t.string "moodys_rating", limit: 12
+    t.string "sp_rating", limit: 12
+    t.decimal "notional_value", precision: 22, scale: 6
+    t.decimal "duration", precision: 22, scale: 6
+    t.decimal "modified_duration", precision: 22, scale: 6
+    t.decimal "real_duration", precision: 22, scale: 6
+    t.decimal "real_yield_to_maturity", precision: 22, scale: 6
+    t.decimal "yield_to_maturity", precision: 22, scale: 6
+    t.decimal "yield_to_worst", precision: 22, scale: 6
+    t.decimal "local_market_value", precision: 22, scale: 6
+    t.decimal "local_market_price", precision: 22, scale: 6
+  end
+
+  create_table "br_tday_holdings_template", id: false, force: :cascade do |t|
+    t.text "fund_ticker"
+    t.text "fund_isin"
+    t.text "fund_cusip"
+    t.text "fund_sedol"
+    t.text "as_of_date"
+    t.text "fund_name"
+    t.text "fund_domicile_code"
+    t.text "holding_name"
+    t.text "holding_ticker"
+    t.text "holding_isin"
+    t.text "holding_cusip"
+    t.text "holding_sedol"
+    t.text "currency_code"
+    t.text "shares_held"
+    t.text "market_price"
+    t.text "market_value"
+    t.text "holding_percent"
+    t.text "sector"
+    t.text "asset_class_code"
+    t.text "asset_class_name"
+    t.text "country_code"
+    t.text "country_name"
+    t.text "exchange_code"
+    t.text "exchange_name"
+    t.text "fx_rate"
+    t.text "market_currency_code"
+    t.text "coupon"
+    t.text "maturity_date"
+    t.text "barcap_rating"
+    t.text "citi_rating"
+    t.text "moodys_rating"
+    t.text "sp_rating"
+    t.text "notional_value"
+    t.text "duration"
+    t.text "modified_duration"
+    t.text "real_duration"
+    t.text "real_yield_to_maturity"
+    t.text "yield_to_maturity"
+    t.text "yield_to_worst"
+    t.text "local_market_value"
+    t.text "local_market_price"
+  end
+
+  create_table "br_tday_nav", id: false, force: :cascade do |t|
+    t.date "etfg_date"
+    t.string "isin", limit: 12
+    t.string "cusip", limit: 9
+    t.string "primary_listing_sedol", limit: 7
+    t.string "primary_listing_ticker", limit: 32
+    t.string "fund_name", limit: 128
+    t.string "base_currency_fund", limit: 12
+    t.string "fund_domicile_code", limit: 12
+    t.date "as_of_date_fund"
+    t.string "currency_code_fund", limit: 12
+    t.decimal "total_net_assets_fund", precision: 22, scale: 6
+    t.date "as_of_date_share_class"
+    t.string "currency_code_share_class", limit: 12
+    t.decimal "total_net_assets_share_class", precision: 22, scale: 6
+    t.decimal "nav_share_class", precision: 22, scale: 6
+    t.decimal "shares_outstanding_share_class", precision: 22, scale: 6
+    t.decimal "yr_high_nav_share_class", precision: 22, scale: 6
+    t.date "yr_high_date_share_class"
+    t.decimal "yr_low_nav_share_class", precision: 22, scale: 6
+    t.date "yr_low_date_share_class"
+    t.decimal "creation_price_share_class", precision: 22, scale: 6
+    t.decimal "cancellation_price_share_class", precision: 22, scale: 6
+    t.decimal "primary_listing_price", precision: 22, scale: 6
+    t.decimal "premium_discount_pct", precision: 22, scale: 6
+    t.decimal "nav_share_class_amt_change", precision: 22, scale: 6
+    t.text "nav_share_class_pct_change"
+    t.decimal "primary_listing_mid_price", precision: 22, scale: 6
+  end
+
+  create_table "br_tday_nav_template", id: false, force: :cascade do |t|
+    t.text "isin"
+    t.text "cusip"
+    t.text "primary_listing_sedol"
+    t.text "primary_listing_ticker"
+    t.text "fund_name"
+    t.text "base_currency_fund"
+    t.text "fund_domicile_code"
+    t.text "as_of_date_fund"
+    t.text "currency_code_fund"
+    t.text "total_net_assets_fund"
+    t.text "as_of_date_share_class"
+    t.text "currency_code_share_class"
+    t.text "total_net_assets_share_class"
+    t.text "nav_share_class"
+    t.text "shares_outstanding_share_class"
+    t.text "yr_high_nav_share_class"
+    t.text "yr_high_date_share_class"
+    t.text "yr_low_nav_share_class"
+    t.text "yr_low_date_share_class"
+    t.text "creation_price_share_class"
+    t.text "cancellation_price_share_class"
+    t.text "primary_listing_price"
+    t.text "premium_discount_pct"
+    t.text "nav_share_class_amt_change"
+    t.text "nav_share_class_pct_change"
+    t.text "primary_listing_mid_price"
+  end
+
+  create_table "camint_nav", id: false, force: :cascade do |t|
+    t.date "etfg_date"
+    t.date "as_of_date"
+    t.string "symbol", limit: 32
+    t.decimal "etrs_outstanding", precision: 22, scale: 6
+    t.decimal "nav_usd", precision: 22, scale: 6
+    t.decimal "nav_cad", precision: 22, scale: 6
+    t.decimal "aum_cad", precision: 22, scale: 6
+    t.decimal "aum_usd", precision: 22, scale: 6
+  end
+
+  create_table "camint_nav_template", id: false, force: :cascade do |t|
+    t.text "as_of_date"
+    t.text "symbol"
+    t.text "etrs_outstanding"
+    t.text "nav_usd"
+    t.text "nav_cad"
+    t.text "aum_cad"
+    t.text "aum_usd"
   end
 
   create_table "citi_basket", id: false, force: :cascade do |t|
@@ -876,6 +1206,51 @@ ActiveRecord::Schema.define(version: 2019_01_31_204704) do
     t.text "money_market_flag"
   end
 
+  create_table "etfmg_hold_v2", id: false, force: :cascade do |t|
+    t.date "etfg_date"
+    t.date "position_date"
+    t.string "account_number", limit: 64
+    t.string "account_name", limit: 128
+    t.string "security_number", limit: 9
+    t.string "ticker_symbol", limit: 64
+    t.string "security_description", limit: 128
+    t.decimal "shares_par", precision: 22, scale: 6
+    t.decimal "local_price", precision: 22, scale: 6
+    t.decimal "market_value_base", precision: 22, scale: 6
+    t.decimal "pct_market_value", precision: 22, scale: 6
+    t.decimal "pct_net_assets", precision: 18, scale: 10
+    t.decimal "exchange_rate", precision: 22, scale: 6
+    t.decimal "multiplier", precision: 22, scale: 6
+    t.string "trading_currency", limit: 16
+    t.decimal "coupon_rate", precision: 22, scale: 6
+    t.date "maturity"
+    t.string "segment_classification", limit: 64
+    t.index ["etfg_date", "security_number"], name: "etfmg_hold_v2_on_date_id"
+    t.index ["etfg_date"], name: "etfmg_hold_v2_on_date"
+  end
+
+  create_table "etfmg_hold_v2_template", id: false, force: :cascade do |t|
+    t.text "position_date"
+    t.text "account_number"
+    t.text "account_name"
+    t.text "security_number"
+    t.text "ticker_symbol"
+    t.text "security_description"
+    t.text "shares_par"
+    t.text "local_price"
+    t.text "market_value_base"
+    t.text "pct_market_value"
+    t.text "pct_net_assets"
+    t.text "exchange_rate"
+    t.text "multiplier"
+    t.text "trading_currency"
+    t.text "coupon_rate"
+    t.text "maturity_date"
+    t.text "segment_classification"
+    t.text "extra_data_field1"
+    t.text "extra_data_field2"
+  end
+
   create_table "etfmg_nav", id: false, force: :cascade do |t|
     t.date "etfg_date"
     t.date "as_of_date"
@@ -886,6 +1261,41 @@ ActiveRecord::Schema.define(version: 2019_01_31_204704) do
     t.decimal "nav", precision: 22, scale: 6
     t.index ["etfg_date", "composite_ticker"], name: "etfmg_nav_date_ticker"
     t.index ["etfg_date"], name: "etfmg_nav_etfg_date"
+  end
+
+  create_table "etfmg_nav_v2", id: false, force: :cascade do |t|
+    t.date "etfg_date"
+    t.date "position_date"
+    t.string "account_number", limit: 64
+    t.string "account_trust", limit: 64
+    t.string "account_family", limit: 64
+    t.string "account_name", limit: 128
+    t.string "account_class", limit: 32
+    t.string "fiscal_year_end", limit: 16
+    t.string "account_cusip", limit: 9
+    t.string "account_ticker", limit: 32
+    t.decimal "nav", precision: 22, scale: 6
+    t.decimal "net_assets", precision: 22, scale: 6
+    t.decimal "outstanding_shares_par", precision: 22, scale: 6
+    t.date "account_inception_date"
+    t.index ["etfg_date"], name: "etfmg_nav_v2_date"
+  end
+
+  create_table "etfmg_nav_v2_template", id: false, force: :cascade do |t|
+    t.text "position_date"
+    t.text "account_number"
+    t.text "account_trust"
+    t.text "account_family"
+    t.text "account_name"
+    t.text "account_class"
+    t.text "fiscal_year_end"
+    t.text "account_cusip"
+    t.text "account_ticker"
+    t.text "nav"
+    t.text "net_assets"
+    t.text "outstanding_shares_par"
+    t.text "account_inception_date"
+    t.text "extra_null_field"
   end
 
   create_table "firsttrust_etn", id: false, force: :cascade do |t|
@@ -1085,6 +1495,37 @@ ActiveRecord::Schema.define(version: 2019_01_31_204704) do
     t.text "fund_currency"
   end
 
+  create_table "harvest_nav", id: false, force: :cascade do |t|
+    t.date "etfg_date"
+    t.string "ticker", limit: 32
+    t.string "fund_name", limit: 128
+    t.string "fund_class", limit: 32
+    t.date "nav_date"
+    t.decimal "nav", precision: 22, scale: 6
+    t.string "nav_currency", limit: 3
+    t.decimal "shares_outstanding", precision: 22, scale: 6
+    t.decimal "per_share_distribution", precision: 22, scale: 6
+    t.string "distribution_currency", limit: 3
+    t.string "distribution_frequency", limit: 32
+    t.decimal "class_net_assets", precision: 22, scale: 6
+    t.decimal "total_net_assets", precision: 22, scale: 6
+  end
+
+  create_table "harvest_nav_template", id: false, force: :cascade do |t|
+    t.text "ticker"
+    t.text "fund_name"
+    t.text "fund_class"
+    t.text "nav_date"
+    t.text "nav"
+    t.text "nav_currency"
+    t.text "shares_outstanding"
+    t.text "per_share_distribution"
+    t.text "distribution_currency"
+    t.text "distribution_frequency"
+    t.text "class_net_assets"
+    t.text "total_net_assets"
+  end
+
   create_table "hod_nav", force: :cascade do |t|
     t.date "etfg_date", null: false
     t.date "hod_date", null: false
@@ -1108,6 +1549,182 @@ ActiveRecord::Schema.define(version: 2019_01_31_204704) do
     t.text "put_vol"
     t.text "call_oi"
     t.text "put_oi"
+  end
+
+  create_table "horizon_lookups", id: false, force: :cascade do |t|
+    t.string "account", limit: 32, null: false
+    t.string "fund_ticker", limit: 32, null: false
+    t.string "fund_name", limit: 128, null: false
+    t.index ["account"], name: "index_horizon_lookups_on_account", unique: true
+  end
+
+  create_table "horizon_nav", id: false, force: :cascade do |t|
+    t.date "etfg_date"
+    t.date "beginning_date"
+    t.date "end_date"
+    t.date "date_1"
+    t.string "acct_description", limit: 128
+    t.decimal "account", precision: 22, scale: 6
+    t.decimal "class", precision: 22, scale: 6
+    t.string "class_description", limit: 128
+    t.decimal "shares_outstanding", precision: 22, scale: 6
+    t.decimal "aum", precision: 22, scale: 6
+    t.decimal "prev_nav", precision: 22, scale: 6
+    t.decimal "nav_per_shr", precision: 22, scale: 6
+    t.decimal "chng_nav_per_shr", precision: 22, scale: 6
+    t.decimal "pct_chng_nav_shr", precision: 22, scale: 6
+    t.decimal "income_dist_usd", precision: 22, scale: 6
+    t.decimal "cap_gain_dist_usd", precision: 22, scale: 6
+    t.decimal "income_dist_per_shr", precision: 22, scale: 6
+    t.decimal "cap_gain_dist_per_shr", precision: 22, scale: 6
+    t.string "fund_ticker", limit: 32
+  end
+
+  create_table "horizon_nav_template", id: false, force: :cascade do |t|
+    t.text "beginning_date"
+    t.text "end_date"
+    t.text "date_1"
+    t.text "acct_description"
+    t.text "account"
+    t.text "class"
+    t.text "class_description"
+    t.text "shares_outstanding"
+    t.text "aum"
+    t.text "prev_nav"
+    t.text "nav_per_shr"
+    t.text "chng_nav_per_shr"
+    t.text "pct_chng_nav_shr"
+    t.text "income_dist_usd"
+    t.text "cap_gain_dist_usd"
+    t.text "income_dist_per_share"
+    t.text "cap_gain_dist_per_share"
+  end
+
+  create_table "invesco_cad_holdings", id: false, force: :cascade do |t|
+    t.date "etfg_date"
+    t.decimal "basket_shares", precision: 22, scale: 6
+    t.string "cusip_sedol", limit: 12
+    t.decimal "dirty_price", precision: 22, scale: 6
+    t.decimal "fx_rate", precision: 22, scale: 6
+    t.decimal "fund_shares", precision: 22, scale: 6
+    t.string "composite_ticker", limit: 32
+    t.string "isin", limit: 32
+    t.string "fund_name", limit: 128
+    t.decimal "price", precision: 22, scale: 6
+    t.decimal "t2_accrual", precision: 22, scale: 6
+    t.string "constituent_ticker", limit: 32
+    t.decimal "weight", precision: 18, scale: 10
+    t.date "as_of_date"
+  end
+
+  create_table "invesco_cad_holdings_template", id: false, force: :cascade do |t|
+    t.text "basket_shares"
+    t.text "cusip_sedol"
+    t.text "dirty_price"
+    t.text "fx_rate"
+    t.text "fund_shares"
+    t.text "composite_ticker"
+    t.text "isin"
+    t.text "fund_name"
+    t.text "price"
+    t.text "t2_accrual"
+    t.text "constituent_ticker"
+    t.text "weight"
+    t.text "as_of_date"
+  end
+
+  create_table "invesco_cad_nav", id: false, force: :cascade do |t|
+    t.date "etfg_date"
+    t.string "ticker", limit: 9
+    t.string "name", limit: 128
+    t.date "as_of_date"
+    t.string "cusip", limit: 9
+    t.decimal "est_cash", precision: 22, scale: 6
+    t.decimal "est_cash_per_ind", precision: 22, scale: 6
+    t.decimal "trade_date_cash", precision: 22, scale: 6
+    t.decimal "nav", precision: 22, scale: 6
+    t.decimal "nav_per_pnu", precision: 22, scale: 6
+    t.decimal "pnu", precision: 22, scale: 6
+    t.decimal "shares_outstanding", precision: 22, scale: 6
+    t.decimal "basket_shares", precision: 22, scale: 6
+    t.string "fund_type", limit: 128
+    t.decimal "subscription_fee", precision: 22, scale: 6
+    t.decimal "subscription_fee_bps", precision: 22, scale: 6
+    t.decimal "redemption_fee", precision: 22, scale: 6
+    t.decimal "redemption_fee_bps", precision: 22, scale: 6
+    t.string "inkind_cutoff", limit: 64
+    t.string "cash_cutoff", limit: 64
+    t.decimal "hedge_mark_to_market", precision: 22, scale: 6
+  end
+
+  create_table "invesco_cad_nav_template", id: false, force: :cascade do |t|
+    t.text "ticker"
+    t.text "name"
+    t.text "as_of_date"
+    t.text "cusip"
+    t.text "est_cash"
+    t.text "est_cash_per_ind"
+    t.text "trade_date_cash"
+    t.text "nav"
+    t.text "nav_per_pnu"
+    t.text "pnu"
+    t.text "shares_outstanding"
+    t.text "basket_shares"
+    t.text "fund_type"
+    t.text "subscription_fee"
+    t.text "subscription_fee_bps"
+    t.text "redemption_fee"
+    t.text "redemption_fee_bps"
+    t.text "inkind_cutoff"
+    t.text "cash_cutoff"
+    t.text "hedge_mark_to_market"
+  end
+
+  create_table "invesco_nav", id: false, force: :cascade do |t|
+    t.date "etfg_date"
+    t.string "cusip", limit: 9
+    t.string "ticker", limit: 64
+    t.string "name", limit: 128
+    t.date "as_of_date"
+    t.decimal "nav_usd", precision: 22, scale: 6
+    t.decimal "interest", precision: 22, scale: 6
+    t.decimal "foreign_na", precision: 22, scale: 6
+    t.decimal "total_usd_na", precision: 22, scale: 6
+    t.decimal "shares_outstanding", precision: 22, scale: 6
+    t.decimal "nav_pu", precision: 22, scale: 6
+    t.decimal "cash_pu", precision: 22, scale: 6
+    t.decimal "currency_per_basket", precision: 22, scale: 6
+    t.decimal "currency_per_shr", precision: 22, scale: 6
+    t.decimal "cur_interest_per_shr", precision: 22, scale: 6
+    t.decimal "fx_rate_four_london", precision: 22, scale: 6
+    t.decimal "interest_rate", precision: 22, scale: 6
+    t.decimal "daily_rate_minus_expense_ratio", precision: 22, scale: 6
+    t.decimal "income_dist", precision: 22, scale: 6
+    t.decimal "short_trm_cap_gain", precision: 22, scale: 6
+    t.decimal "long_trm_cap_gain", precision: 22, scale: 6
+  end
+
+  create_table "invesco_nav_template", id: false, force: :cascade do |t|
+    t.text "cusip"
+    t.text "ticker"
+    t.text "name"
+    t.text "as_of_date"
+    t.text "nav_usd"
+    t.text "interest"
+    t.text "foreign_na"
+    t.text "total_usd_na"
+    t.text "shares_outstanding"
+    t.text "nav_pu"
+    t.text "cash_pu"
+    t.text "currency_per_basket"
+    t.text "currency_per_shr"
+    t.text "cur_interest_per_shr"
+    t.text "fx_rate_four_london"
+    t.text "interest_rate"
+    t.text "daily_rate_minus_expense_ratio"
+    t.text "income_dist"
+    t.text "short_trm_cap_gain"
+    t.text "long_trm_cap_gain"
   end
 
   create_table "jpm_flex_nav", id: false, force: :cascade do |t|
@@ -1415,6 +2032,106 @@ ActiveRecord::Schema.define(version: 2019_01_31_204704) do
     t.text "shares"
   end
 
+  create_table "rbc_holdings", id: false, force: :cascade do |t|
+    t.date "etfg_date"
+    t.text "fund_code"
+    t.string "security_type", limit: 32
+    t.string "security_id", limit: 12
+    t.string "formal_name", limit: 128
+    t.string "alt_name", limit: 128
+    t.string "tax_country", limit: 5
+    t.string "security_subtype", limit: 32
+    t.string "class_sec_type", limit: 32
+    t.decimal "shares", precision: 22, scale: 6
+    t.decimal "cost", precision: 22, scale: 6
+    t.decimal "market_value", precision: 22, scale: 6
+    t.string "issuer", limit: 64
+    t.decimal "price", precision: 22, scale: 6
+    t.string "cusip", limit: 9
+    t.string "security_id1", limit: 12
+    t.string "sedol", limit: 7
+    t.decimal "interest_rate", precision: 22, scale: 6
+    t.string "security_currency", limit: 5
+    t.decimal "market_value1", precision: 22, scale: 6
+    t.text "maturity"
+    t.decimal "native_cost", precision: 22, scale: 6
+    t.date "date1"
+    t.decimal "weight", precision: 18, scale: 10
+  end
+
+  create_table "rbc_holdings_template", id: false, force: :cascade do |t|
+    t.text "fund_code"
+    t.text "security_type"
+    t.text "security_id"
+    t.text "formal_name"
+    t.text "alt_name"
+    t.text "tax_country"
+    t.text "security_subtype"
+    t.text "class_sec_type"
+    t.text "shares"
+    t.text "cost"
+    t.text "market_value"
+    t.text "issuer"
+    t.text "price"
+    t.text "cusip"
+    t.text "security_id1"
+    t.text "sedol"
+    t.text "interest_rate"
+    t.text "security_currency"
+    t.text "market_value1"
+    t.text "maturity"
+    t.text "native_cost"
+    t.text "date1"
+    t.text "weight"
+  end
+
+  create_table "rbc_nav", id: false, force: :cascade do |t|
+    t.date "etfg_date"
+    t.string "fund_code", limit: 6
+    t.string "fund_name", limit: 32
+    t.decimal "current_price", precision: 22, scale: 6
+    t.decimal "current_assets", precision: 22, scale: 6
+    t.decimal "price_change", precision: 22, scale: 6
+    t.decimal "prev_price", precision: 22, scale: 6
+    t.decimal "prev_assets", precision: 22, scale: 6
+    t.decimal "asset_change", precision: 22, scale: 6
+    t.string "fund_currency", limit: 4
+    t.decimal "current_outstanding_shares", precision: 22, scale: 6
+    t.decimal "prev_outstanding_shares", precision: 22, scale: 6
+    t.date "run_date"
+    t.decimal "capital_distribution_rate", precision: 22, scale: 6
+    t.decimal "income_distribution_rate", precision: 22, scale: 6
+    t.decimal "total_distribution_rate", precision: 22, scale: 6
+    t.date "current_day"
+    t.date "prev_date"
+    t.decimal "daily_yield", precision: 22, scale: 6
+    t.decimal "seven_day_yield", precision: 22, scale: 6
+    t.date "as_of_date"
+  end
+
+  create_table "rbc_nav_template", id: false, force: :cascade do |t|
+    t.text "fund_code"
+    t.text "fund_name"
+    t.text "current_price"
+    t.text "current_assets"
+    t.text "price_change"
+    t.text "prev_price"
+    t.text "prev_assets"
+    t.text "asset_change"
+    t.text "fund_currency"
+    t.text "current_outstanding_shares"
+    t.text "prev_outstanding_shares"
+    t.text "run_date"
+    t.text "capital_distribution_rate"
+    t.text "income_distribution_rate"
+    t.text "total_distribution_rate"
+    t.text "current_day"
+    t.text "prev_date"
+    t.text "daily_yield"
+    t.text "seven_day_yield"
+    t.text "as_of_date"
+  end
+
   create_table "sei_blackbar", id: false, force: :cascade do |t|
     t.date "etfg_date"
     t.text "parent_id"
@@ -1580,6 +2297,360 @@ ActiveRecord::Schema.define(version: 2019_01_31_204704) do
     t.decimal "days_to_cover", precision: 22, scale: 6
     t.decimal "short_pct_of_float", precision: 22, scale: 6
     t.decimal "short_prior_mo", precision: 22, scale: 6
+  end
+
+  create_table "ssc_ca_lookups", id: false, force: :cascade do |t|
+    t.string "code", limit: 32, null: false
+    t.string "ticker", limit: 32, null: false
+    t.string "fund_name", limit: 128, null: false
+    t.index ["code"], name: "index_ssc_ca_lookups_on_code", unique: true
+  end
+
+  create_table "ssc_cad_nav", id: false, force: :cascade do |t|
+    t.date "etfg_date"
+    t.string "fund_type", limit: 4
+    t.string "fund_id", limit: 4
+    t.string "fund_name", limit: 128
+    t.string "base_currency", limit: 3
+    t.string "basis_ind", limit: 1
+    t.date "nav_date"
+    t.decimal "nav", precision: 22, scale: 6
+    t.decimal "nav_change", precision: 22, scale: 6
+    t.decimal "offer_price", precision: 22, scale: 6
+    t.decimal "offer_price_change", precision: 22, scale: 6
+    t.decimal "net_assets", precision: 22, scale: 6
+    t.decimal "market_value", precision: 22, scale: 6
+    t.decimal "app_dep", precision: 22, scale: 6
+    t.decimal "income_distribution", precision: 22, scale: 6
+    t.decimal "div_shares", precision: 22, scale: 6
+    t.decimal "daily_div_rate", precision: 22, scale: 6
+    t.decimal "div_rate_change", precision: 22, scale: 6
+    t.decimal "net_shares_outstanding", precision: 22, scale: 6
+    t.decimal "seven_day_yield", precision: 22, scale: 6
+    t.decimal "seven_day_eff_yield", precision: 22, scale: 6
+    t.decimal "avg_days_mat", precision: 22, scale: 6
+    t.decimal "total_assets", precision: 22, scale: 6
+    t.string "composite_fund_number", limit: 32
+    t.string "cls_class_code", limit: 32
+    t.string "cls_class_name", limit: 128
+    t.string "ticker", limit: 32
+  end
+
+  create_table "ssc_cad_nav_template", id: false, force: :cascade do |t|
+    t.text "fund_type"
+    t.text "fund_id"
+    t.text "fund_name"
+    t.text "base_currency"
+    t.text "basis_ind"
+    t.text "nav_date"
+    t.text "nav"
+    t.text "nav_change"
+    t.text "offer_price"
+    t.text "offer_price_change"
+    t.text "net_assets"
+    t.text "market_value"
+    t.text "app_dep"
+    t.text "income_distribution"
+    t.text "div_shares"
+    t.text "daily_div_rate"
+    t.text "div_rate_change"
+    t.text "net_shares_outstanding"
+    t.text "seven_day_yield"
+    t.text "seven_day_eff_yield"
+    t.text "avg_days_mat"
+    t.text "total_assets"
+    t.text "composite_fund_number"
+    t.text "cls_class_code"
+    t.text "cls_class_name"
+  end
+
+  create_table "ssc_cad_pos", id: false, force: :cascade do |t|
+    t.date "etfg_date"
+    t.string "fund_type", limit: 16
+    t.string "fund_id", limit: 16
+    t.string "base_country", limit: 3
+    t.string "base_currency", limit: 3
+    t.date "calendar_date"
+    t.string "asset_id", limit: 64
+    t.string "alt_asset_id_type1", limit: 3
+    t.string "alt_asset_id1", limit: 16
+    t.string "alt_asset_id_type2", limit: 3
+    t.string "alt_asset_id2", limit: 16
+    t.string "dtc_cusip", limit: 9
+    t.string "ticker", limit: 64
+    t.string "issue_long_name", limit: 128
+    t.string "invest_ind", limit: 32
+    t.string "asset_group", limit: 32
+    t.string "position_type", limit: 32
+    t.string "investment_type", limit: 32
+    t.string "state_code", limit: 32
+    t.string "incorporated_country", limit: 2
+    t.string "issued_country", limit: 2
+    t.string "trade_country", limit: 2
+    t.string "nratax_country", limit: 2
+    t.date "issue_date"
+    t.date "maturity_date"
+    t.decimal "days_to_maturity", precision: 22, scale: 6
+    t.decimal "original_coupon_rate", precision: 22, scale: 6
+    t.decimal "pos_int_rate", precision: 22, scale: 6
+    t.date "var_rate_change_date"
+    t.string "var_rate_frequency", limit: 16
+    t.string "moody_rating", limit: 32
+    t.string "snp_rating", limit: 32
+    t.string "major_industry", limit: 64
+    t.string "minor_industry", limit: 64
+    t.string "pool_type", limit: 32
+    t.string "lot_account_num", limit: 32
+    t.string "repo_num", limit: 32
+    t.decimal "total_lots", precision: 22, scale: 6
+    t.date "trade_date"
+    t.date "settlement_date"
+    t.string "issue_class", limit: 64
+    t.string "report_class", limit: 64
+    t.string "call_put_ind", limit: 1
+    t.decimal "orig_strike_price", precision: 22, scale: 6
+    t.decimal "curr_strike_price", precision: 22, scale: 6
+    t.decimal "share_par_qty", precision: 22, scale: 6
+    t.decimal "contracts_qty", precision: 22, scale: 6
+    t.decimal "org_face_pos_qty", precision: 22, scale: 6
+    t.decimal "untcst_btl", precision: 22, scale: 6
+    t.decimal "untcst_ltl", precision: 22, scale: 6
+    t.decimal "cstorg_btl", precision: 22, scale: 6
+    t.decimal "cstorg_ltl", precision: 22, scale: 6
+    t.decimal "cst_btl", precision: 22, scale: 6
+    t.decimal "cst_ltl", precision: 22, scale: 6
+    t.decimal "amtzd_btl", precision: 22, scale: 6
+    t.decimal "amtzd_ltl", precision: 22, scale: 6
+    t.decimal "accrued_btl", precision: 22, scale: 6
+    t.decimal "accrued_ltl", precision: 22, scale: 6
+    t.decimal "market_value_btl", precision: 22, scale: 6
+    t.decimal "market_value_ltl", precision: 22, scale: 6
+    t.decimal "unrealized_gnls_btl", precision: 22, scale: 6
+    t.decimal "unrealized_gnls_ltl", precision: 22, scale: 6
+    t.decimal "market_price_bam", precision: 22, scale: 6
+    t.decimal "market_price_lam", precision: 22, scale: 6
+    t.decimal "market_price_eam", precision: 22, scale: 6
+    t.decimal "current_xchart", precision: 22, scale: 6
+    t.string "current_exch_rate_src", limit: 32
+    t.string "fas_price_src", limit: 32
+    t.string "market_price_currency", limit: 3
+    t.string "market_price_eur", limit: 3
+    t.string "market_value_code", limit: 32
+    t.decimal "day_61_price", precision: 22, scale: 6
+    t.decimal "day_61_day", precision: 22, scale: 6
+    t.decimal "day_61_yield", precision: 22, scale: 6
+    t.string "filler", limit: 128
+    t.string "brkr_fins", limit: 32
+    t.string "sw_closing_fx", limit: 32
+    t.string "ssb_trade_id", limit: 32
+    t.string "incm_currency", limit: 3
+    t.string "fvm_code", limit: 32
+    t.decimal "weight", precision: 18, scale: 10
+    t.string "composite_ticker", limit: 32
+  end
+
+  create_table "ssc_cad_pos_template", id: false, force: :cascade do |t|
+    t.text "fund_type"
+    t.text "fund_id"
+    t.text "base_country"
+    t.text "base_currency"
+    t.text "calendar_date"
+    t.text "asset_id"
+    t.text "alt_asset_id_type1"
+    t.text "alt_asset_id1"
+    t.text "alt_asset_id_type2"
+    t.text "alt_asset_id2"
+    t.text "dtc_cusip"
+    t.text "ticker"
+    t.text "issue_long_name"
+    t.text "invest_ind"
+    t.text "asset_group"
+    t.text "position_type"
+    t.text "investment_type"
+    t.text "state_code"
+    t.text "incorporated_country"
+    t.text "issued_country"
+    t.text "trade_country"
+    t.text "nratax_country"
+    t.text "issue_date"
+    t.text "maturity_date"
+    t.text "days_to_maturity"
+    t.text "original_coupon_rate"
+    t.text "pos_int_rate"
+    t.text "var_rate_change_date"
+    t.text "var_rate_frequency"
+    t.text "moody_rating"
+    t.text "snp_rating"
+    t.text "major_industry"
+    t.text "minor_industry"
+    t.text "pool_type"
+    t.text "lot_account_num"
+    t.text "repo_num"
+    t.text "total_lots"
+    t.text "trade_date"
+    t.text "settlement_date"
+    t.text "issue_class"
+    t.text "report_class"
+    t.text "call_put_ind"
+    t.text "orig_strike_price"
+    t.text "curr_strike_price"
+    t.text "share_par_qty"
+    t.text "contracts_qty"
+    t.text "org_face_pos_qty"
+    t.text "untcst_btl"
+    t.text "untcst_ltl"
+    t.text "cstorg_btl"
+    t.text "cstorg_ltl"
+    t.text "cst_btl"
+    t.text "cst_ltl"
+    t.text "amtzd_btl"
+    t.text "amtzd_ltl"
+    t.text "accrued_btl"
+    t.text "accrued_ltl"
+    t.text "market_value_btl"
+    t.text "market_value_ltl"
+    t.text "unrealized_gnls_btl"
+    t.text "unrealized_gnls_ltl"
+    t.text "market_price_bam"
+    t.text "market_price_lam"
+    t.text "market_price_eam"
+    t.text "current_xchart"
+    t.text "current_exch_rate_src"
+    t.text "fas_price_src"
+    t.text "market_price_currency"
+    t.text "market_price_eur"
+    t.text "market_value_code"
+    t.text "day_61_price"
+    t.text "day_61_day"
+    t.text "day_61_yield"
+    t.text "filler"
+    t.text "brkr_fins"
+    t.text "sw_closing_fx"
+    t.text "ssb_trade_id"
+    t.text "incm_currency"
+    t.text "fvm_code"
+  end
+
+  create_table "ssc_ire_lookups", id: false, force: :cascade do |t|
+    t.string "code", limit: 32, null: false
+    t.string "ticker", limit: 32, null: false
+    t.string "fund_name", limit: 128, null: false
+    t.index ["code"], name: "index_ssc_ire_lookups_on_code", unique: true
+  end
+
+  create_table "ssc_ire_nav", id: false, force: :cascade do |t|
+    t.date "etfg_date"
+    t.string "fund_type", limit: 4
+    t.string "fund_id", limit: 4
+    t.string "fund_name", limit: 128
+    t.string "base_currency", limit: 3
+    t.string "basis_ind", limit: 1
+    t.date "nav_date"
+    t.decimal "nav", precision: 22, scale: 6
+    t.decimal "nav_change", precision: 22, scale: 6
+    t.decimal "offer_price", precision: 22, scale: 6
+    t.decimal "offer_price_change", precision: 22, scale: 6
+    t.decimal "net_assets", precision: 22, scale: 6
+    t.decimal "market_value", precision: 22, scale: 6
+    t.decimal "app_dep", precision: 22, scale: 6
+    t.decimal "income_distribution", precision: 22, scale: 6
+    t.decimal "div_shares", precision: 22, scale: 6
+    t.decimal "daily_div_rate", precision: 22, scale: 6
+    t.decimal "div_rate_change", precision: 22, scale: 6
+    t.decimal "net_shares_outstanding", precision: 22, scale: 6
+    t.decimal "seven_day_yield", precision: 22, scale: 6
+    t.decimal "seven_day_eff_yield", precision: 22, scale: 6
+    t.decimal "avg_days_mat", precision: 22, scale: 6
+    t.decimal "total_assets", precision: 22, scale: 6
+    t.string "composite_fund_number", limit: 32
+    t.string "cls_class_code", limit: 32
+    t.string "cls_class_name", limit: 128
+    t.string "ticker", limit: 32
+  end
+
+  create_table "ssc_ire_pos", id: false, force: :cascade do |t|
+    t.date "etfg_date"
+    t.string "fund_type", limit: 16
+    t.string "fund_id", limit: 16
+    t.string "base_country", limit: 3
+    t.string "base_currency", limit: 3
+    t.date "calendar_date"
+    t.string "asset_id", limit: 64
+    t.string "alt_asset_id_type1", limit: 3
+    t.string "alt_asset_id1", limit: 16
+    t.string "alt_asset_id_type2", limit: 3
+    t.string "alt_asset_id2", limit: 16
+    t.string "dtc_cusip", limit: 9
+    t.string "ticker", limit: 64
+    t.string "issue_long_name", limit: 128
+    t.string "invest_ind", limit: 32
+    t.string "asset_group", limit: 32
+    t.string "position_type", limit: 32
+    t.string "investment_type", limit: 32
+    t.string "state_code", limit: 32
+    t.string "incorporated_country", limit: 2
+    t.string "issued_country", limit: 2
+    t.string "trade_country", limit: 2
+    t.string "nratax_country", limit: 2
+    t.date "issue_date"
+    t.date "maturity_date"
+    t.decimal "days_to_maturity", precision: 22, scale: 6
+    t.decimal "original_coupon_rate", precision: 22, scale: 6
+    t.decimal "pos_int_rate", precision: 22, scale: 6
+    t.date "var_rate_change_date"
+    t.string "var_rate_frequency", limit: 16
+    t.string "moody_rating", limit: 32
+    t.string "snp_rating", limit: 32
+    t.string "major_industry", limit: 64
+    t.string "minor_industry", limit: 64
+    t.string "pool_type", limit: 32
+    t.string "lot_account_num", limit: 32
+    t.string "repo_num", limit: 32
+    t.decimal "total_lots", precision: 22, scale: 6
+    t.date "trade_date"
+    t.date "settlement_date"
+    t.string "issue_class", limit: 64
+    t.string "report_class", limit: 64
+    t.string "call_put_ind", limit: 1
+    t.decimal "orig_strike_price", precision: 22, scale: 6
+    t.decimal "curr_strike_price", precision: 22, scale: 6
+    t.decimal "share_par_qty", precision: 22, scale: 6
+    t.decimal "contracts_qty", precision: 22, scale: 6
+    t.decimal "org_face_pos_qty", precision: 22, scale: 6
+    t.decimal "untcst_btl", precision: 22, scale: 6
+    t.decimal "untcst_ltl", precision: 22, scale: 6
+    t.decimal "cstorg_btl", precision: 22, scale: 6
+    t.decimal "cstorg_ltl", precision: 22, scale: 6
+    t.decimal "cst_btl", precision: 22, scale: 6
+    t.decimal "cst_ltl", precision: 22, scale: 6
+    t.decimal "amtzd_btl", precision: 22, scale: 6
+    t.decimal "amtzd_ltl", precision: 22, scale: 6
+    t.decimal "accrued_btl", precision: 22, scale: 6
+    t.decimal "accrued_ltl", precision: 22, scale: 6
+    t.decimal "market_value_btl", precision: 22, scale: 6
+    t.decimal "market_value_ltl", precision: 22, scale: 6
+    t.decimal "unrealized_gnls_btl", precision: 22, scale: 6
+    t.decimal "unrealized_gnls_ltl", precision: 22, scale: 6
+    t.decimal "market_price_bam", precision: 22, scale: 6
+    t.decimal "market_price_lam", precision: 22, scale: 6
+    t.decimal "market_price_eam", precision: 22, scale: 6
+    t.decimal "current_xchart", precision: 22, scale: 6
+    t.string "current_exch_rate_src", limit: 32
+    t.string "fas_price_src", limit: 32
+    t.string "market_price_currency", limit: 3
+    t.string "market_price_eur", limit: 3
+    t.string "market_value_code", limit: 32
+    t.decimal "day_61_price", precision: 22, scale: 6
+    t.decimal "day_61_day", precision: 22, scale: 6
+    t.decimal "day_61_yield", precision: 22, scale: 6
+    t.string "filler", limit: 128
+    t.string "brkr_fins", limit: 32
+    t.string "sw_closing_fx", limit: 32
+    t.string "ssb_trade_id", limit: 32
+    t.string "incm_currency", limit: 3
+    t.string "fvm_code", limit: 32
+    t.decimal "weight", precision: 18, scale: 10
+    t.string "composite_ticker", limit: 32
   end
 
   create_table "ssc_lookups", force: :cascade do |t|
@@ -2179,370 +3250,3 @@ ActiveRecord::Schema.define(version: 2019_01_31_204704) do
     t.index ["pooled_instrument_id"], name: "index_staging_industries_on_pooled_instrument_id"
   end
 
-  create_table "staging_instrument_exceptions", force: :cascade do |t|
-    t.integer "datasource_id", limit: 2, null: false
-    t.bigint "instrument_id", null: false
-    t.string "name_in_datasource", limit: 128, null: false
-    t.date "etfg_date", null: false
-    t.string "figi", limit: 12
-    t.string "sedol", limit: 7
-    t.string "isin", limit: 12
-    t.string "cusip", limit: 9
-    t.string "composite_ticker", limit: 32
-    t.bigint "pooled_instrument_id"
-    t.text "trace"
-    t.index ["datasource_id"], name: "index_staging_instrument_exceptions_on_datasource_id"
-    t.index ["etfg_date"], name: "index_staging_instrument_exceptions_on_etfg_date"
-    t.index ["instrument_id"], name: "index_staging_instrument_exceptions_on_instrument_id"
-  end
-
-  create_table "ubs_etracs", id: false, force: :cascade do |t|
-    t.date "etfg_date"
-    t.string "product_name", limit: 128
-    t.string "exchange_trading_symbol", limit: 32
-    t.string "intraday_indicative_value_symbol_index", limit: 32
-    t.decimal "intraday_indicative_value", precision: 22, scale: 6
-    t.string "shares_outstanding_symbol_index", limit: 32
-    t.decimal "shares_outstanding", precision: 22, scale: 6
-    t.decimal "market_value", precision: 22, scale: 6
-    t.string "source_field", limit: 32
-    t.date "as_of_date"
-  end
-
-  create_table "ubs_nav_template", id: false, force: :cascade do |t|
-    t.text "product_name"
-    t.text "exchange_trading_symbol"
-    t.text "intraday_indicative_value_symbol_index"
-    t.text "intraday_indicative_value"
-    t.text "shares_outstanding_symbol_index"
-    t.text "shares_outstanding"
-    t.text "market_value"
-    t.text "source_field"
-    t.text "as_of_date"
-  end
-
-  create_table "usbank_nav", id: false, force: :cascade do |t|
-    t.date "etfg_date"
-    t.text "fund_name"
-    t.text "fund_ticker"
-    t.text "cusip"
-    t.decimal "shares_outstanding", precision: 18, scale: 6
-    t.decimal "nav", precision: 18, scale: 6
-    t.decimal "nav_change_dollars", precision: 18, scale: 6
-    t.decimal "nav_change_percentage", precision: 18, scale: 6
-    t.decimal "market_price", precision: 18, scale: 6
-    t.decimal "market_price_change_dollars", precision: 18, scale: 6
-    t.decimal "market_price_change_percentage", precision: 18, scale: 6
-    t.decimal "premium_discount", precision: 18, scale: 6
-    t.date "rate_date"
-  end
-
-  create_table "usbank_nav_template", id: false, force: :cascade do |t|
-    t.text "fund_name"
-    t.text "fund_ticker"
-    t.text "cusip"
-    t.text "shares_outstanding"
-    t.text "nav"
-    t.text "nav_change_dollars"
-    t.text "nav_change_percentage"
-    t.text "market_price"
-    t.text "market_price_change_dollars"
-    t.text "market_price_change_percentage"
-    t.text "premium_discount"
-    t.text "rate_date"
-  end
-
-  create_table "usbank_pcf", id: false, force: :cascade do |t|
-    t.date "etfg_date"
-    t.text "fundticker"
-    t.text "entityname"
-    t.text "familyname"
-    t.text "effectivedate"
-    t.text "securityticker"
-    t.text "securityid"
-    t.text "securityalias"
-    t.text "securityname"
-    t.decimal "weight", precision: 22, scale: 6
-    t.decimal "basketmarketvalue", precision: 22, scale: 6
-    t.decimal "price", precision: 22, scale: 6
-    t.decimal "shares", precision: 22, scale: 6
-    t.decimal "securitymarketvalue", precision: 22, scale: 6
-    t.text "corporateactionapplied"
-    t.text "cilflag"
-    t.text "basketid"
-    t.decimal "nav", precision: 22, scale: 6
-    t.decimal "estimatedcash", precision: 22, scale: 6
-    t.decimal "actualcashamount", precision: 22, scale: 6
-    t.decimal "sharesoutstanding", precision: 22, scale: 6
-    t.decimal "currentxrate", precision: 22, scale: 6
-  end
-
-  create_table "usbank_pcf_template", id: false, force: :cascade do |t|
-    t.text "fundticker"
-    t.text "entityname"
-    t.text "familyname"
-    t.text "effectivedate"
-    t.text "securityticker"
-    t.text "securityid"
-    t.text "securityalias"
-    t.text "securityname"
-    t.text "weight"
-    t.text "basketmarketvalue"
-    t.text "price"
-    t.text "shares"
-    t.text "securitymarketvalue"
-    t.text "corporateactionapplied"
-    t.text "cilflag"
-    t.text "basketid"
-    t.text "nav"
-    t.text "estimatedcash"
-    t.text "actualcashamount"
-    t.text "sharesoutstanding"
-    t.text "currentxrate"
-  end
-
-  create_table "usbank_total", force: :cascade do |t|
-    t.date "etfg_date"
-    t.date "as_of_date"
-    t.text "fund_id"
-    t.text "fund_name"
-    t.text "fund_ticker"
-    t.text "sub_account"
-    t.text "security_id"
-    t.text "security_id_type"
-    t.text "sec_description"
-    t.text "currency"
-    t.text "long_short_ind"
-    t.decimal "units", precision: 18, scale: 6
-    t.decimal "price", precision: 18, scale: 6
-    t.decimal "market_value_base", precision: 18, scale: 6
-    t.decimal "total_cost", precision: 18, scale: 6
-    t.text "ticker_symbol"
-    t.decimal "interest_rate", precision: 18, scale: 6
-    t.date "mat_date"
-    t.text "country"
-    t.text "state"
-    t.text "income_prod_ind"
-    t.text "pool_num"
-    t.text "call_date"
-    t.text "next_call_price"
-    t.text "sic_code"
-    t.text "naic_code"
-    t.text "gics_sec_code"
-    t.text "gics_ind_grp_code"
-    t.text "gics_ind_code"
-    t.text "gics_sub_ind_code"
-    t.text "exchange_rate"
-    t.text "moody_rating"
-    t.text "snp_rating"
-    t.text "r144a_restrict_flag"
-    t.text "pool_type"
-    t.text "asset_category"
-    t.text "issue_collateral"
-    t.text "issuer_type"
-    t.text "strike_price"
-    t.text "opt_expir_date"
-    t.text "share_equiv_per_cntrct"
-    t.text "issue_date"
-    t.text "early_acq_date"
-    t.text "late_acq_date"
-    t.text "div_level_sic_code"
-    t.text "series_num"
-    t.text "usb_sec_type"
-    t.text "unit_of_calc"
-    t.text "pricing_symbol"
-    t.text "prior_day_ex_rate"
-    t.text "ex_rate_perc_change"
-    t.decimal "prior_day_shares", precision: 18, scale: 6
-    t.decimal "prior_day_price", precision: 18, scale: 6
-    t.decimal "price_perc_change", precision: 18, scale: 6
-    t.text "first_coupon"
-    t.text "mbs_factor"
-    t.text "underlying_cusip"
-    t.decimal "total_assets", precision: 18, scale: 6
-    t.decimal "total_net_assets", precision: 18, scale: 6
-    t.text "sec_type_desc"
-    t.decimal "amort_cost_base", precision: 18, scale: 6
-    t.decimal "amort_cost_local", precision: 18, scale: 6
-    t.decimal "accrued_inc_base", precision: 18, scale: 6
-    t.decimal "accrued_inc_local", precision: 18, scale: 6
-    t.text "field_01"
-    t.text "field_02"
-    t.text "field_03"
-    t.text "field_04"
-    t.text "field_05"
-    t.text "field_06"
-    t.text "field_07"
-    t.text "field_08"
-    t.text "field_09"
-    t.text "field_10"
-    t.decimal "weight", precision: 18, scale: 10
-  end
-
-  create_table "usbank_total_template", id: false, force: :cascade do |t|
-    t.text "as_of_date"
-    t.text "fund_id"
-    t.text "fund_name"
-    t.text "fund_ticker"
-    t.text "sub_account"
-    t.text "security_id"
-    t.text "security_id_type"
-    t.text "sec_description"
-    t.text "currency"
-    t.text "long_short_ind"
-    t.text "units"
-    t.text "price"
-    t.text "market_value_base"
-    t.text "total_cost"
-    t.text "ticker_symbol"
-    t.text "interest_rate"
-    t.text "mat_date"
-    t.text "country"
-    t.text "state"
-    t.text "income_prod_ind"
-    t.text "pool_num"
-    t.text "call_date"
-    t.text "next_call_price"
-    t.text "sic_code"
-    t.text "naic_code"
-    t.text "gics_sec_code"
-    t.text "gics_ind_grp_code"
-    t.text "gics_ind_code"
-    t.text "gics_sub_ind_code"
-    t.text "exchange_rate"
-    t.text "moody_rating"
-    t.text "snp_rating"
-    t.text "r144a_restrict_flag"
-    t.text "pool_type"
-    t.text "asset_category"
-    t.text "issue_collateral"
-    t.text "issuer_type"
-    t.text "strike_price"
-    t.text "opt_expir_date"
-    t.text "share_equiv_per_cntrct"
-    t.text "issue_date"
-    t.text "early_acq_date"
-    t.text "late_acq_date"
-    t.text "div_level_sic_code"
-    t.text "series_num"
-    t.text "usb_sec_type"
-    t.text "unit_of_calc"
-    t.text "pricing_symbol"
-    t.text "prior_day_ex_rate"
-    t.text "ex_rate_perc_change"
-    t.text "prior_day_shares"
-    t.text "prior_day_price"
-    t.text "price_perc_change"
-    t.text "first_coupon"
-    t.text "mbs_factor"
-    t.text "underlying_cusip"
-    t.text "total_assets"
-    t.text "total_net_assets"
-    t.text "sec_type_desc"
-    t.text "amort_cost_base"
-    t.text "amort_cost_local"
-    t.text "accrued_inc_base"
-    t.text "accrued_inc_local"
-    t.text "field_01"
-    t.text "field_02"
-    t.text "field_03"
-    t.text "field_04"
-    t.text "field_05"
-    t.text "field_06"
-    t.text "field_07"
-    t.text "field_08"
-    t.text "field_09"
-    t.text "field_10"
-  end
-
-  create_table "vanguard_baskets", id: false, force: :cascade do |t|
-    t.date "etfg_date"
-    t.string "fund_name", limit: 128
-    t.string "fund_identifier", limit: 14
-    t.string "fund_identifier_type", limit: 32
-    t.string "domicile", limit: 32
-    t.string "fund_ticker", limit: 32, null: false
-    t.date "trade_date"
-    t.decimal "unit_size", precision: 22, scale: 6
-    t.decimal "shares_outstanding", precision: 22, scale: 6
-    t.decimal "nav", precision: 22, scale: 6
-    t.string "basket_identifier", limit: 14
-    t.string "basket_identifier_type", limit: 32
-    t.string "basket_usage", limit: 32
-    t.decimal "fixed_fee_create", precision: 22, scale: 6
-    t.decimal "fixed_fee_redeem", precision: 22, scale: 6
-    t.decimal "tba_fee", precision: 22, scale: 6
-    t.decimal "cash_in_lieu_fee", precision: 22, scale: 6
-    t.decimal "standard_custom_fee", precision: 22, scale: 6
-    t.decimal "actual_cash", precision: 22, scale: 6
-    t.decimal "estimated_cash", precision: 22, scale: 6
-    t.decimal "expense_ratio", precision: 22, scale: 6
-    t.decimal "daily_create_unit_limit", precision: 22, scale: 6
-    t.decimal "daily_create_redeem_unit", precision: 22, scale: 6
-    t.string "base_currency", limit: 16
-  end
-
-  create_table "vanguard_factors", id: false, force: :cascade do |t|
-    t.date "etfg_date", null: false
-    t.date "as_of_date", null: false
-    t.string "composite_ticker", limit: 32, null: false
-    t.string "composite_name", limit: 128, null: false
-    t.string "fund_id", limit: 32
-    t.string "asset_type", limit: 128
-    t.string "constituent_ticker", limit: 64
-    t.string "constituent_name", limit: 128
-    t.string "isin", limit: 12
-    t.decimal "weight", precision: 22, scale: 6
-    t.decimal "market_value", precision: 22, scale: 6
-    t.decimal "shares", precision: 22, scale: 6
-  end
-
-  create_table "vanguard_holdings", id: false, force: :cascade do |t|
-    t.date "etfg_date", null: false
-    t.date "as_of_date", null: false
-    t.string "composite_ticker", limit: 32, null: false
-    t.string "composite_name", limit: 128, null: false
-    t.string "fund_id", limit: 32
-    t.string "asset_type", limit: 128
-    t.string "constituent_ticker", limit: 64
-    t.string "constituent_name", limit: 128
-    t.string "cusip", limit: 9
-    t.string "sedol", limit: 7
-    t.string "isin", limit: 12
-    t.decimal "weight", precision: 22, scale: 6
-    t.string "sector", limit: 64
-    t.string "country", limit: 64
-    t.string "depository_receipt", limit: 32
-    t.decimal "market_value", precision: 22, scale: 6
-    t.decimal "face_amount", precision: 22, scale: 6
-    t.decimal "coupon_rate", precision: 22, scale: 6
-    t.date "maturity_date"
-    t.decimal "shares", precision: 22, scale: 6
-  end
-
-  create_table "velocity", id: false, force: :cascade do |t|
-    t.date "etf_date"
-    t.string "etf_ticker", limit: 32
-    t.decimal "etf_value", precision: 22, scale: 6
-    t.decimal "etf_shares", precision: 22, scale: 6
-  end
-
-  create_table "xignite_api_calls", id: false, force: :cascade do |t|
-    t.string "cusip", limit: 9, null: false
-    t.string "industry", limit: 64
-    t.string "sector", limit: 128
-    t.text "data"
-    t.index ["cusip"], name: "index_xignite_api_calls_on_cusip", unique: true
-  end
-
-  create_table "xignite_industry_mappings", id: false, force: :cascade do |t|
-    t.string "source", limit: 64, null: false
-    t.string "dest", limit: 64, null: false
-  end
-
-  create_table "xignite_sector_mappings", id: false, force: :cascade do |t|
-    t.string "source", limit: 64, null: false
-    t.string "dest", limit: 64, null: false
-  end
-
-end
