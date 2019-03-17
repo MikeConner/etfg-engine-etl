@@ -2,7 +2,7 @@
 #
 # Table name: known_exceptions
 #
-#  id               :bigint(8)        not null
+#  id               :bigint(8)        not null, primary key
 #  datasource_id    :integer          not null
 #  effective_date   :date
 #  expiration_date  :date

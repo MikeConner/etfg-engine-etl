@@ -2,7 +2,7 @@
 #
 # Table name: ts_composites
 #
-#  id                        :bigint(8)        not null
+#  id                        :bigint(8)        not null, primary key
 #  etfg_date                 :date             not null
 #  datasource_id             :integer          not null
 #  pooled_instrument_id      :bigint(8)

@@ -2,7 +2,7 @@
 #
 # Table name: issuer_exceptions
 #
-#  id                 :bigint(8)        not null
+#  id                 :bigint(8)        not null, primary key
 #  datasource_id      :integer          not null
 #  file_date          :date             not null
 #  tablename          :string(64)       not null

@@ -2,7 +2,7 @@
 #
 # Table name: holidays
 #
-#  id          :bigint(8)        not null
+#  id          :bigint(8)        not null, primary key
 #  country     :string(2)        default("US"), not null
 #  market_day  :date             not null
 #  is_open     :boolean          not null

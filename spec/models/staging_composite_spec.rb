@@ -86,6 +86,7 @@
 #  primary_benchmark           :string
 #  match                       :boolean          default(FALSE), not null
 #  exclude_from_ts             :boolean          default(FALSE), not null
+#  base_currency               :string(16)
 #
 
 require 'rails_helper'

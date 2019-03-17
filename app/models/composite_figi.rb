@@ -2,7 +2,7 @@
 #
 # Table name: composite_figis
 #
-#  id             :bigint(8)        not null
+#  id             :bigint(8)        not null, primary key
 #  figi           :string(12)       not null
 #  composite_figi :string(12)       not null
 #  created_at     :datetime         not null
