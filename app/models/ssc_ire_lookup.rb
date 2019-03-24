@@ -8,7 +8,7 @@
 #
 
 class SscIreLookup < FeedSchemaBase
- self.record_timestamps = false
+  self.record_timestamps = false
   self.primary_key = :code
 
   validates_length_of :code, :ticker, :maximum => 32

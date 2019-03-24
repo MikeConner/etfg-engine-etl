@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_17_194639) do
+ActiveRecord::Schema.define(version: 2019_03_24_013024) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -58,6 +58,7 @@ ActiveRecord::Schema.define(version: 2019_03_17_194639) do
     t.boolean "yesterday_backfill"
     t.boolean "composite"
     t.date "etfg_date"
+    t.string "country", limit: 64
     t.index ["datasource_id", "composite_ticker", "yesterday_backfill", "composite", "etfg_date"], name: "ds_ranks_uniq", unique: true
     t.index ["datasource_id", "etfg_date"], name: "ranks_on_source_date"
     t.index ["etfg_date", "composite_ticker"], name: "ranks_on_date_ticker"
@@ -336,6 +337,7 @@ ActiveRecord::Schema.define(version: 2019_03_17_194639) do
     t.integer "years_to_maturity", limit: 2
     t.string "maturity_range", limit: 8
     t.string "base_currency", limit: 16
+    t.boolean "backfill_flag", default: false, null: false
     t.index ["datasource_id"], name: "ts_constituents_on_datasource_id"
     t.index ["etfg_date", "datasource_id"], name: "index_on_date_and_source"
     t.index ["etfg_date"], name: "ts_constituents_date_only"
