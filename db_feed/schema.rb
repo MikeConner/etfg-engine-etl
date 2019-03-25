@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_25_201328) do
+ActiveRecord::Schema.define(version: 2019_03_25_212113) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1952,6 +1952,11 @@ ActiveRecord::Schema.define(version: 2019_03_25_201328) do
     t.decimal "total_assets", precision: 22, scale: 6
     t.decimal "net_assets", precision: 22, scale: 6
     t.text "futval"
+  end
+
+  create_table "desjardins_lookups", id: false, force: :cascade do |t|
+    t.string "fund_code", limit: 32
+    t.string "ticker", limit: 32
   end
 
   create_table "etfmg_hold", force: :cascade do |t|
@@ -4211,7 +4216,7 @@ ActiveRecord::Schema.define(version: 2019_03_25_201328) do
   create_table "td_holdings", id: false, force: :cascade do |t|
     t.date "etfg_date"
     t.string "account_name", limit: 128
-    t.decimal "account_number", precision: 22, scale: 6
+    t.decimal "acct_number", precision: 22, scale: 6
     t.string "security_number", limit: 32
     t.string "security_description", limit: 128
     t.string "trading_currency", limit: 32
@@ -4233,11 +4238,12 @@ ActiveRecord::Schema.define(version: 2019_03_25_201328) do
     t.date "as_of_date"
     t.string "acct_base_currency", limit: 32
     t.string "period_status", limit: 16
+    t.string "ticker", limit: 16
   end
 
   create_table "td_holdings_template", id: false, force: :cascade do |t|
     t.text "account_name"
-    t.text "account_number"
+    t.text "acct_number"
     t.text "security_number"
     t.text "security_description"
     t.text "trading_currency"
