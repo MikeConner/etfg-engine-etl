@@ -1,12 +1,12 @@
 # == Schema Information
 #
-# Table name: purpose_lookups
+# Table name: td_lookups
 #
-#  account_number :string(32)       primary key
 #  ticker         :string(32)
+#  account_number :string(32)       primary key
 #
 
-class PurposeLookup < FeedSchemaBase
+class TdLookup < FeedSchemaBase
   self.record_timestamps = false
   self.primary_key = :account_number
 
