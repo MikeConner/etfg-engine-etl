@@ -5,29 +5,29 @@
         %br
         %br
         %br
-        %h1 AGFiQ Lookups
+        %h1 Desjardins Lookups
         = form_for @lookup do |f|
           %table.table
             %caption New lookup table entry
             %tbody
               %tr{:style => 'width:50%'}
                 %td
+                  = f.label :fund_code
+                  = f.text_field :fund_code
+                %td
                   = f.label :ticker
                   = f.text_field :ticker
-                %td
-                  = f.label :fund_number
-                  = f.text_field :fund_number
                 %td= f.submit 'Add Entry', :class => 'button', :style => 'margin-top:20px'
           - unless @tickers.empty?
             %table.table.zebra-striped
               %thead
                 %tr
+                  %th Fund Code
                   %th Ticker
-                  %th Fund Number
                   %th
               %tbody
                 - @tickers.each do |t|
                   %tr
+                    %td= t.fund_code
                     %td= t.ticker
-                    %td= t.fund_number
                     %td= link_to 'Delete', t, :method => :delete, :data => { :confirm => 'Are you sure?' }

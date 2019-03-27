@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_25_212113) do
+ActiveRecord::Schema.define(version: 2019_03_27_014420) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,8 +69,7 @@ ActiveRecord::Schema.define(version: 2019_03_25_212113) do
 
   create_table "agf_lookups", id: false, force: :cascade do |t|
     t.string "ticker", limit: 32, null: false
-    t.string "holdings_name", limit: 128, null: false
-    t.string "nav_name", limit: 128, null: false
+    t.string "fund_number", limit: 64, null: false
   end
 
   create_table "agf_nav", id: false, force: :cascade do |t|
@@ -1957,6 +1956,36 @@ ActiveRecord::Schema.define(version: 2019_03_25_212113) do
   create_table "desjardins_lookups", id: false, force: :cascade do |t|
     t.string "fund_code", limit: 32
     t.string "ticker", limit: 32
+  end
+
+  create_table "desjardins_nav", id: false, force: :cascade do |t|
+    t.date "etfg_date"
+    t.string "fund_code", limit: 16
+    t.string "fund_name", limit: 128
+    t.string "class_id", limit: 12
+    t.decimal "shares_outstanding", precision: 22, scale: 6
+    t.decimal "total_net_assets", precision: 22, scale: 6
+    t.decimal "current_price", precision: 22, scale: 6
+    t.decimal "previous_price", precision: 22, scale: 6
+    t.decimal "price_change", precision: 22, scale: 6
+    t.decimal "price_percent_change", precision: 22, scale: 6
+    t.decimal "income_distribution_rate", precision: 22, scale: 6
+    t.decimal "cap_gains_distribution_rate", precision: 22, scale: 6
+    t.string "ticker", limit: 16
+  end
+
+  create_table "desjardins_nav_template", id: false, force: :cascade do |t|
+    t.text "fund_code"
+    t.text "fund_name"
+    t.text "class_id"
+    t.text "shares_outstanding"
+    t.text "total_net_assets"
+    t.text "current_price"
+    t.text "previous_price"
+    t.text "price_change"
+    t.text "price_percent_change"
+    t.text "income_distribution_rate"
+    t.text "cap_gains_distribution_rate"
   end
 
   create_table "etfmg_hold", force: :cascade do |t|

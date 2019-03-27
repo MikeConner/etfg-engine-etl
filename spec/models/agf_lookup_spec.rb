@@ -2,9 +2,8 @@
 #
 # Table name: agf_lookups
 #
-#  ticker        :string(32)       not null, primary key
-#  holdings_name :string(128)      not null
-#  nav_name      :string(128)      not null
+#  ticker      :string(32)       not null, primary key
+#  fund_number :string(64)       not null
 #
 
 require 'rails_helper'

@@ -70,6 +70,8 @@ Rails.application.routes.draw do
   end
 
   resources :agf_lookups, :only => [:index, :destroy, :create]
+  resources :td_lookups, :only => [:index, :destroy, :create]
+  resources :desjardins_lookups, :only => [:index, :destroy, :create]
   resources :horizon_lookups, :only => [:index, :destroy, :create]
   resources :ssc_ca_lookups, :only => [:index, :destroy, :create]
   resources :ssc_ire_lookups, :only => [:index, :destroy, :create]

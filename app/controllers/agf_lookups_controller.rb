@@ -30,6 +30,6 @@ class AgfLookupsController < ApplicationController
   
 private
   def agf_params
-    params.require(:agf_lookup).permit(:ticker, :holdings_name, :nav_name)
+    params.require(:agf_lookup).permit(:ticker, :fund_number)
   end
 end

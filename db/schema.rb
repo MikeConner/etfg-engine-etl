@@ -10,12 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_24_013024) do
+ActiveRecord::Schema.define(version: 2019_03_27_011140) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "ambiguous_instruments", force: :cascade do |t|
+  create_table "ambiguous_instruments", id: false, force: :cascade do |t|
+    t.bigserial "id", null: false
     t.integer "datasource_id", limit: 2, null: false
     t.date "file_date", null: false
     t.bigint "datasource_line", null: false
@@ -23,13 +24,14 @@ ActiveRecord::Schema.define(version: 2019_03_24_013024) do
     t.bigint "resolved_id"
   end
 
-  create_table "cached_figis", force: :cascade do |t|
+  create_table "cached_figis", id: false, force: :cascade do |t|
+    t.bigserial "id", null: false
     t.string "input_ids", null: false
     t.date "last_updated"
-    t.index ["input_ids"], name: "index_cached_figis_on_input_ids", unique: true
   end
 
-  create_table "composite_figis", force: :cascade do |t|
+  create_table "composite_figis", id: false, force: :cascade do |t|
+    t.bigserial "id", null: false
     t.string "figi", limit: 12, null: false
     t.string "composite_figi", limit: 12, null: false
     t.datetime "created_at", default: -> { "now()" }, null: false
@@ -41,8 +43,6 @@ ActiveRecord::Schema.define(version: 2019_03_24_013024) do
     t.string "unique_id", limit: 32
     t.string "description"
     t.string "iso_country", limit: 2
-    t.index ["composite_figi"], name: "index_composite_figis_on_composite_figi"
-    t.index ["figi"], name: "index_composite_figis_on_figi"
   end
 
   create_table "country_maps", id: false, force: :cascade do |t|
@@ -54,21 +54,18 @@ ActiveRecord::Schema.define(version: 2019_03_24_013024) do
   create_table "datasource_ranks", id: false, force: :cascade do |t|
     t.bigint "datasource_id", null: false
     t.string "composite_ticker", limit: 32, null: false
-    t.integer "ranking", limit: 2, null: false
     t.boolean "yesterday_backfill"
+    t.integer "ranking", limit: 2
     t.boolean "composite"
     t.date "etfg_date"
     t.string "country", limit: 64
-    t.index ["datasource_id", "composite_ticker", "yesterday_backfill", "composite", "etfg_date"], name: "ds_ranks_uniq", unique: true
-    t.index ["datasource_id", "etfg_date"], name: "ranks_on_source_date"
-    t.index ["etfg_date", "composite_ticker"], name: "ranks_on_date_ticker"
   end
 
   create_table "datasources", force: :cascade do |t|
     t.string "data_source_name", limit: 50, null: false
     t.boolean "is_direct_feed", default: true, null: false
     t.string "region", limit: 2, default: "US", null: false
-    t.integer "composite_rank", limit: 2, default: 5, null: false
+    t.integer "composite_rank", default: 5
     t.integer "constituent_rank", limit: 2, default: 5
   end
 
@@ -78,17 +75,17 @@ ActiveRecord::Schema.define(version: 2019_03_24_013024) do
     t.date "expiration_date"
     t.string "slug"
     t.integer "datasource_id"
-    t.index ["composite_ticker"], name: "index_date_adjust_fund_flows_on_composite_ticker", unique: true
-    t.index ["slug"], name: "index_date_adjust_fund_flows_on_slug", unique: true
   end
 
-  create_table "etpr_templates", force: :cascade do |t|
+  create_table "etpr_templates", id: false, force: :cascade do |t|
+    t.bigserial "id", null: false
     t.string "template_file"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "holidays", force: :cascade do |t|
+  create_table "holidays", id: false, force: :cascade do |t|
+    t.bigserial "id", null: false
     t.string "country", limit: 2, default: "US", null: false
     t.date "market_day", null: false
     t.boolean "is_open", null: false
@@ -110,11 +107,6 @@ ActiveRecord::Schema.define(version: 2019_03_24_013024) do
     t.boolean "skipped", default: false, null: false
     t.string "resolution", limit: 16
     t.integer "score"
-    t.index ["composite_ticker"], name: "index_instrument_exceptions_on_composite_ticker"
-    t.index ["datasource_id", "instrument_id", "composite_ticker", "candidate_name"], name: "ie_row", unique: true
-    t.index ["datasource_id"], name: "index_instrument_exceptions_on_datasource_id"
-    t.index ["instrument_id"], name: "index_instrument_exceptions_on_instrument_id"
-    t.index ["score"], name: "index_instrument_exceptions_on_score"
   end
 
   create_table "instruments", force: :cascade do |t|
@@ -153,44 +145,34 @@ ActiveRecord::Schema.define(version: 2019_03_24_013024) do
     t.string "cusip_validated", limit: 16
     t.string "geography", limit: 3
     t.string "asset_class", limit: 128
-    t.index ["currency"], name: "index_instruments_on_currency"
-    t.index ["cusip"], name: "index_instruments_on_cusip"
-    t.index ["figi", "sedol", "isin", "cusip"], name: "all_indexes_instruments"
-    t.index ["figi"], name: "index_instruments_on_figi"
-    t.index ["isin"], name: "index_instruments_on_isin"
-    t.index ["issuer_id"], name: "index_instruments_on_issuer_id"
-    t.index ["sedol"], name: "index_instruments_on_sedol"
   end
 
-  create_table "issuer_exceptions", force: :cascade do |t|
+  create_table "issuer_exceptions", id: false, force: :cascade do |t|
+    t.bigserial "id", null: false
     t.integer "datasource_id", limit: 2, null: false
     t.date "file_date", null: false
     t.string "tablename", limit: 64, null: false
     t.string "name_in_datasource", limit: 128
-    t.index ["datasource_id", "file_date"], name: "index_issuer_exceptions_on_datasource_id_and_file_date"
-    t.index ["datasource_id", "name_in_datasource"], name: "index_issuer_exceptions_on_datasource_id_and_name_in_datasource", unique: true
-    t.index ["datasource_id"], name: "index_issuer_exceptions_on_datasource_id"
   end
 
-  create_table "issuer_variants", force: :cascade do |t|
+  create_table "issuer_variants", id: false, force: :cascade do |t|
+    t.bigserial "id", null: false
     t.string "name", limit: 32, null: false
     t.integer "datasource_id", limit: 2, null: false
     t.integer "issuer_id"
     t.date "effective_date"
     t.date "expiration_date"
-    t.index ["datasource_id"], name: "index_issuer_variants_on_datasource_id"
-    t.index ["name", "issuer_id"], name: "index_issuer_variants_on_name_and_issuer_id", unique: true
-    t.index ["name"], name: "index_issuer_variants_on_name"
   end
 
-  create_table "issuers", force: :cascade do |t|
+  create_table "issuers", id: false, force: :cascade do |t|
+    t.bigserial "id", null: false
     t.string "name", limit: 32, null: false
     t.date "effective_date"
     t.date "expiration_date"
-    t.index ["name"], name: "index_issuers_on_name", unique: true
   end
 
-  create_table "known_exceptions", force: :cascade do |t|
+  create_table "known_exceptions", id: false, force: :cascade do |t|
+    t.bigserial "id", null: false
     t.integer "datasource_id", limit: 2, null: false
     t.date "effective_date"
     t.date "expiration_date"
@@ -204,10 +186,10 @@ ActiveRecord::Schema.define(version: 2019_03_24_013024) do
     t.string "isin", limit: 12
     t.string "cusip", limit: 9
     t.string "composite_ticker", limit: 32
-    t.index ["datasource_id"], name: "index_known_exceptions_on_datasource_id"
   end
 
-  create_table "pooled_instrument_exceptions", force: :cascade do |t|
+  create_table "pooled_instrument_exceptions", id: false, force: :cascade do |t|
+    t.bigserial "id", null: false
     t.integer "datasource_id", limit: 2, null: false
     t.date "file_date", null: false
     t.bigint "pooled_instrument_id", null: false
@@ -281,12 +263,10 @@ ActiveRecord::Schema.define(version: 2019_03_24_013024) do
     t.string "cusip", limit: 9
     t.integer "datasource_id"
     t.boolean "exclude_from_ts", default: false, null: false
-    t.index ["composite_ticker"], name: "index_pooled_instruments_on_composite_ticker"
-    t.index ["instrument_id"], name: "index_pooled_instruments_on_instrument_id"
-    t.index ["issuer_id"], name: "index_pooled_instruments_on_issuer_id"
   end
 
-  create_table "ts_composites", force: :cascade do |t|
+  create_table "ts_composites", id: false, force: :cascade do |t|
+    t.bigserial "id", null: false
     t.date "etfg_date", null: false
     t.integer "datasource_id", limit: 2, null: false
     t.bigint "pooled_instrument_id"
@@ -309,13 +289,10 @@ ActiveRecord::Schema.define(version: 2019_03_24_013024) do
     t.date "as_of_date", null: false
     t.decimal "factor", precision: 22, scale: 6, default: "1.0"
     t.decimal "factor_shares_outstanding", precision: 22, scale: 6
-    t.index ["datasource_id"], name: "index_ts_composites_on_datasource_id"
-    t.index ["etfg_date", "datasource_id"], name: "index_ts_composites_on_etfg_date_and_datasource_id"
-    t.index ["etfg_date"], name: "index_ts_composites_on_etfg_date"
-    t.index ["pooled_instrument_id"], name: "index_ts_composites_on_pooled_instrument_id"
   end
 
-  create_table "ts_constituents", force: :cascade do |t|
+  create_table "ts_constituents", id: false, force: :cascade do |t|
+    t.bigserial "id", null: false
     t.date "etfg_date", null: false
     t.integer "datasource_id", limit: 2, null: false
     t.bigint "pooled_instrument_id"
@@ -338,13 +315,11 @@ ActiveRecord::Schema.define(version: 2019_03_24_013024) do
     t.string "maturity_range", limit: 8
     t.string "base_currency", limit: 16
     t.boolean "backfill_flag", default: false, null: false
-    t.index ["datasource_id"], name: "ts_constituents_on_datasource_id"
-    t.index ["etfg_date", "datasource_id"], name: "index_on_date_and_source"
-    t.index ["etfg_date"], name: "ts_constituents_date_only"
-    t.index ["instrument_id"], name: "ts_constituents_on_instrument_id"
+    t.index ["datasource_id"], name: "index_ts_constituents_on_datasource_id"
   end
 
-  create_table "ts_exposures", force: :cascade do |t|
+  create_table "ts_exposures", id: false, force: :cascade do |t|
+    t.bigserial "id", null: false
     t.date "etfg_date", null: false
     t.bigint "pooled_instrument_id", null: false
     t.string "exposure_type", limit: 64, null: false
@@ -356,7 +331,8 @@ ActiveRecord::Schema.define(version: 2019_03_24_013024) do
     t.index ["region"], name: "index_ts_exposures_on_region"
   end
 
-  create_table "ts_industries", force: :cascade do |t|
+  create_table "ts_industries", id: false, force: :cascade do |t|
+    t.bigserial "id", null: false
     t.date "etfg_date", null: false
     t.string "composite_ticker", limit: 32
     t.string "issuer", limit: 64
