@@ -25,6 +25,7 @@
 #  maturity_range       :string(8)
 #  base_currency        :string(16)
 #  backfill_flag        :boolean          default(FALSE), not null
+#  exchange_country     :string(64)
 #
 
 class TsConstituent < ApplicationRecord

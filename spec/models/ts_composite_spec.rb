@@ -25,6 +25,7 @@
 #  as_of_date                :date             not null
 #  factor                    :decimal(22, 6)   default(1.0)
 #  factor_shares_outstanding :decimal(22, 6)
+#  exchange_country          :string(64)
 #
 
 RSpec.describe 'TsComposite', type: :model do
