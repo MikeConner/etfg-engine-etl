@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_27_014420) do
+ActiveRecord::Schema.define(version: 2019_03_31_193204) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -4198,7 +4198,7 @@ ActiveRecord::Schema.define(version: 2019_03_27_014420) do
   create_table "staging_industries", force: :cascade do |t|
     t.date "etfg_date", null: false
     t.date "as_of_date", null: false
-    t.integer "datasource_id"
+    t.integer "datasource_id", null: false
     t.string "composite_ticker", limit: 32, null: false
     t.string "country", limit: 64, default: "US", null: false
     t.decimal "avg_daily_trading_volume", precision: 22, scale: 6

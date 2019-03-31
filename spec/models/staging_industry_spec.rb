@@ -5,7 +5,7 @@
 #  id                       :bigint(8)        not null, primary key
 #  etfg_date                :date             not null
 #  as_of_date               :date             not null
-#  datasource_id            :integer
+#  datasource_id            :integer          not null
 #  composite_ticker         :string(32)       not null
 #  country                  :string(64)       default("US"), not null
 #  avg_daily_trading_volume :decimal(22, 6)
