@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_27_162909) do
+ActiveRecord::Schema.define(version: 2019_03_30_212318) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,6 +27,14 @@ ActiveRecord::Schema.define(version: 2019_03_27_162909) do
     t.string "input_ids", null: false
     t.date "last_updated"
     t.index ["input_ids"], name: "index_cached_figis_on_input_ids", unique: true
+  end
+
+  create_table "composite_country_overrides", force: :cascade do |t|
+    t.bigint "datasource_id", null: false
+    t.string "composite_ticker", limit: 32, null: false
+    t.string "composite_country", limit: 2, null: false
+    t.index ["datasource_id", "composite_country"], name: "index_on_id_country", unique: true
+    t.index ["datasource_id"], name: "index_composite_country_overrides_on_datasource_id"
   end
 
   create_table "composite_figis", force: :cascade do |t|
@@ -70,6 +78,7 @@ ActiveRecord::Schema.define(version: 2019_03_27_162909) do
     t.string "region", limit: 2, default: "US", null: false
     t.integer "composite_rank", default: 5
     t.integer "constituent_rank", limit: 2, default: 5
+    t.string "composite_country", limit: 2
   end
 
   create_table "date_adjust_fund_flows", id: false, force: :cascade do |t|
@@ -284,6 +293,12 @@ ActiveRecord::Schema.define(version: 2019_03_27_162909) do
     t.index ["composite_ticker"], name: "index_pooled_instruments_on_composite_ticker"
     t.index ["instrument_id"], name: "index_pooled_instruments_on_instrument_id"
     t.index ["issuer_id"], name: "index_pooled_instruments_on_issuer_id"
+  end
+
+  create_table "regions", id: false, force: :cascade do |t|
+    t.string "region_name", limit: 2, null: false
+    t.string "default_country", limit: 2
+    t.index ["region_name"], name: "index_regions_on_region_name", unique: true
   end
 
   create_table "ts_composites", force: :cascade do |t|
