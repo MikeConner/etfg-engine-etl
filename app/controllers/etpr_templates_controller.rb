@@ -88,6 +88,7 @@ class EtprTemplatesController < ApplicationController
               # 1 issue_name
               unless row[1].blank?
                 changes[:composite_description] = row[1]
+                changes[:standard_composite_name] = row[1]
                 updates += 1
               end
               # 2 issuer_name
