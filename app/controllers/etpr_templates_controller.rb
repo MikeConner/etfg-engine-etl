@@ -19,6 +19,9 @@ class EtprTemplatesController < ApplicationController
       # Read the file and set it
       CSV.foreach(@template.template_file.file.path, :headers => true) do |row|
         found = false
+        # Reject blank lines
+        next if row[1].blank?
+        
         begin
           country = row[37].blank? ? 'US' : row[37].strip
           
