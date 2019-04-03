@@ -318,7 +318,7 @@ class EtprTemplatesController < ApplicationController
   
 private
   def parse_boolean(val)
-    return ['y','yes','t','true','1'].include?(val.downcase)
+    return val.blank? ? false : ['y','yes','t','true','1'].include?(val.downcase)
   end
   
   def template_params
