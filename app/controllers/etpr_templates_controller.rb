@@ -78,6 +78,7 @@ class EtprTemplatesController < ApplicationController
                                          :focus => row[33].blank? ? nil : row[33].strip,
                                          :region => row[34].blank? ? nil : row[34].strip,
                                          :category => row[35].blank? ? nil : row[35].strip,
+                                         :primary_benchmark => row[38].blank? ? nil : row[38].strip,
                                          :approved => true)
             pi.update_attribute(:pooled_instrument_id, pi.id)
             created += 1
@@ -280,6 +281,11 @@ class EtprTemplatesController < ApplicationController
               # 37 country
               unless row[37].blank?
                 changes[:exchange_country] = row[37].strip
+                updates += 1
+              end
+              # 38 primary_benchmark
+              unless row[38].blank?
+                changes[:primary_benchmark] = row[38].strip
                 updates += 1
               end
   
