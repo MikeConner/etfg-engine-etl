@@ -27,6 +27,8 @@ class EtprTemplatesController < ApplicationController
           
           pi = PooledInstrument.find_by_composite_ticker_and_exchange_country(row[0], country)
           if pi.nil?
+            next if row[1].blank?
+            
             # create instrument
             issuer_name = nil
             issuer_id = nil
@@ -39,8 +41,8 @@ class EtprTemplatesController < ApplicationController
               updates += 1
             end
             name = row[1].strip
-            inception_date =  Date.strptime(row[3], "%m/%d/%Y") rescue nil
-            maturity_date = Date.strptime(row[5], "%m/%d/%Y") rescue nil
+            inception_date = parse_date(row[3]) 
+            maturity_date = parse_date(row[5])
             
             pi = PooledInstrument.create(:issuer => issuer_name,
                                          :issuer_id => issuer_id,
@@ -86,6 +88,8 @@ class EtprTemplatesController < ApplicationController
             pi.update_attribute(:pooled_instrument_id, pi.id)
             created += 1
           else
+            num_composites = PooledInstrument.where(:pooled_instrument_id => pi.pooled_instrument_id).count
+            
             PooledInstrument.where(:pooled_instrument_id => pi.pooled_instrument_id).each do |c|
               found = true
               changes = {}
@@ -106,7 +110,7 @@ class EtprTemplatesController < ApplicationController
               end
               # 3 inception_date
               unless row[3].blank?
-                inception_date = Date.strptime(row[3], "%m/%d/%Y") rescue nil
+                inception_date = parse_date(row[3])
                 unless inception_date.nil?
                   changes[:inception_date] = inception_date
                   updates += 1
@@ -119,7 +123,7 @@ class EtprTemplatesController < ApplicationController
                end
               # 5 maturity_date
               unless row[5].blank?
-                maturity_date = Date.strptime(row[5], "%m/%d/%Y") rescue nil
+                maturity_date = parse_date(row[5])
                 unless maturity_date.nil?
                   changes[:maturity_date] = maturity_date
                   updates += 1
@@ -276,11 +280,19 @@ class EtprTemplatesController < ApplicationController
                 updates += 1
               end
               # 36 expiration_date
-              expiration_date = Date.strptime(row[36], "%m/%d/%Y") rescue nil
-              # Don't update if there's another one
-              if not expiration_date.nil? and c.effective_date.nil? and c.expiration_date.nil?
-                changes[:expiration_date] = expiration_date
+              if 1 == num_composites
+                expiration_date = parse_date(row[36]) rescue nil
+                # Don't update if there's a conflict
+                if not expiration_date.nil? and (c.effective_date.nil? or c.effective_date < expiration_date)
+                  changes[:expiration_date] = expiration_date
+                  updates += 1
+                else
+                  puts "Conflict - cannot update date '#{expiration_date}'"
+                end
+              else
+                puts "Cannot update expiration date - already has a date range"
               end
+              
               # 37 country
               unless row[37].blank?
                 changes[:exchange_country] = row[37].strip
@@ -306,6 +318,7 @@ class EtprTemplatesController < ApplicationController
           errors += 1
           
           puts ex.message
+          puts.ex.backtrace.join("\n")
           puts row
         end
       end
@@ -322,6 +335,18 @@ class EtprTemplatesController < ApplicationController
 private
   def parse_boolean(val)
     return val.blank? ? false : ['y','yes','t','true','1'].include?(val.downcase)
+  end
+  
+  def parse_date(str)
+    result = nil
+
+    fields = str.split(/\//)
+    if 3 == fields.length
+      fmt = 2 == fields[2].length ? "%m/%d/%y" : "%m/%d/%Y"
+      result = Date.strptime(str, fmt)
+    end    
+    
+    result
   end
   
   def template_params
