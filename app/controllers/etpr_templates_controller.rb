@@ -67,12 +67,12 @@ class EtprTemplatesController < ApplicationController
                                          :total_expenses => row[22].blank? ? nil : row[22].to_f,
                                          :fee_waivers => row[23].blank? ? nil : row[23].to_f,
                                          :net_expenses => row[24].blank? ? nil : row[24].to_f,
-                                         :is_active => ActiveModel::Type::Boolean.new.cast(row[25]),
-                                         :is_etn => ActiveModel::Type::Boolean.new.cast(row[26]),
-                                         :is_levered => ActiveModel::Type::Boolean.new.cast(row[27]),
+                                         :is_active => parse_boolean(row[25]),
+                                         :is_etn => parse_boolean(row[26]),
+                                         :is_levered => parse_boolean(row[27]),
                                          :levered_amount => row[28].blank? ? nil : row[28].to_f,
-                                         :is_inverse => ActiveModel::Type::Boolean.new.cast(row[29]),
-                                         :has_derivatives => ActiveModel::Type::Boolean.new.cast(row[30]),
+                                         :is_inverse => parse_boolean(row[29]),
+                                         :has_derivatives => parse_boolean(row[30]),
                                          :asset_class => row[31].blank? ? nil : row[31].strip,
                                          :development_class => row[32].blank? ? nil : row[32].strip,
                                          :focus => row[33].blank? ? nil : row[33].strip,
@@ -219,17 +219,17 @@ class EtprTemplatesController < ApplicationController
               end
               # 25 is_active
               unless row[25].blank?
-                changes[:is_active] = ActiveModel::Type::Boolean.new.cast(row[25])
+                changes[:is_active] = parse_boolean(row[25])
                 updates += 1
               end
               # 26 is_etn
               unless row[26].blank?
-                changes[:is_etn] = ActiveModel::Type::Boolean.new.cast(row[26])
+                changes[:is_etn] = parse_boolean(row[26])
                 updates += 1
               end
               # 27 is_levered
               unless row[27].blank?
-                changes[:is_levered] = ActiveModel::Type::Boolean.new.cast(row[27])
+                changes[:is_levered] = parse_boolean(row[27])
                 updates += 1
               end
               # 28 levered_amount  
@@ -239,12 +239,12 @@ class EtprTemplatesController < ApplicationController
               end
               # 29 is_inverse
               unless row[29].blank?
-                changes[:is_inverse] = ActiveModel::Type::Boolean.new.cast(row[29])
+                changes[:is_inverse] = parse_boolean(row[29])
                 updates += 1
               end
               # 30 has_derivatives
               unless row[30].blank?
-                changes[:has_derivatives] = ActiveModel::Type::Boolean.new.cast(row[30])
+                changes[:has_derivatives] = parse_boolean(row[30])
                 updates += 1
               end
               # 31 asset_class
@@ -317,6 +317,10 @@ class EtprTemplatesController < ApplicationController
   end
   
 private
+  def parse_boolean(val)
+    return ['y','yes','t','true','1'].include?(val.downcase)
+  end
+  
   def template_params
     params.require(:etpr_template).permit(:user_id, :template_file)
   end
