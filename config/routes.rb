@@ -76,6 +76,7 @@ Rails.application.routes.draw do
   resources :ssc_ca_lookups, :only => [:index, :destroy, :create]
   resources :ssc_ire_lookups, :only => [:index, :destroy, :create]
   resources :asset_class_lookups, :only => [:index, :destroy, :create]
+  resources :purpose_lookups, :only => [:index, :destroy, :create]
   
   resources :date_adjust_fund_flows, :only => [:index, :destroy, :create] do
     member do 
