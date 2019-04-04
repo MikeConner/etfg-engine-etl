@@ -133,6 +133,8 @@ class InstrumentsController < ApplicationController
   end
          
   def create_field_set(field, dup_sets, set_map, max_num = 10)
+    fields = 'id,instrument_id,datasource_id,ticker,standard_name,effective_date,expiration_date,figi,sedol,isin,cusip,exchange_country,currency,exchange,approved,default_instrument'
+
     sql = "SELECT figi,sedol,isin,cusip,#{field} FROM (SELECT figi,sedol,isin,cusip,#{field},COUNT(*) c FROM instruments GROUP BY figi,sedol,isin,cusip,#{field}) AS sub WHERE c > 1"
     dup_sql = []
     recs = ActiveRecord::Base.connection.execute(sql)
