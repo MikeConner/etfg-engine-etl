@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_30_212318) do
+ActiveRecord::Schema.define(version: 2019_04_10_032248) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -89,6 +89,15 @@ ActiveRecord::Schema.define(version: 2019_03_30_212318) do
     t.integer "datasource_id"
     t.index ["composite_ticker"], name: "index_date_adjust_fund_flows_on_composite_ticker", unique: true
     t.index ["slug"], name: "index_date_adjust_fund_flows_on_slug", unique: true
+  end
+
+  create_table "etpr_logs", force: :cascade do |t|
+    t.date "upload_date", null: false
+    t.string "composite_ticker", limit: 32, null: false
+    t.string "exchange_country", limit: 64, null: false
+    t.text "result", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "etpr_templates", force: :cascade do |t|

@@ -1,1 +1,1 @@
-instrument_id,exchange_country,currency,market_sector,security_type,sector,industry,industry_group,subindustry,geography,sedol,isin,cusip
+instrument_id,exchange_country,currency,market_sector,security_type,sector,industry,industry_group,subindustry,geography,sedol,isin,cusip,as_of_date

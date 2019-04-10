@@ -74,4 +74,14 @@ class PooledInstrument < ApplicationRecord
   
   validates_length_of :composite_ticker, :distribution_frequency, :maximum => 32
   validates_length_of :issuer, :maximum => 64
+  
+  # This is used in the ETPR template, where the controller already parses the date
+  def self.date_range(date)
+    #date = date_param.try(:strftime, "%Y%m%d")
+    clause = "((effective_date IS NULL AND expiration_date IS NULL) OR " +
+              "(effective_date IS NULL AND expiration_date IS NOT NULL AND '#{date}' <= expiration_date) OR " +
+              "(effective_date IS NOT NULL AND expiration_date IS NULL AND '#{date}' > effective_date) OR " +
+              "(effective_date IS NOT NULL AND expiration_date IS NOT NULL AND '#{date}' > effective_date AND '#{date}' <= expiration_date))"
+    PooledInstrument.where(clause)
+  end  
 end

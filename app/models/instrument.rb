@@ -48,6 +48,10 @@ class Instrument < ApplicationRecord
   
   def self.date_range(date_param)
     date = date_param.try(:strftime, "%Y%m%d")
+    self.date_range_parsed(date)
+  end
+
+  def self.date_range_parsed(date)
     clause = "((effective_date IS NULL AND expiration_date IS NULL) OR " +
               "(effective_date IS NULL AND expiration_date IS NOT NULL AND '#{date}' <= expiration_date) OR " +
               "(effective_date IS NOT NULL AND expiration_date IS NULL AND '#{date}' > effective_date) OR " +

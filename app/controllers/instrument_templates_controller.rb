@@ -5,15 +5,27 @@ class InstrumentTemplatesController < ApplicationController
 
   def create
     @template = InstrumentTemplate.new(template_params)
-    if @template.save
-      num_not_found = 0
+    ok = @template.save
+    if ok
+      if @template.template_file.file.nil?
+        @template.errors.add(:base, "ETPR instrument template file invalid") 
+        ok = false
+      end
+    end
+
+    if ok
       num_found = 0
       updates = 0
+      today = Date.today
       
       # Read the file and set it
       CSV.foreach(@template.template_file.file.path, :headers => true) do |row|
         found = false
-        Instrument.where(:instrument_id => row[0].to_i).each do |i|
+        
+        as_of_date = parse_date(row[13]) rescue today
+        
+        i = Instrument.date_range_parsed(as_of_date).where(:instrument_id => row[0].to_i).first
+        unless i.nil?
           found = true
           changes = {}
           if i.exchange_country.blank? and not row[1].blank?
@@ -68,20 +80,14 @@ class InstrumentTemplatesController < ApplicationController
           i.update_attributes(changes)
         end
         
-        if found
-          num_found += 1
-        else
-          num_not_found += 1
-          puts "#{row[0]} not found"
-        end
+        num_found += 1 if found
       end
       
-      stats = "#{num_found} found; #{num_not_found} not found; #{updates} updated"
+      stats = "#{num_found} found; #{updates} updated"
       
       redirect_to root_path, :notice => "Instrument template file uploaded (#{stats})"
     else
-      flash.now[:alert] = @template.errors.full_messages.to_sentence
-      render templates_path, :layout => 'admin'
+      redirect_to templates_path, :alert => @template.errors.full_messages.to_sentence
     end
   end
   
@@ -89,4 +95,16 @@ private
   def template_params
     params.require(:instrument_template).permit(:user_id, :template_file)
   end
+  
+  def parse_date(str)
+    result = nil
+
+    fields = str.split(/\//)
+    if 3 == fields.length
+      fmt = 2 == fields[2].length ? "%m/%d/%y" : "%m/%d/%Y"
+      result = Date.strptime(str, fmt)
+    end    
+    
+    result
+  end  
 end
