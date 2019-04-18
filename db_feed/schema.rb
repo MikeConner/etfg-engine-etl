@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_31_193204) do
+ActiveRecord::Schema.define(version: 2019_04_18_210800) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -1953,6 +1953,38 @@ ActiveRecord::Schema.define(version: 2019_03_31_193204) do
     t.text "futval"
   end
 
+  create_table "desjardins_holdings", id: false, force: :cascade do |t|
+    t.date "etfg_date"
+    t.string "fund_code", limit: 5
+    t.string "fund_name", limit: 128
+    t.string "isin", limit: 12
+    t.string "sedol", limit: 7
+    t.string "holding_name", limit: 128
+    t.decimal "shares_par_value", precision: 22, scale: 6
+    t.decimal "interest_rate", precision: 22, scale: 6
+    t.decimal "base_market_value", precision: 22, scale: 6
+    t.decimal "base_accrued_interest", precision: 22, scale: 6
+    t.date "maturity_date"
+    t.string "base_currency_code", limit: 3
+    t.date "period_end_date"
+    t.string "ticker", limit: 4
+  end
+
+  create_table "desjardins_holdings_template", id: false, force: :cascade do |t|
+    t.text "fund_code"
+    t.text "fund_name"
+    t.text "isin"
+    t.text "sedol"
+    t.text "holding_name"
+    t.text "shares_par_value"
+    t.text "interest_rate"
+    t.text "base_market_value"
+    t.text "base_accrued_interest"
+    t.text "maturity_date"
+    t.text "base_currency_code"
+    t.text "period_end_date"
+  end
+
   create_table "desjardins_lookups", id: false, force: :cascade do |t|
     t.string "fund_code", limit: 32
     t.string "ticker", limit: 32
@@ -2164,6 +2196,93 @@ ActiveRecord::Schema.define(version: 2019_03_31_193204) do
     t.text "outstanding_shares_par"
     t.text "account_inception_date"
     t.text "extra_null_field"
+  end
+
+  create_table "first_asset_funds", id: false, force: :cascade do |t|
+    t.string "ticker", limit: 4, null: false
+    t.string "fund_name", limit: 128
+    t.string "address", null: false
+    t.index ["ticker"], name: "index_first_asset_funds_on_ticker", unique: true
+  end
+
+  create_table "first_asset_nav", id: false, force: :cascade do |t|
+    t.date "etfg_date"
+    t.decimal "aum", precision: 22, scale: 6
+    t.string "auditor", limit: 32
+    t.string "cusip", limit: 9
+    t.date "conversion_date"
+    t.string "distribution_frequency", limit: 32
+    t.string "eligibility", limit: 64
+    t.date "inception_date"
+    t.string "lead_manager", limit: 64
+    t.string "lead_managers", limit: 128
+    t.decimal "management_fee", precision: 22, scale: 6
+    t.decimal "nav", precision: 22, scale: 6
+    t.decimal "offering_price", precision: 22, scale: 6
+    t.string "portfolio_manager", limit: 64
+    t.string "ticker", limit: 4
+    t.decimal "shares_outstanding", precision: 22, scale: 6
+    t.date "as_of_date"
+  end
+
+  create_table "first_asset_nav_template", id: false, force: :cascade do |t|
+    t.text "aum"
+    t.text "auditor"
+    t.text "cusip"
+    t.text "conversion_date"
+    t.text "distribution_frequency"
+    t.text "eligibility"
+    t.text "inception_date"
+    t.text "lead_manager"
+    t.text "lead_managers"
+    t.text "management_fee"
+    t.text "nav"
+    t.text "offering_price"
+    t.text "portfolio_manager"
+    t.text "ticker"
+    t.text "shares_outstanding"
+    t.text "as_of_date"
+  end
+
+  create_table "first_trust_cad_nav", id: false, force: :cascade do |t|
+    t.date "etfg_date"
+    t.decimal "blank"
+    t.date "nav_date"
+    t.date "trade_date"
+    t.string "fund_ticker", limit: 6
+    t.string "fund_cusip", limit: 9
+    t.decimal "nav_share", precision: 22, scale: 6
+    t.decimal "fund_shares_out", precision: 22, scale: 6
+    t.decimal "aum", precision: 22, scale: 6
+    t.decimal "creation_fee", precision: 22, scale: 6
+    t.decimal "pnu", precision: 22, scale: 6
+    t.decimal "creation_unit_nav", precision: 22, scale: 6
+    t.decimal "nav_dt_mkt_value", precision: 22, scale: 6
+    t.decimal "total_cash", precision: 22, scale: 6
+    t.decimal "estimated_cash", precision: 22, scale: 6
+    t.decimal "expense_accrual", precision: 22, scale: 6
+    t.decimal "fund_dvd_amt", precision: 22, scale: 6
+    t.string "basket_cusip", limit: 9
+  end
+
+  create_table "first_trust_cad_nav_template", id: false, force: :cascade do |t|
+    t.text "blank"
+    t.text "nav_date"
+    t.text "trade_date"
+    t.text "fund_ticker"
+    t.text "fund_cusip"
+    t.text "nav_share"
+    t.text "fund_shares_out"
+    t.text "aum"
+    t.text "creation_fee"
+    t.text "pnu"
+    t.text "creation_unit_nav"
+    t.text "nav_dt_mkt_value"
+    t.text "total_cash"
+    t.text "estimated_cash"
+    t.text "expense_accrual"
+    t.text "fund_dvd_amt"
+    t.text "basket_cusip"
   end
 
   create_table "firsttrust_etn", id: false, force: :cascade do |t|
@@ -3125,6 +3244,11 @@ ActiveRecord::Schema.define(version: 2019_03_31_193204) do
     t.text "native_cost"
     t.text "date1"
     t.text "weight"
+  end
+
+  create_table "rbc_lookups", id: false, force: :cascade do |t|
+    t.string "ticker", limit: 32, null: false
+    t.string "fund_code", limit: 64, null: false
   end
 
   create_table "rbc_nav", id: false, force: :cascade do |t|

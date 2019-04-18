@@ -1,0 +1,38 @@
+.container
+  .span12
+    .content-block
+      .bd
+        %br
+        %br
+        %br
+        %h1 First Asset Funds
+        = form_for @lookup do |f|
+          %table.table
+            %caption New First Asset fund
+            %tbody
+              %tr{:style => 'width:50%'}
+                %td
+                  = f.label :ticker
+                  = f.text_field :ticker
+                %td
+                  = f.label :fund_name
+                  = f.text_field :fund_name
+                %td
+                  = f.label :address
+                  = f.text_field :address
+                %td= f.submit 'Add Fund', :class => 'button', :style => 'margin-top:20px'
+          - unless @tickers.empty?
+            %table.table.zebra-striped
+              %thead
+                %tr
+                  %th Ticker
+                  %th Fund Name
+                  %th Web Address
+                  %th
+              %tbody
+                - @tickers.each do |t|
+                  %tr
+                    %td= t.ticker
+                    %td= t.fund_name
+                    %td= link_to t.address, t.address
+                    %td= link_to 'Delete', t, :method => :delete, :data => { :confirm => 'Are you sure?' }
