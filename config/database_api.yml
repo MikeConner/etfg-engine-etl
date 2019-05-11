@@ -8,16 +8,16 @@ default: &default
   encoding: unicode
   # For details on connection pooling, see Rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
-  database: etfg_api
+  database: etfg
   username: etfg
   password: ShortEverything!
   pool: 100
-  schema_search_path: "public"
+  schema_search_path: "api"
 
 development:
-  host: 10.10.10.10 #167.99.237.105
+  host: engine.etfg.com
   <<: *default
 
 production:
-  host: 10.10.10.10 #167.99.237.105
+  host: engine.etfg.com
   <<: *default
