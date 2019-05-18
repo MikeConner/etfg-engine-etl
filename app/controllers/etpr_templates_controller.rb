@@ -354,7 +354,7 @@ private
   def parse_date(str)
     result = nil
 
-    fields = str.split(/\//)
+    fields = str.split(/\//) rescue []
     if 3 == fields.length
       fmt = 2 == fields[2].length ? "%m/%d/%y" : "%m/%d/%Y"
       result = Date.strptime(str, fmt)
