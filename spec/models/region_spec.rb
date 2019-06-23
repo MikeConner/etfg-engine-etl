@@ -2,7 +2,7 @@
 #
 # Table name: regions
 #
-#  region_name     :string(2)        not null
+#  region_name     :string(2)        not null, primary key
 #  default_country :string(2)
 #
 

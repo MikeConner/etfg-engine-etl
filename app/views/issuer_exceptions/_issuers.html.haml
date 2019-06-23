@@ -16,6 +16,5 @@
           %td= exception.file_date
           %td
             = source.data_source_name
-            - df = source.is_direct_feed ? ' (DF)' : ''
-            = df
+            = source.suffix
           %td= exception.name_in_datasource

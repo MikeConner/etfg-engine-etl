@@ -20,7 +20,6 @@
 #  avg_bid_size              :decimal(22, 6)
 #  avg_ask_size              :decimal(22, 6)
 #  avg_midpoint              :decimal(22, 6)
-#  basket_estimated_cash     :decimal(22, 6)
 #  publish                   :boolean          default(FALSE), not null
 #  as_of_date                :date             not null
 #  factor                    :decimal(22, 6)   default(1.0)
