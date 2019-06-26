@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_22_021415) do
+ActiveRecord::Schema.define(version: 2019_06_26_155347) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -289,6 +289,83 @@ ActiveRecord::Schema.define(version: 2019_06_22_021415) do
     t.index ["region_name"], name: "index_regions_on_region_name", unique: true
   end
 
+  create_table "ts_basket_composites", force: :cascade do |t|
+    t.date "etfg_date", null: false
+    t.date "as_of_date", null: false
+    t.integer "datasource_id", limit: 2, null: false
+    t.bigint "pooled_instrument_id"
+    t.string "exchange_country", limit: 64
+    t.string "composite_ticker", limit: 32
+    t.string "composite_name", limit: 128
+    t.decimal "estimated_cash", precision: 22, scale: 6
+    t.decimal "total_cash", precision: 22, scale: 6
+    t.decimal "cash_in_lieu_value", precision: 22, scale: 6
+    t.string "issuer", limit: 64
+    t.string "composite_cusip", limit: 9
+    t.string "composite_isin", limit: 12
+    t.string "asset_class", limit: 28
+    t.string "category", limit: 28
+    t.string "development_class", limit: 32
+    t.string "focus", limit: 28
+    t.decimal "expense_ratio", precision: 18, scale: 6
+    t.decimal "creation_unit_size", precision: 18, scale: 6
+    t.boolean "publish", default: false, null: false
+    t.index ["datasource_id"], name: "index_ts_basket_composites_on_datasource"
+    t.index ["etfg_date", "datasource_id"], name: "index_ts_basket_composites_on_date_source"
+    t.index ["etfg_date"], name: "index_ts_basket_composites_on_etfg_date"
+    t.index ["pooled_instrument_id"], name: "index_ts_basket_composites_on_pi"
+  end
+
+  create_table "ts_basket_constituents", force: :cascade do |t|
+    t.date "etfg_date", null: false
+    t.date "as_of_date"
+    t.integer "datasource_id", limit: 2, null: false
+    t.bigint "pooled_instrument_id"
+    t.bigint "instrument_id"
+    t.string "composite_ticker", limit: 32
+    t.string "constituent_ticker", limit: 64
+    t.string "constituent_name", limit: 128
+    t.string "figi", limit: 12
+    t.string "sedol", limit: 7
+    t.string "cusip", limit: 9
+    t.string "isin", limit: 12
+    t.decimal "market_value", precision: 22, scale: 6
+    t.decimal "total_shares_held", precision: 22, scale: 6
+    t.decimal "basket_weight", precision: 18, scale: 10
+    t.string "cash_in_lieu_flag", limit: 3
+    t.boolean "backfill_flag", default: false, null: false
+    t.boolean "publish", default: false, null: false
+    t.index ["datasource_id"], name: "ts_basket_constituents_on_datasource_id"
+    t.index ["etfg_date", "datasource_id"], name: "index_tsbc_on_date_and_source"
+    t.index ["etfg_date"], name: "ts_bc_constituents_date_only"
+    t.index ["instrument_id"], name: "ts_basket_constituents_on_instrument_id"
+  end
+
+  create_table "ts_basket_exposures", force: :cascade do |t|
+    t.date "etfg_date", null: false
+    t.bigint "pooled_instrument_id", null: false
+    t.string "exposure_type", limit: 64, null: false
+    t.string "category", limit: 64, null: false
+    t.decimal "exposure_value", precision: 22, scale: 6, null: false
+    t.string "region", limit: 2
+    t.index ["etfg_date"], name: "index_ts_bsk_exposures_on_etfg_date"
+    t.index ["exposure_type"], name: "index_ts_bsk_exposures_on_exposure_type"
+    t.index ["region"], name: "index_ts_bsk_exposures_on_region"
+  end
+
+  create_table "ts_baskets", force: :cascade do |t|
+    t.date "etfg_date", null: false
+    t.bigint "pooled_instrument_id", null: false
+    t.string "region", limit: 2
+    t.text "geographic_exposure"
+    t.text "sector_exposure"
+    t.text "industry_exposure"
+    t.text "industry_group_exposure"
+    t.text "subindustry_exposure"
+    t.index ["etfg_date", "pooled_instrument_id", "region"], name: "index_ts_baskets_on_date_region_id"
+    t.index ["etfg_date"], name: "index_ts_baskets_on_etfg_date"
+  end
+
   create_table "ts_composites", id: false, force: :cascade do |t|
     t.bigserial "id", null: false
     t.date "etfg_date", null: false
@@ -341,6 +418,7 @@ ActiveRecord::Schema.define(version: 2019_06_22_021415) do
     t.boolean "backfill_flag", default: false, null: false
     t.string "exchange_country", limit: 64
     t.index ["datasource_id"], name: "index_ts_constituents_on_datasource_id"
+    t.index ["etfg_date", "pooled_instrument_id", "instrument_id"], name: "index_on_date_indices"
   end
 
   create_table "ts_exposures", id: false, force: :cascade do |t|
