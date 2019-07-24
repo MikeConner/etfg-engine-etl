@@ -35,8 +35,9 @@ class EtprTemplatesController < ApplicationController
           country = row[37].blank? ? 'US' : row[37].strip
           
           as_of_date = parse_date(row[39]) rescue today
-          composites = PooledInstrument.date_range(as_of_date).where(:composite_ticker => row[0], :exchange_country => country, :exclude_from_ts => false)
-
+          composites = PooledInstrument.date_range(as_of_date).where(:composite_ticker => row[0], 
+                                                                     :exchange_country => country,
+                                                                     :exclude_from_ts => false)
           if 0 == composites.count
             next if row[1].blank?
             
@@ -95,6 +96,9 @@ class EtprTemplatesController < ApplicationController
                                          :region => row[34].blank? ? nil : row[34].strip,
                                          :category => row[35].blank? ? nil : row[35].strip,
                                          :primary_benchmark => row[38].blank? ? nil : row[38].strip,
+                                         :composite_description => row[40].blank? ? nil : row[40].strip,
+                                         :isin => row[41].blank? ? nil : row[41].strip,
+                                         :cusip => row[42].blank? ? nil : row[42].strip,
                                          :approved => true)
             pi.update_attribute(:pooled_instrument_id, pi.id)
             created += 1
@@ -317,6 +321,21 @@ class EtprTemplatesController < ApplicationController
               updates += 1
             end
             # 39 has as_of_date, used to disambiguate
+            # 40 composite_description
+            unless row[40].blank?
+              changes[:composite_description] = row[40].strip
+              updates += 1
+            end
+            # 41 isin
+            unless row[41].blank?
+              changes[:isin] = row[41].strip
+              updates += 1
+            end
+            # 42 cusip
+            unless row[42].blank?
+              changes[:cusip] = row[42].strip
+              updates += 1
+            end
             
             pi.update_attributes(changes)
           else

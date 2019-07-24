@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_26_155347) do
+ActiveRecord::Schema.define(version: 2019_07_23_063101) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -297,9 +297,11 @@ ActiveRecord::Schema.define(version: 2019_06_26_155347) do
     t.string "exchange_country", limit: 64
     t.string "composite_ticker", limit: 32
     t.string "composite_name", limit: 128
-    t.decimal "estimated_cash", precision: 22, scale: 6
+    t.decimal "estimated_cash_cu", precision: 22, scale: 6
+    t.decimal "estimated_cash_etf", precision: 22, scale: 6
     t.decimal "total_cash", precision: 22, scale: 6
     t.decimal "cash_in_lieu_value", precision: 22, scale: 6
+    t.decimal "dividend_per_etf", precision: 22, scale: 6
     t.string "issuer", limit: 64
     t.string "composite_cusip", limit: 9
     t.string "composite_isin", limit: 12
@@ -308,7 +310,10 @@ ActiveRecord::Schema.define(version: 2019_06_26_155347) do
     t.string "development_class", limit: 32
     t.string "focus", limit: 28
     t.decimal "expense_ratio", precision: 18, scale: 6
+    t.decimal "creation_fee", precision: 22, scale: 6
     t.decimal "creation_unit_size", precision: 18, scale: 6
+    t.decimal "nav_per_cu", precision: 18, scale: 6
+    t.boolean "cash_only_flag"
     t.boolean "publish", default: false, null: false
     t.index ["datasource_id"], name: "index_ts_basket_composites_on_datasource"
     t.index ["etfg_date", "datasource_id"], name: "index_ts_basket_composites_on_date_source"
@@ -417,6 +422,7 @@ ActiveRecord::Schema.define(version: 2019_06_26_155347) do
     t.string "base_currency", limit: 16
     t.boolean "backfill_flag", default: false, null: false
     t.string "exchange_country", limit: 64
+    t.string "asset_class", limit: 28
     t.index ["datasource_id"], name: "index_ts_constituents_on_datasource_id"
     t.index ["etfg_date", "pooled_instrument_id", "instrument_id"], name: "index_on_date_indices"
   end

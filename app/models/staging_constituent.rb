@@ -41,6 +41,7 @@
 #  maturity_date        :date
 #  segment              :integer
 #  base_currency        :string(16)
+#  asset_class          :string(28)
 #
 
 class StagingConstituent < FeedSchemaBase
