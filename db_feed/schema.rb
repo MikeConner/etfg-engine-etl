@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_22_050359) do
+ActiveRecord::Schema.define(version: 2019_07_31_223316) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -3653,7 +3653,7 @@ ActiveRecord::Schema.define(version: 2019_07_22_050359) do
     t.date "maturity_date"
     t.integer "segment", limit: 2
     t.string "base_currency", limit: 16
-    t.string "asset_class", limit: 28
+    t.string "asset_class", limit: 64
     t.index ["as_of_date", "datasource_id"], name: "index_staging_constituents_on_as_of_date_and_datasource_id"
     t.index ["composite_ticker", "exchange_country"], name: "ticker_country_constituents"
     t.index ["composite_ticker"], name: "index_staging_constituents_on_composite_ticker"

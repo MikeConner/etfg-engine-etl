@@ -26,7 +26,7 @@
 #  base_currency        :string(16)
 #  backfill_flag        :boolean          default(FALSE), not null
 #  exchange_country     :string(64)
-#  asset_class          :string(28)
+#  asset_class          :string(64)
 #
 
 RSpec.describe 'TsConstituent', type: :model do
