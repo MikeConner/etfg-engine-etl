@@ -2,6 +2,7 @@ class InstrumentsController < ApplicationController
   respond_to :js, :html
 
   NUM_DUPLICATES = 30
+  FIELDS = 'id,instrument_id,datasource_id,ticker,standard_name,effective_date,expiration_date,figi,sedol,isin,cusip,exchange_country,currency,exchange,approved,default_instrument'
     
   before_action :authenticate_user!
 
@@ -16,6 +17,7 @@ class InstrumentsController < ApplicationController
     
     create_isin_cusip_set(@dup_sets, @set_map)
     create_field_set('exchange_country', @dup_sets, @set_map, 20)
+    create_ambiguous_set(@dup_sets, @set_map, 30)
     # Currency ones don't seem to be valid, per Joey - try just ignoring them
     #if @dup_sets.count <= NUM_DUPLICATES
     #  create_field_set('currency', @dup_sets, @set_map)
@@ -23,7 +25,7 @@ class InstrumentsController < ApplicationController
     
     render :layout => 'admin'
   end
-
+  
   def resolve_ambiguous
     to_delete = []
     remap = Hash.new
@@ -82,7 +84,6 @@ class InstrumentsController < ApplicationController
   end
   
   def create_isin_cusip_set(dup_sets, set_map, max_num = 10)
-    fields = 'id,instrument_id,datasource_id,ticker,standard_name,effective_date,expiration_date,figi,sedol,isin,cusip,exchange_country,currency,exchange,approved,default_instrument'
     # i/s form a pair - group ones where this is equal; each set with the same glob value is a duplicate set
     dup_sql = []
    
@@ -133,8 +134,6 @@ class InstrumentsController < ApplicationController
   end
          
   def create_field_set(field, dup_sets, set_map, max_num = 10)
-    fields = 'id,instrument_id,datasource_id,ticker,standard_name,effective_date,expiration_date,figi,sedol,isin,cusip,exchange_country,currency,exchange,approved,default_instrument'
-
     sql = "SELECT figi,sedol,isin,cusip,#{field} FROM (SELECT figi,sedol,isin,cusip,#{field},COUNT(*) c FROM instruments GROUP BY figi,sedol,isin,cusip,#{field}) AS sub WHERE c > 1"
     dup_sql = []
     recs = ActiveRecord::Base.connection.execute(sql)
@@ -149,7 +148,7 @@ class InstrumentsController < ApplicationController
       clauses.push("cusip='#{rec['cusip']}'") unless rec['cusip'].blank?
       clauses.push("#{field}='#{rec[field]}'") unless rec[field].blank?
       
-      dup_sql.push("SELECT #{fields} FROM instruments WHERE " + clauses.join(" AND ") + " ORDER BY instrument_id")
+      dup_sql.push("SELECT #{FIELDS} FROM instruments WHERE " + clauses.join(" AND ") + " ORDER BY instrument_id")
     end
     
     dup_sql.each do |s|
@@ -160,9 +159,9 @@ class InstrumentsController < ApplicationController
       
       id_set = []
       recs.each do |r|
-         id_set.push(r['instrument_id'])
+        id_set.push(r['instrument_id'])
          
-         if instrument_id.nil?
+        if instrument_id.nil?
           instrument_id = r['instrument_id']
         elsif r['instrument_id'] != instrument_id and (!r['effective_date'].blank? or !r['expiration_date'].blank?)
           diff_ids = true
@@ -181,7 +180,45 @@ class InstrumentsController < ApplicationController
       break if dup_sets.count >= max_num
     end
   end
-  
+
+  def create_ambiguous_set(dup_sets, set_map, max_num = 10)
+    rec = ActiveRecord::Base.connection.execute('SELECT MAX(file_date) AS max_date FROM ambiguous_instruments')
+    max_date = rec[0]['max_date'] rescue nil
+    unless max_date.nil?
+      s = "SELECT DISTINCT instrument_list FROM ambiguous_instruments WHERE file_date='#{max_date}'"
+      recs = ActiveRecord::Base.connection.execute(s)
+      
+      recs.each do |r|
+        ids = r['instrument_list']
+        # Make sure the list doesn't already exist
+        str_id_list = ids[1,ids.length-2].gsub(' ','') rescue nil
+        next if str_id_list.blank?
+        str_id_set = str_id_list.split(',')
+        next if 1 == str_id_set.count
+        num_set = []
+        str_id_set.each do |id|
+          num_set.push(id.to_i)
+        end
+        next if dup_sets.include?(num_set)
+        
+        # We have a set of instrument_ids that isn't already generated from before
+        
+        s = "SELECT #{FIELDS} FROM instruments WHERE instrument_id IN #{ids}"
+        dups = ActiveRecord::Base.connection.execute(s)
+
+        current = []
+        dups.each do |d|
+           current.push(d)
+        end
+      
+        dup_sets.push(current)
+        set_map[dup_sets.count] = num_set
+        
+        break if dup_sets.count >= max_num
+      end
+    end
+  end
+    
   def index
     @paginated = false
     
@@ -243,7 +280,6 @@ class InstrumentsController < ApplicationController
   
 private
   def process_globs(sql, dup_sql)    
-    fields = 'id,instrument_id,datasource_id,ticker,standard_name,effective_date,expiration_date,figi,sedol,isin,cusip,exchange_country,currency,exchange,approved,default_instrument'
     current = Hash.new
     last_glob = nil
     recs = ActiveRecord::Base.connection.execute(sql)
@@ -264,7 +300,7 @@ private
           end
           
           if current_instrument_ids.length > 1
-            dup_sql.push("SELECT #{fields} FROM instruments WHERE id IN (#{current_ids.to_s.gsub(/(\[|\])/,'')})")
+            dup_sql.push("SELECT #{FIELDS} FROM instruments WHERE id IN (#{current_ids.to_s.gsub(/(\[|\])/,'')})")
           end
                     
           current = Hash.new
