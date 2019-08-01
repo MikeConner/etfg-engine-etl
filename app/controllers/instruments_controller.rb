@@ -199,8 +199,9 @@ class InstrumentsController < ApplicationController
         str_id_set.each do |id|
           num_set.push(id.to_i)
         end
+        next if 1 == num_set.count
         next if dup_sets.include?(num_set)
-        
+          
         # We have a set of instrument_ids that isn't already generated from before
         
         s = "SELECT #{FIELDS} FROM instruments WHERE instrument_id IN #{ids}"
