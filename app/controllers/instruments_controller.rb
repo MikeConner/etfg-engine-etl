@@ -126,6 +126,8 @@ class InstrumentsController < ApplicationController
         current.push(r)
       end
       
+      next if current.count < 2
+      
       dup_sets.push(current)
       set_map[dup_sets.count] = id_set
       
@@ -172,7 +174,7 @@ class InstrumentsController < ApplicationController
       
       # Don't mark as duplicates if they're just effective/expiration date pairs
       
-      if diff_ids
+      if diff_ids and current.count > 1
         dup_sets.push(current)
         set_map[dup_sets.count] = id_set
       end
