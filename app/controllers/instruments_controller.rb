@@ -56,7 +56,12 @@ class InstrumentsController < ApplicationController
         StagingConstituent.where(:instrument_id => id).update_all(:instrument_id => remap[id])
       end
       
-      Instrument.find(id).destroy
+      # It's (remotely) possible a previous one already deleted it
+      # So make sure it exists before deleting
+      i = Instrument.find_by_id(id)
+      unless i.nil?
+        i.destroy
+      end
     end
     
     redirect_to duplicate_instruments_path, :notice => 'Resolved instruments'
