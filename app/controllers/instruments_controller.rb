@@ -15,9 +15,12 @@ class InstrumentsController < ApplicationController
     @dup_sets = []
     @set_map = {}
     
-    create_isin_cusip_set(@dup_sets, @set_map)
-    create_field_set('exchange_country', @dup_sets, @set_map, 20)
-    create_ambiguous_set(@dup_sets, @set_map, 30)
+    # Instead of these three - simplify!
+    create_cusip_set(@dup_sets, @set_map)
+    #create_isin_cusip_set(@dup_sets, @set_map)
+    #create_field_set('exchange_country', @dup_sets, @set_map, 20)
+    #create_ambiguous_set(@dup_sets, @set_map, 30)
+    
     # Currency ones don't seem to be valid, per Joey - try just ignoring them
     #if @dup_sets.count <= NUM_DUPLICATES
     #  create_field_set('currency', @dup_sets, @set_map)
@@ -80,6 +83,69 @@ class InstrumentsController < ApplicationController
       head :ok
     else
       render :text => @lookup.errors.full_messages.to_sentence
+    end
+  end
+  
+  def create_cusip_set(dup_sets, set_map, max_num = 30)
+    # Find sets of instruments with the same cusip and different instrument_ids
+    sql = "SELECT cusip FROM " +
+          "(SELECT cusip,COUNT(*) c FROM instruments" +
+          " WHERE cusip IS NOT NULL " +
+          "GROUP BY cusip) AS Sub " +
+          "WHERE c > 1 " + 
+          "ORDER BY c DESC"
+    
+    recs = ActiveRecord::Base.connection.execute(sql)
+    recs.each do |r|
+      current_cusip = r['cusip']
+      # We now have a CUSIP to try - eliminate ones with the same instrument_id (corporate actions)
+      sql = "SELECT instrument_id FROM " +
+            "(SELECT instrument_id,COUNT(*) c " +
+            "FROM instruments " +
+            "WHERE cusip='#{current_cusip}' " +
+            "GROUP BY instrument_id) AS Sub " +
+            "WHERE c = 1"
+      instrument_ids = []
+      ids = ActiveRecord::Base.connection.execute(sql)
+      ids.each do |id|
+        instrument_ids.push(id['instrument_id'])
+      end
+      
+      # Instrument ids has the list of non-duplicate instrument_ids
+      # If there is only one, it was just a corporate action - no potential duplicates
+      if instrument_ids.count > 1
+        sql = "SELECT id,figi,sedol,isin FROM instruments WHERE cusip='#{r['cusip']}' AND instrument_id IN (#{instrument_ids})".gsub('[','').gsub(']','')
+        table = ActiveRecord::Base.connection.execute(sql)
+        table.each do |row|
+          dups = []
+          sql = "SELECT id FROM instruments " + 
+                "WHERE (figi IS NULL OR figi='#{row['figi']}') AND " + 
+                      "(sedol IS NULL OR sedol='#{row['sedol']}') AND " +
+                      "(isin IS NULL OR isin='#{row['isin']}') AND " +
+                      "cusip='#{current_cusip}'"
+          res = ActiveRecord::Base.connection.execute(sql)
+          res.each do |rx|
+            dups.push(rx['id'])
+          end
+          
+          if dups.count > 1 and not dup_sets.include?(dups)
+            sql = "SELECT #{FIELDS} FROM instruments WHERE id IN (#{dups})".gsub('[','').gsub(']','')
+
+            current = []
+            instruments = ActiveRecord::Base.connection.execute(sql)
+            instruments.each do |instrument|
+              current.append(instrument)
+            end
+            
+            dup_sets.append(current)
+            set_map[dup_sets.count] = instrument_ids
+            
+            break if dup_sets.count >= max_num
+          end
+        end
+        
+        break if dup_sets.count >= max_num
+      end
     end
   end
   
