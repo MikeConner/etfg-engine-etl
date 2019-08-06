@@ -16,7 +16,8 @@ class InstrumentsController < ApplicationController
     @set_map = {}
     
     # Instead of these three - simplify!
-    create_cusip_set(@dup_sets, @set_map)
+    create_dup_set('cusip', @dup_sets, @set_map, 20)
+    create_dup_set('isin', @dup_sets, @set_map, 40)
     #create_isin_cusip_set(@dup_sets, @set_map)
     #create_field_set('exchange_country', @dup_sets, @set_map, 20)
     #create_ambiguous_set(@dup_sets, @set_map, 30)
@@ -91,23 +92,23 @@ class InstrumentsController < ApplicationController
     end
   end
   
-  def create_cusip_set(dup_sets, set_map, max_num = 30)
+  def create_dup_set(field, dup_sets, set_map, max_num = 30)
     # Find sets of instruments with the same cusip and different instrument_ids
-    sql = "SELECT cusip FROM " +
-          "(SELECT cusip,COUNT(*) c FROM instruments" +
-          " WHERE cusip IS NOT NULL " +
-          "GROUP BY cusip) AS Sub " +
+    sql = "SELECT #{field} FROM " +
+          "(SELECT #{field},COUNT(*) c FROM instruments" +
+          " WHERE #{field} IS NOT NULL " +
+          "GROUP BY #{field}) AS Sub " +
           "WHERE c > 1 " + 
           "ORDER BY c DESC"
     
     recs = ActiveRecord::Base.connection.execute(sql)
     recs.each do |r|
-      current_cusip = r['cusip']
+      current_field = r[field]
       # We now have a CUSIP to try - eliminate ones with the same instrument_id (corporate actions)
       sql = "SELECT instrument_id FROM " +
             "(SELECT instrument_id,COUNT(*) c " +
             "FROM instruments " +
-            "WHERE cusip='#{current_cusip}' " +
+            "WHERE #{field}='#{current_field}' " +
             "GROUP BY instrument_id) AS Sub " +
             "WHERE c = 1"
       instrument_ids = []
@@ -118,16 +119,18 @@ class InstrumentsController < ApplicationController
       
       # Instrument ids has the list of non-duplicate instrument_ids
       # If there is only one, it was just a corporate action - no potential duplicates
+      other_field = 'cusip' == field ? 'isin' : 'cusip'
+      
       if instrument_ids.count > 1
-        sql = "SELECT id,figi,sedol,isin FROM instruments WHERE cusip='#{r['cusip']}' AND instrument_id IN (#{instrument_ids})".gsub('[','').gsub(']','')
+        sql = "SELECT id,figi,sedol,#{other_field} FROM instruments WHERE #{field}='#{r[field]}' AND instrument_id IN (#{instrument_ids})".gsub('[','').gsub(']','')
         table = ActiveRecord::Base.connection.execute(sql)
         table.each do |row|
           dups = []
           sql = "SELECT id FROM instruments " + 
                 "WHERE (figi IS NULL OR figi='#{row['figi']}') AND " + 
                       "(sedol IS NULL OR sedol='#{row['sedol']}') AND " +
-                      "(isin IS NULL OR isin='#{row['isin']}') AND " +
-                      "cusip='#{current_cusip}'"
+                      "(#{other_field} IS NULL OR #{other_field}='#{row[other_field]}') AND " +
+                      "#{field}='#{current_field}'"
           res = ActiveRecord::Base.connection.execute(sql)
           res.each do |rx|
             dups.push(rx['id'])
