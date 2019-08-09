@@ -126,19 +126,26 @@ class InstrumentsController < ApplicationController
         table = ActiveRecord::Base.connection.execute(sql)
         table.each do |row|
           dups = []
-          sql = "SELECT id FROM instruments " + 
-                "WHERE (figi IS NULL OR figi='#{row['figi']}') AND " + 
-                      "(sedol IS NULL OR sedol='#{row['sedol']}') AND " +
-                      "(#{other_field} IS NULL OR #{other_field}='#{row[other_field]}') AND " +
-                      "#{field}='#{current_field}'"
+          clauses = []
+          unless row['figi'].nil?
+            clauses.push("(figi IS NULL OR figi='#{row['figi']}')")
+          end
+          unless row['sedol'].nil?
+            clauses.push("(sedol IS NULL OR sedol='#{row['sedol']}')")
+          end
+          unless row[other_field].nil?
+            clauses.push("(#{other_field} IS NULL OR #{other_field}='#{row[other_field]}')")
+          end
+
+          sql = "SELECT id FROM instruments WHERE " + clauses.join(" AND ") + " AND #{field}='#{current_field}'"
           res = ActiveRecord::Base.connection.execute(sql)
           res.each do |rx|
             dups.push(rx['id'])
           end
-          
+        
           if dups.count > 1 and not dup_sets.include?(dups)
             sql = "SELECT #{FIELDS} FROM instruments WHERE id IN (#{dups})".gsub('[','').gsub(']','')
-
+  
             current = []
             instruments = ActiveRecord::Base.connection.execute(sql)
             instruments.each do |instrument|
