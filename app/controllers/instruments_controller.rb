@@ -137,25 +137,27 @@ class InstrumentsController < ApplicationController
             clauses.push("(#{other_field} IS NULL OR #{other_field}='#{row[other_field]}')")
           end
 
-          sql = "SELECT id FROM instruments WHERE " + clauses.join(" AND ") + " AND #{field}='#{current_field}'"
-          res = ActiveRecord::Base.connection.execute(sql)
-          res.each do |rx|
-            dups.push(rx['id'])
-          end
-        
-          if dups.count > 1 and not dup_sets.include?(dups)
-            sql = "SELECT #{FIELDS} FROM instruments WHERE id IN (#{dups})".gsub('[','').gsub(']','')
-  
-            current = []
-            instruments = ActiveRecord::Base.connection.execute(sql)
-            instruments.each do |instrument|
-              current.append(instrument)
+          if clauses.count > 0
+            sql = "SELECT id FROM instruments WHERE " + clauses.join(" AND ") + " AND #{field}='#{current_field}'"
+            res = ActiveRecord::Base.connection.execute(sql)
+            res.each do |rx|
+              dups.push(rx['id'])
             end
-            
-            dup_sets.append(current)
-            set_map[dup_sets.count] = instrument_ids
-            
-            break if dup_sets.count >= max_num
+          
+            if dups.count > 1 and not dup_sets.include?(dups)
+              sql = "SELECT #{FIELDS} FROM instruments WHERE id IN (#{dups})".gsub('[','').gsub(']','')
+    
+              current = []
+              instruments = ActiveRecord::Base.connection.execute(sql)
+              instruments.each do |instrument|
+                current.append(instrument)
+              end
+              
+              dup_sets.append(current)
+              set_map[dup_sets.count] = instrument_ids
+              
+              break if dup_sets.count >= max_num
+            end
           end
         end
         
