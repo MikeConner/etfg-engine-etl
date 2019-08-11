@@ -144,7 +144,8 @@ class InstrumentsController < ApplicationController
               dups.push(rx['id'])
             end
           
-            if dups.count > 1 and not dup_sets.include?(dups)
+            # Need to sort, because [1,2] != [2,1]
+            if dups.count > 1 and not dup_sets.include?(dups.sort)
               sql = "SELECT #{FIELDS} FROM instruments WHERE id IN (#{dups})".gsub('[','').gsub(']','')
     
               current = []
@@ -153,7 +154,7 @@ class InstrumentsController < ApplicationController
                 current.append(instrument)
               end
               
-              dup_sets.append(current)
+              dup_sets.append(current.sort)
               set_map[dup_sets.count] = instrument_ids
               
               break if dup_sets.count >= max_num

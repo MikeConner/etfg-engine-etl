@@ -76,6 +76,10 @@ class InstrumentTemplatesController < ApplicationController
             changes[:cusip] = row[12]
             updates += 1
           end
+          if i.ticker.blank? and not row[14].blank?
+            changes[:ticker] = row[14]
+            updates += 1
+          end
           
           i.update_attributes(changes)
         end
