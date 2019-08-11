@@ -12,12 +12,18 @@ class InstrumentsController < ApplicationController
       @source_map[d.id] = d.data_source_name
     end
     
+    # dup_sets is an array of query results (instruments)
     @dup_sets = []
+    # set_map is a hash where set_map[0] points to the first element, set_map[1] to the second, etc.
+    #   The value is the set of instrument_ids
     @set_map = {}
+    # Just used to detect duplicates (i.e., the same set of ids in different order, which can happen if you search by cusip and then isin)
+    # This is an array of arrays of *ids* (not instrument ids)
+    @id_sets = []
     
     # Instead of these three - simplify!
-    create_dup_set('cusip', @dup_sets, @set_map, 20)
-    create_dup_set('isin', @dup_sets, @set_map, 40)
+    create_dup_set('cusip', @dup_sets, @set_map, @id_sets, 20)
+    create_dup_set('isin', @dup_sets, @set_map, @id_sets, 40)
     #create_isin_cusip_set(@dup_sets, @set_map)
     #create_field_set('exchange_country', @dup_sets, @set_map, 20)
     #create_ambiguous_set(@dup_sets, @set_map, 30)
@@ -92,7 +98,7 @@ class InstrumentsController < ApplicationController
     end
   end
   
-  def create_dup_set(field, dup_sets, set_map, max_num = 30)
+  def create_dup_set(field, dup_sets, set_map, id_sets, max_num = 30)
     # Find sets of instruments with the same cusip and different instrument_ids
     sql = "SELECT #{field} FROM " +
           "(SELECT #{field},COUNT(*) c FROM instruments" +
@@ -145,7 +151,7 @@ class InstrumentsController < ApplicationController
             end
           
             # Need to sort, because [1,2] != [2,1]
-            if dups.count > 1 and not dup_sets.include?(dups.sort)
+            if dups.count > 1 and not id_sets.include?(dups.sort)
               sql = "SELECT #{FIELDS} FROM instruments WHERE id IN (#{dups})".gsub('[','').gsub(']','')
     
               current = []
@@ -154,7 +160,8 @@ class InstrumentsController < ApplicationController
                 current.append(instrument)
               end
               
-              dup_sets.append(current.sort)
+              dup_sets.append(current)
+              id_sets.append(dups.sort)
               set_map[dup_sets.count] = instrument_ids
               
               break if dup_sets.count >= max_num
