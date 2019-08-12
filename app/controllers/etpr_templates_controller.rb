@@ -33,7 +33,6 @@ class EtprTemplatesController < ApplicationController
         
         begin
           country = row[37].blank? ? 'US' : row[37].strip
-          
           as_of_date = parse_date(row[39]) rescue today
           composites = PooledInstrument.date_range(as_of_date).where(:composite_ticker => row[0], 
                                                                      :exchange_country => country,
@@ -298,16 +297,18 @@ class EtprTemplatesController < ApplicationController
             end
             # 36 expiration_date
             expiration_date = parse_date(row[36]) rescue nil
-            # Don't update if there's a conflict
-            if not expiration_date.nil? and (pi.effective_date.nil? or pi.effective_date < expiration_date)
-              changes[:expiration_date] = expiration_date
-              updates += 1
-            else
-              EtprLog.create(:upload_date => today,
-                             :composite_ticker => row[0],
-                             :exchange_country => country,
-                             :result => "Conflict - cannot update date '#{expiration_date}'")
-              errors += 1
+            unless expiration_date.nil?
+              # Don't update if there's a conflict
+              if pi.effective_date.nil? or pi.effective_date < expiration_date
+                changes[:expiration_date] = expiration_date
+                updates += 1
+              else
+                EtprLog.create(:upload_date => today,
+                               :composite_ticker => row[0],
+                               :exchange_country => country,
+                               :result => "Conflict - cannot update date '#{expiration_date}'")
+                errors += 1
+              end
             end
             
             # 37 country
@@ -328,12 +329,12 @@ class EtprTemplatesController < ApplicationController
             end
             # 41 isin
             unless row[41].blank?
-              changes[:isin] = row[41].strip
+              changes[:cusip] = row[41].strip
               updates += 1
             end
             # 42 cusip
             unless row[42].blank?
-              changes[:cusip] = row[42].strip
+              changes[:isin] = row[42].strip
               updates += 1
             end
             
@@ -376,6 +377,10 @@ private
     fields = str.split(/\//) rescue []
     if 3 == fields.length
       fmt = 2 == fields[2].length ? "%m/%d/%y" : "%m/%d/%Y"
+      result = Date.strptime(str, fmt)
+    else
+      fields = str.split(/-/) rescue []
+      fmt = 2 == fields[0].length ? "%y-%m-%d" : "%Y-%m-%d"
       result = Date.strptime(str, fmt)
     end    
     
