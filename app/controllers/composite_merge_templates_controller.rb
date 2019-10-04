@@ -48,7 +48,7 @@ class CompositeMergeTemplatesController < ApplicationController
               ActiveRecord::Base.transaction do
                 # Effective_date could be wrong - if it's after the expiration date, set it to null
                 if old_pooled_instrument.effective_date.nil? or change_date > old_pooled_instrument.effective_date
-                  old_pooled_instrument.update_attribute!(:expiration_date => change_date)
+                  old_pooled_instrument.update_attribute(:expiration_date, change_date)
                 else
                   old_pooled_instrument.update_attributes!(:effective_date => nil, 
                                                            :expiration_date => change_date)
