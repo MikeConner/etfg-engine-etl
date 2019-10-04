@@ -22,6 +22,7 @@ class StaticPagesController < ApplicationController
   def templates
     @instrument_template = InstrumentTemplate.new
     @etpr_template = EtprTemplate.new
+    @composite_merge_template = CompositeMergeTemplate.new
     
     render :layout => 'admin'
   end

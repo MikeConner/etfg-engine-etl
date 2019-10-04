@@ -88,6 +88,7 @@ Rails.application.routes.draw do
   
   resources :instrument_templates, :only => [:create]
   resources :etpr_templates, :only => [:create]
+  resources :composite_merge_templates, :only => [:create]
   resources :api_users, :only => [:index, :destroy]
   
   get "/workbench" => "static_pages#workbench"

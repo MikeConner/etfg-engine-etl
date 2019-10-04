@@ -10,10 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_05_032421) do
+ActiveRecord::Schema.define(version: 2019_10_04_030915) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "composite_merge_templates", force: :cascade do |t|
+    t.bigint "user_id"
+    t.string "template_file"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_composite_merge_templates_on_user_id"
+  end
 
   create_table "dag_statuses", force: :cascade do |t|
     t.string "datasource", limit: 32, null: false
