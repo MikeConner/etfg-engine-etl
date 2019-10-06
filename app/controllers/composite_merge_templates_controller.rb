@@ -20,7 +20,7 @@ class CompositeMergeTemplatesController < ApplicationController
       
       today = Date.today
       
-      csv_result = 'old_pooled_instrument_id,new_pooled_instrument_id,change_date,result\n'
+      csv_result = "old_pooled_instrument_id,new_pooled_instrument_id,change_date,result\n"
       
       # Read the file and set it
       CSV.foreach(@template.template_file.file.path, :headers => true) do |row|
