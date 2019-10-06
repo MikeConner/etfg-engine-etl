@@ -23,7 +23,7 @@
           %p= link_to 'Download Composite Merge Template', 'composite_merge_template.csv'
           %p
             = form_for @composite_merge_template, :html => {:multipart => true} do |f|
-              = f.label :template_file, 'Upload Merge Composite Template'
+              = f.label :template_file, 'Upload Composite Merge Template'
               = f.file_field :template_file
               = f.hidden_field :user_id, :value => current_user.id
-              = f.submit 'Upload Merge Composite Data'
+              = f.submit 'Upload Composite Merge Data'
