@@ -61,6 +61,15 @@ class InstrumentsController < ApplicationController
     to_delete.each do |id|
       if remap.has_key?(id)
         StagingConstituent.where(:instrument_id => id).update_all(:instrument_id => remap[id])
+        constituent_name = Instrument.find(remap[id]).standard_name
+        TsConstituent.where(:instrument_id => id).update_all(:instrument_id => remap[id], :constituent_name => constituent_name)
+        InstrumentException.where(:instrument_id => id).update_all(:instrument_id => remap[id])
+        StagingInstrumentException.where(:instrument_id => id).update_all(:instrument_id => remap[id])
+        # Staging basket constituents, ts_basket_constituents
+        ['feed.staging_basket_constituents', 'ts_basket_constituents'].each do |table|
+           sql = "UPDATE #{table} SET instrument_id=#{remap[id]} WHERE instrument_id=#{id}"
+           ActiveRecord::Base.connection.execute(sql)
+        end
       end
       
       # It's (remotely) possible a previous one already deleted it
