@@ -1,1 +1,1 @@
-old_pooled_instrument_id,new_pooled_instrument_id,change_date
+original_pooled_instrument_id,successor_pooled_instrument_id,change_date,,github.com/MikeConner/etfg-data-engine/wiki/Composite-Merge-Template

@@ -43,7 +43,7 @@ class CompositeMergeTemplatesController < ApplicationController
             # Going to set expiration date of old one to change_date
             
             # and effective_date of new_instrument to change_date
-            if new_pooled_instrument.expiration_date.nil? or change_date <= new_pooled_instrument.expiration_date
+            if new_pooled_instrument.expiration_date.nil? or change_date < new_pooled_instrument.expiration_date
               # Dates are ok - make change
               ActiveRecord::Base.transaction do
                 # Effective_date could be wrong - if it's after the expiration date, set it to null
