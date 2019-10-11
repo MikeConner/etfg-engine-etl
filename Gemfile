@@ -53,6 +53,9 @@ gem 'turbolinks', '~> 5'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.1.0', require: false
 gem 'devise', '4.4.3'
+gem 'delayed_job_active_record', '4.1.4'
+gem 'daemons', '1.3.1'
+gem 'progress_job', '0.0.4'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

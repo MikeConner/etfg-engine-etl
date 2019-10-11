@@ -28,10 +28,13 @@ module EtfgEtl
     # the framework and any gems in your application.
     config.time_zone = 'Eastern Time (US & Canada)'
 
+    config.active_job.queue_adapter = :delayed_job
+
     config.paths.add Rails.root.join('lib', 'generators').to_s, :eager_load => true
     config.paths.add Rails.root.join('lib', 'kiba', 'sources').to_s, :eager_load => true
     config.paths.add Rails.root.join('lib', 'kiba', 'transformers').to_s, :eager_load => true
     config.paths.add Rails.root.join('lib', 'kiba', 'destinations').to_s, :eager_load => true
+    config.paths.add Rails.root.join('lib', 'workers').to_s, :eager_load => true
 
     # Don't generate system test files.
     #config.generators.system_tests = nil
