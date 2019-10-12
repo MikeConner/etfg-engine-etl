@@ -52,8 +52,8 @@ class EtprTemplatesController < ApplicationController
               updates += 1
             end
             name = row[1].strip
-            inception_date = parse_date(row[3]) 
-            maturity_date = parse_date(row[5])
+            inception_date = row[3].blank? ? nil : parse_date(row[3]) 
+            maturity_date = row[5].blank? ? nil : parse_date(row[5])
             
             pi = PooledInstrument.create(:issuer => issuer_name,
                                          :issuer_id => issuer_id,
@@ -126,7 +126,7 @@ class EtprTemplatesController < ApplicationController
             end
             # 3 inception_date
             unless row[3].blank?
-              inception_date = parse_date(row[3])
+              inception_date = row[3].blank? ? nil : parse_date(row[3])
               unless inception_date.nil?
                 changes[:inception_date] = inception_date
                 updates += 1
@@ -385,6 +385,8 @@ private
     end    
     
     result
+  rescue Exception => ex
+    raise "#{ex.message}: #{str}"  
   end
   
   def template_params
