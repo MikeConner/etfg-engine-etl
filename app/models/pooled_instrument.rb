@@ -67,12 +67,13 @@
 #  cusip                       :string(9)
 #  datasource_id               :integer
 #  exclude_from_ts             :boolean          default(FALSE), not null
+#  iopv_symbol                 :string(32)
 #
 
 class PooledInstrument < ApplicationRecord
   belongs_to :datasource, :optional => true
   
-  validates_length_of :composite_ticker, :distribution_frequency, :maximum => 32
+  validates_length_of :composite_ticker, :distribution_frequency, :iopv_symbol, :maximum => 32
   validates_length_of :issuer, :maximum => 64
   
   # This is used in the ETPR template, where the controller already parses the date
