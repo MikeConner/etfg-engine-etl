@@ -98,6 +98,7 @@ class EtprTemplatesController < ApplicationController
                                          :composite_description => row[40].blank? ? nil : row[40].strip,
                                          :isin => row[41].blank? ? nil : row[41].strip,
                                          :cusip => row[42].blank? ? nil : row[42].strip,
+                                         :iopv_symbol => row[43].blank? ?  nil : row[43].strip,
                                          :approved => true)
             pi.update_attribute(:pooled_instrument_id, pi.id)
             created += 1
@@ -335,6 +336,11 @@ class EtprTemplatesController < ApplicationController
             # 42 cusip
             unless row[42].blank?
               changes[:isin] = row[42].strip
+              updates += 1
+            end
+            # 43 iopv_symbol
+            unless row[43].blank?
+              changes[:iopv_symbol] = row[43].strip
               updates += 1
             end
             
